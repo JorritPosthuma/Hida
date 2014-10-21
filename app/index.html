@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="hida"></html>
+<head>
+  <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+  
+  <script src="lib/bower/jquery/dist/jquery.js"></script>
+  <script src="lib/bower/jquery-ui/jquery-ui.js"></script>
+  <script src="lib/bower/bootstrap-sass/dist/js/bootstrap.js"></script>
+
+  <script src="lib/inspinia/plugins/metisMenu/jquery.metisMenu.js"></script>
+  <script src="lib/inspinia/plugins/pace/pace.min.js"></script>
+  <script src="lib/inspinia/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+  <script src="lib/inspinia/base/inspinia.js"></script>
+
+  <script src="lib/bower/angular/angular.js"></script>
+  <script src="lib/bower/ui-router/release/angular-ui-router.js"></script>
+  <script src="lib/bower/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+  <script src="lib/inspinia/base/app.js"></script>
+  <script src="lib/inspinia/base/directives.js"></script>
+  
+  <script src="logic/main.js"></script>
+
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="wrapper">
+
+      <div ng-include="'lib/inspinia/templates/navigation.html'"></div>
+
+      <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+
+          <div ng-include="'lib/inspinia/templates/topnavbar.html'"></div>
+
+          <div ui-view></div>
+
+          <div ng-include="'lib/inspinia/templates/footer.html'"></div>
+
+      </div>
+
+  </div>
+
+</body>

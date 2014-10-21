@@ -1,0 +1,10 @@
+{
+  "name": "Hida",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.html",
+  "window": {
+    "title": "Hida",
+    "toolbar": true
+  }
+}
