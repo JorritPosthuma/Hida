@@ -1,0 +1,5 @@
+#wrapper
+  div(ng-include="'parts/nav.html'")
+  #page-wrapper.gray-bg(ng-class='$state.current.name')
+    div(ng-include="'parts/top.html'")
+    div(ui-view="")

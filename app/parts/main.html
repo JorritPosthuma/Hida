@@ -1,0 +1,8 @@
+
+<div id="wrapper">
+  <div ng-include="'parts/nav.html'"></div>
+  <div id="page-wrapper" ng-class="$state.current.name" class="gray-bg">
+    <div ng-include="'parts/top.html'"></div>
+    <div ui-view=""></div>
+  </div>
+</div>

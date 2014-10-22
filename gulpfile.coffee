@@ -41,11 +41,9 @@ gulp.task "build", ->
 
 gulp.task "sass", ->
   gulp.src paths.sass
-  # .pipe $.sourcemaps.init()
-    .pipe $.rubySass()
+    .pipe $.rubySass
+      sourcemapPath: '.'
     .on 'error', handle_error
-    .pipe $.concat "style.css"
-  # .pipe $.sourcemaps.write()
   .pipe gulp.dest "./app/css/"
   .pipe $.livereload()
 
@@ -70,6 +68,18 @@ gulp.task "jade", ->
 
 gulp.task "livereload", ->
   $.livereload.listen()
+
+gulp.task "serve", [ "watch" ], ->
+  restify = require "restify"
+  server  = restify.createServer name: "When"
+  port    = process.env.PORT || 8080
+
+  server.listen port, ->
+    console.log "#{server.name} listening at #{server.url}"
+
+  server.get /.*/, restify.serveStatic
+    directory: "./app"
+    default: "index.html"
 
 gulp.task "watch", [ "default", "livereload" ], ->
   gulp.watch [ "./app/**/*.scss" ], ["sass"]
