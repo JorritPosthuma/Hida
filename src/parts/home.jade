@@ -1,1 +1,19 @@
-h1 Hoi home!
+//- .row.dashboard-header
+//-   .col-sm-12
+//-     h2 Read Dicom
+
+//-     input(type="file", accept=".dicom")
+.row.dashboard-header
+  .col-sm-12
+    h2 Show Dicom
+    table
+      tr
+        td
+          strong Window Width: 
+        td {{ctrl.ww}}
+      tr
+        td
+          strong Window Level:
+        td {{ctrl.wl}}
+    br
+    .dicom(style="width:512px; height:512px; background: black;")

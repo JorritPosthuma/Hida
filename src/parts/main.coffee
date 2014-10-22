@@ -1,5 +1,5 @@
 module = angular.module 'hida'
-module.controller 'MainController', ($scope, $rootScope) ->
+module.controller 'MainController', ($scope, $rootScope, $state) ->
 
   new class extends DefaultController
 
@@ -13,6 +13,8 @@ module.controller 'MainController', ($scope, $rootScope) ->
 
     constructor: ->
       super $scope, $rootScope
+
+      $scope.$state = $state
 
     ###########################
     # Methods                 #
