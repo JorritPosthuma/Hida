@@ -1,11 +1,9 @@
-//- .row.dashboard-header
-//-   .col-sm-12
-//-     h2 Read Dicom
-
-//-     input(type="file", accept=".dicom")
+input#file(style='display:none;', type='file', accept=".dcm")
 .row.dashboard-header
   .col-sm-12
-    h2 Show Dicom
+    h2
+      | Show Image &nbsp;
+      i.fa.fa-cloud-upload(ng-click='ctrl.open()')
     table
       tr
         td

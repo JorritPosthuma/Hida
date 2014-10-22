@@ -9966,4 +9966,9 @@ body.skin-3 {
   .main-home table td {
     padding: 2px 5px; }
 
+.profile-element .name {
+  color: white;
+  font-weight: bold;
+  margin-top: 8px; }
+
 /*# sourceMappingURL=main.css.map */

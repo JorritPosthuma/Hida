@@ -10,6 +10,10 @@ angular.module "hida", [ 'ui.router', 'inspinia' ]
     url: "/home"
     templateUrl: "parts/home.html"
     controller: "HomeController"
+  .state "main.export",
+    url: "/export"
+    templateUrl: "parts/export.html"
+    controller: "ExportController"
   .state "login",
     url: "/login"
     templateUrl: "parts/login.html"

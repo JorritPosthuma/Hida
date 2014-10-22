@@ -2,13 +2,14 @@ nav.navbar-default.navbar-static-side(role='navigation')
   .sidebar-collapse
     ul#side-menu.nav(side-navigation='')
       li.nav-header
-        .logo-element
-          | HIDA
+        .dropdown.profile-element
+          img.img-circle(alt='image', src='img/profile.jpg', width='30')
+          span.name.block Jorrit Posthuma
       li(ui-sref-active='active')
-        a
-          i.fa.fa-laptop
-          span.nav-label Main page
+        a(ui-sref='main.home')
+          i.fa.fa-photo
+          span.nav-label Show Image
       li(ui-sref-active='active')
-        a
-          i.fa.fa-desktop
-          span.nav-label Minor page
+        a(ui-sref='main.export')
+          i.fa.fa-cloud-download
+          span.nav-label Export

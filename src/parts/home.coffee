@@ -1,5 +1,3 @@
-file = 'dicomfile:/Users/Jorrit/Development/Hida/app/data/test.dcm'
-
 module = angular.module 'hida'
 module.controller 'HomeController', ($scope, $rootScope) ->
 
@@ -19,22 +17,25 @@ module.controller 'HomeController', ($scope, $rootScope) ->
     constructor: ->
       super $scope, $rootScope
 
-      $element = $('.dicom')
-      element = $element[0]
+      @$element = $('.dicom')
+      @element = @$element[0]
 
-      fs = require 'fs'
+      cornerstone.enable @element
 
-      cornerstone.enable element
+    ###########################
+    # Methods                 #
+    ###########################
 
-      cornerstone.loadImage file
+    image: (file) =>
+      cornerstone.loadImage 'dicomfile:' + file
       .then (image) =>
-        cornerstone.displayImage element, image
-        viewport = cornerstone.getViewport element
+        cornerstone.displayImage @element, image
+        viewport = cornerstone.getViewport @element
 
         @ww = viewport.voi.windowWidth
         @wl = viewport.voi.windowCenter
 
-        $element.mousedown (e) =>
+        @$element.mousedown (e) =>
           lastX = e.pageX
           lastY = e.pageY
 
@@ -43,10 +44,10 @@ module.controller 'HomeController', ($scope, $rootScope) ->
             deltaY = e.pageY - lastY
             lastX = e.pageX
             lastY = e.pageY
-            viewport = cornerstone.getViewport(element)
+            viewport = cornerstone.getViewport(@element)
             viewport.voi.windowWidth += (deltaX / viewport.scale)
             viewport.voi.windowCenter += (deltaY / viewport.scale)
-            cornerstone.setViewport element, viewport
+            cornerstone.setViewport @element, viewport
 
             @ww = Math.round viewport.voi.windowWidth
             @wl = Math.round viewport.voi.windowCenter
@@ -56,6 +57,8 @@ module.controller 'HomeController', ($scope, $rootScope) ->
             $(document).unbind "mousemove"
             $(document).unbind "mouseup"
 
-    ###########################
-    # Methods                 #
-    ###########################
+    open: =>
+      file = $('#file')
+      self = @
+      file.change -> self.image $(@).val()
+      file.click()
