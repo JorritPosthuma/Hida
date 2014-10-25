@@ -1,0 +1,15 @@
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/badgets_labels.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/badgets_labels.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/base.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/base.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/buttons.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/buttons.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/custom.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/custom.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/elements.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/elements.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/media.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/media.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/mixins.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/mixins.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/navigation.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/navigation.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/pages.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/pages.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/sidebar.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/sidebar.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/skins.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/skins.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/style.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/style.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/theme-config.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/theme-config.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/typography.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/typography.scss
+./sass2scss -p -k < /Users/Jorrit/Development/Hida/src/style/inspinia/variables.sass > /Users/Jorrit/Development/Hida/src/style/inspinia/variables.scss

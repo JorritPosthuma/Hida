@@ -24,6 +24,8 @@ gulp.task "default", [ "sass", "coffee", "jade" ]
 
 gulp.task "run", [ "watch" ], $.shell.task [ nw + 'app' ]
 
+gulp.task "rerun", [ "rewatch" ], $.shell.task [ nw + 'app' ]
+
 gulp.task "build", ->
   NWB = require 'node-webkit-builder'
 
@@ -41,9 +43,10 @@ gulp.task "build", ->
 
 gulp.task "sass", ->
   gulp.src paths.sass
-    .pipe $.rubySass
-      sourcemapPath: '.'
+  .pipe $.sourcemaps.init()
+    .pipe $.sass()
     .on 'error', handle_error
+  .pipe $.sourcemaps.write()
   .pipe gulp.dest "./app/css/"
   .pipe $.livereload()
 
@@ -81,7 +84,9 @@ gulp.task "serve", [ "watch" ], ->
     directory: "./app"
     default: "index.html"
 
-gulp.task "watch", [ "default", "livereload" ], ->
+gulp.task "rewatch", [ "livereload" ], ->
   gulp.watch [ "./app/**/*.scss" ], ["sass"]
   gulp.watch paths.coffee, ["coffee"]
   gulp.watch paths.jade, ["jade"]
+
+gulp.task "watch", [ "default", "rewatch" ]
