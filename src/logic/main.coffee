@@ -1,4 +1,4 @@
-angular.module "hida", [ 'ui.router', 'inspinia' ]
+angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
 
 .config ($stateProvider, $urlRouterProvider) ->
   $stateProvider

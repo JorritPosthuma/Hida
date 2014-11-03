@@ -1,26 +1,2 @@
 
-<input id="file" style="display:none;" type="file"/>
-<div class="row dashboard-header">
-  <div class="col-sm-12">
-    <h2>Show Image &nbsp;<i ng-click="ctrl.open()" class="fa fa-cloud-upload"></i></h2>
-    <table>
-      <tr>
-        <td><strong>Window Width: </strong></td>
-        <td>{{ctrl.ww}}</td>
-      </tr>
-      <tr>
-        <td><strong>Window Level:</strong></td>
-        <td>{{ctrl.wl}}</td>
-      </tr>
-      <tr>
-        <td><strong>Frames:</strong></td>
-        <td>{{ctrl.frame}} of {{ctrl.frames}}</td>
-      </tr>
-      <tr>
-        <td><strong>Color:</strong></td>
-        <td>{{ctrl.color}}</td>
-      </tr>
-    </table><br/>
-    <div style="overflow: scroll; width: 512px; height: 512px; background: black;" class="dicom"></div>
-  </div>
-</div>
+<dicom style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></dicom>

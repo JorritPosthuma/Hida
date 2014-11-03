@@ -9,6 +9,32 @@
   cursor: default;
 }
 
+.layout-nav {
+  position: fixed;
+  width: 220px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.layout-top {
+  position: fixed;
+  heigth: 60px;
+  top: 0;
+  left: 220px;
+  right: 0;
+
+  padding: 0 15px 0 15px;
+}
+
+.layout-content {
+  position: fixed;
+  top: 60px;
+  left: 220px;
+  right: 0;
+  bottom: 0;
+}
+
 .main-home {
   table {
     position: absolute;
