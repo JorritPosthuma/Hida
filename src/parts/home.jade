@@ -13,5 +13,13 @@ input#file(style='display:none;', type='file')
         td
           strong Window Level:
         td {{ctrl.wl}}
+      tr
+        td
+          strong Frames:
+        td {{ctrl.frame}} of {{ctrl.frames}}
+      tr
+        td
+          strong Color:
+        td {{ctrl.color}}
     br
-    .dicom(style="width:512px; height:512px; background: black;")
+    .dicom(style="overflow: scroll; width: 512px; height: 512px; background: black;")

@@ -5,7 +5,7 @@
   "main": "index.html",
   "window": {
     "title": "Hida",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
     "width": 1080,
     "height": 700
