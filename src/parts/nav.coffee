@@ -1,5 +1,5 @@
 module = angular.module 'hida'
-module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
+module.controller 'NavController', ($scope, $rootScope, $state) ->
 
   new class extends DefaultController
 
@@ -7,18 +7,22 @@ module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
     # Instance variables      #
     ###########################
 
-    path: ''
-
     ###########################
-    # constructor             #
+    # constructor & init      #
     ###########################
 
     constructor: ->
       super $scope, $rootScope
 
-      $rootScope.$watch 'image_path', (image_path) =>
-        @path = image_path
-
     ###########################
     # Methods                 #
     ###########################
+
+    open: =>
+      file = $('#file')
+      self = @
+      file.change -> 
+        $rootScope.image_path = $(@).val()
+        $state.go 'main.home'
+      file.click()
+      return false

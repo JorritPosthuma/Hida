@@ -45,10 +45,15 @@ module.directive 'dicom', ->
         cornerstone.enable @element
         @register()
 
-        @image "/Users/Jorrit/Development/Hida Private/Patientdata/ANONHBSAMCHERMES1/HIDASPECTFASE2RECONSCAC/1.2.752.37.1.1.3407820023.6.166606720130905"
-        @viewport.voi.windowWidth = 185
-        @viewport.voi.windowCenter = 84
-        cornerstone.setViewport @element, @viewport        
+        $scope.$watch 'path', (path) =>
+          console.info path
+          if path? and path isnt ''
+            @image path
+
+        # @image "/Users/Jorrit/Development/Hida Private/Patientdata/ANONHBSAMCHERMES1/HIDASPECTFASE2RECONSCAC/1.2.752.37.1.1.3407820023.6.166606720130905"
+        # @viewport.voi.windowWidth = 185
+        # @viewport.voi.windowCenter = 84
+        # cornerstone.setViewport @element, @viewport        
 
       loaded: => @viewport?
 

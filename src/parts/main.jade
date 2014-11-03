@@ -1,6 +1,4 @@
-input#file(style='display:none;', type='file')
-
 div(ng-class='$state.current.name | replace:".":"-"')
-  .layout-nav(ng-include="'parts/nav.html'")
+  .layout-nav(ng-controller="NavController", ng-include="'parts/nav.html'")
   .layout-top(ng-include="'parts/top.html'")
   .layout-content.gray-bg(ui-view="")

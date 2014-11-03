@@ -18,4 +18,4 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
     url: "/login"
     templateUrl: "parts/login.html"
 
-  $urlRouterProvider.otherwise "/home"
+  $urlRouterProvider.otherwise "/export"

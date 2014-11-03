@@ -1,7 +1,6 @@
 
-<input id="file" style="display:none;" type="file"/>
 <div ng-class="$state.current.name | replace:&quot;.&quot;:&quot;-&quot;">
-  <div ng-include="'parts/nav.html'" class="layout-nav"></div>
+  <div ng-controller="NavController" ng-include="'parts/nav.html'" class="layout-nav"></div>
   <div ng-include="'parts/top.html'" class="layout-top"></div>
   <div ui-view="" class="layout-content gray-bg"></div>
 </div>

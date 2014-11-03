@@ -19,10 +19,3 @@ module.controller 'MainController', ($scope, $rootScope, $state) ->
     ###########################
     # Methods                 #
     ###########################
-
-    open: =>
-      file = $('#file')
-      self = @
-      file.change -> self.image $(@).val()
-      file.click()
-      return false
