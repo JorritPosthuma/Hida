@@ -1,27 +1,19 @@
 .cornerstone-enabled-image {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-
   cursor: default;
 }
 
 .layout-nav {
   position: fixed;
   width: 220px;
-  left: 0;
   top: 0;
   bottom: 0;
 }
 
 .layout-top {
   position: fixed;
-  heigth: 60px;
+  height: 60px;
   top: 0;
-  left: 220px;
   right: 0;
 
   padding: 0 15px 0 15px;
@@ -30,9 +22,18 @@
 .layout-content {
   position: fixed;
   top: 60px;
-  left: 220px;
   right: 0;
   bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .layout-nav                   { left: -220px; }
+  .layout-top, .layout-content  { left: 0;      }
+}
+
+@media (min-width: 768px) {
+  .layout-nav                   { left: 0px;    }
+  .layout-top, .layout-content  { left: 220px;  }
 }
 
 .main-home {
