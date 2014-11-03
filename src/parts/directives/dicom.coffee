@@ -22,6 +22,9 @@ module.directive 'dicom', ->
       frame: 1
       scroll: 0
 
+      scroll_speed: 100 # Higher is slower
+      scroll_cumulative: 0
+
       ###########################
       # Constructor & init      #
       ###########################
@@ -34,13 +37,9 @@ module.directive 'dicom', ->
       ###########################
 
       link: (@$element) =>
-        $timeout @_link, 0, false
-
-      _link: =>
         @element    = @$element[0]
         @$document  = $(document)
 
-        @resize()
         $(window).resize @resize
 
         cornerstone.enable @element
@@ -60,14 +59,28 @@ module.directive 'dicom', ->
 
           direction = e.originalEvent.wheelDelta
 
-          if direction < 0
-            if @frame > 1
-              @frame = @frame - 1
-              @show()
-          else
-            if @frame < @frames
-              @frame = @frame + 1
-              @show()
+          # Make sure we add up in right scroll direction
+          if direction > 0
+            if @scroll_cumulative < 0
+              @scroll_cumulative = 0
+          else 
+            if @scroll_cumulative > 0
+              @scroll_cumulative = 0
+
+          @scroll_cumulative = @scroll_cumulative + direction
+
+          steps = Math.floor Math.abs(@scroll_cumulative) / @scroll_speed
+
+          if steps isnt 0
+            @scroll_cumulative = @scroll_cumulative % @scroll_speed
+            if direction < 0
+              if @frame > 1
+                @frame = @frame - 1
+                @show()
+            else
+              if @frame < @frames
+                @frame = @frame + 1
+                @show()
 
         @$element.mousedown (e) =>
           return if not @loaded()
