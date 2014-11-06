@@ -70,16 +70,15 @@ module.directive 'dicom', ->
           steps = Math.floor Math.abs(@scroll_cumulative) / @scroll_speed
 
           if steps isnt 0
-            @scope.$evalAsync =>
-              @scroll_cumulative = @scroll_cumulative % @scroll_speed
-              if direction < 0
-                if @frame > 1
-                  @frame = @frame - 1
-                  @show()
-              else
-                if @frame < @frames
-                  @frame = @frame + 1
-                  @show()
+            @scroll_cumulative = @scroll_cumulative % @scroll_speed
+            if direction < 0
+              if @frame > 1
+                @frame = @frame - 1
+                @show true
+            else
+              if @frame < @frames
+                @frame = @frame + 1
+                @show true
 
         @$element.mousedown (e) =>
           return if not @loaded()
@@ -108,29 +107,31 @@ module.directive 'dicom', ->
         @reader = new DicomFileReader files
 
         @frame = 1
+        @frames = @reader.getFrameCount()
         @scroll_cumulative = 0
         @viewport = undefined
 
         @show()
 
-      show: =>
-        @reader.getFrame @frame
-        .then (image) =>
-          @scope.$evalAsync =>
-            cornerstone.displayImage @element, image
-            if not @viewport?
-              @viewport = cornerstone.getViewport @element
+      show: (digest = false) =>
+        frame = @reader.getFrame @frame
+        frame.image.then (image) =>
+          cornerstone.displayImage @element, image
+          if not @viewport?
+            @viewport = cornerstone.getViewport @element
 
-              @viewport.voi.windowCenter = image.windowCenter
-              @viewport.voi.windowWidth = image.windowWidth
-              cornerstone.setViewport @element, @viewport
+            @viewport.voi.windowCenter = image.windowCenter
+            @viewport.voi.windowWidth = image.windowWidth
+            cornerstone.setViewport @element, @viewport
 
-            @ww = @viewport.voi.windowWidth
-            @wl = @viewport.voi.windowCenter
-            @color = @reader.color_int
-            @frames = @reader.getFrameCount()
+          @ww = Math.round @viewport.voi.windowWidth
+          @wl = Math.round @viewport.voi.windowCenter
+          @color = frame.getColorInt()
 
-            @resize()
+          @resize()
+
+          @scope.$apply() if digest
 
       resize: =>
         cornerstone.resize @element, true if @loaded()
+        @viewport = cornerstone.getViewport @element
