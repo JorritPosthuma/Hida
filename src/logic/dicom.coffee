@@ -40,12 +40,12 @@ class DicomFileReader
   ###########################
 
   _read: =>
-    buffer  = @fs.readFileSync @file.path
+    buffer = @fs.readFileSync @file.path
 
-    @file.data = dicomParser.parseDicom new Uint8Array buffer
-    @file.framecount = @file.data.string("x00280008") || 1
-    @file.color_int  = @file.data.string("x00280004")
-    @file.is_color   = -1 isnt color_interpretations.indexOf @color_int
+    @file.data        = dicomParser.parseDicom new Uint8Array buffer
+    @file.framecount  = @file.data.string("x00280008") || 1
+    @file.color_int   = @file.data.string("x00280004")
+    @file.is_color    = -1 isnt color_interpretations.indexOf @color_int
 
   _load: =>
     method = if @file.is_color
@@ -56,7 +56,7 @@ class DicomFileReader
       id = "#{@file.path}\##{frame_id}"
       image = method id, @file.data, @file.data.byteArray, @file.color_int, frame_id
 
-      @frames.push new DicomFrame file, id, frame_id, image
+      @frames.push new DicomFrame @file, id, frame_id, image
 
 
   getFrame: (frame) => @frames[frame - 1]
@@ -66,5 +66,6 @@ class DicomFileReader
 class DicomFrame
 
   constructor: (@file, @id, @frame_nr, @image) ->
+    console.info @file.color_int
 
-  getColorInt: => file.color_int
+  getColorInt: => @file.color_int
