@@ -1,6 +1,9 @@
 .sass-cache
 
 app/lib/bower
+app/parts
+app/logic
+app/css
 node_modules
 
 build
