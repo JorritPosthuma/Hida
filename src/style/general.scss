@@ -3,6 +3,11 @@
   cursor: default;
 }
 
+.drag {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
 .layout-nav {
   position: fixed;
   width: 220px;

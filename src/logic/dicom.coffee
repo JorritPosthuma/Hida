@@ -14,27 +14,26 @@ class DicomFileReader
   # Instance variables      #
   ###########################
 
-  frames = []
+  frames: []
 
   ###########################
   # Constructor             #
   ###########################
 
-  constructor: (@path) ->
+  constructor: (@files) ->
     @fs = require "fs"
 
-    @_read()
-    @_metadata()
-    @_load()
+    for @file in @files
+      @_read()
+      @_metadata()
+      @_load()
 
   ###########################
   # Methods                 #
   ###########################
 
-  isColorImage: (color) => 
-
   _read: =>
-    buffer  = @fs.readFileSync @path
+    buffer  = @fs.readFileSync @file
     @dataSet = dicomParser.parseDicom new Uint8Array buffer
 
   _metadata: =>
@@ -47,7 +46,9 @@ class DicomFileReader
     then cornerstoneWADOImageLoader.makeColorImage
     else cornerstoneWADOImageLoader.makeGrayscaleImage
 
-    @frames = for frame_id in [0..@framecount - 1]
-      method "#{@path}_#{frame_id}", @dataSet, @dataSet.byteArray, @color_int, frame_id
+    for frame_id in [0..@framecount - 1]
+      @frames.push method "#{@file}_#{frame_id}", @dataSet, @dataSet.byteArray, @color_int, frame_id
 
-  get: (frame) => @frames[frame - 1]
+  getFrame: (frame) => @frames[frame - 1]
+
+  getFrameCount: => @frames.length

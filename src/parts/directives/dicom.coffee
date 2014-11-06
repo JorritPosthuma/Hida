@@ -3,7 +3,7 @@ module = angular.module 'hida'
 module.directive 'dicom', ->
   restrict: 'E'
   scope: 
-    path: '='
+    images: '='
   templateUrl: "parts/directives/dicom.html"
   link: (scope, element, attrs, ctrl, b) -> scope.ctrl.link element
   controller: ($scope, $rootScope, $timeout) ->
@@ -20,7 +20,6 @@ module.directive 'dicom', ->
       color: 'No color'
 
       frame: 1
-      scroll: 0
 
       scroll_speed: 100 # Higher is slower
       scroll_cumulative: 0
@@ -45,15 +44,9 @@ module.directive 'dicom', ->
         cornerstone.enable @element
         @register()
 
-        $scope.$watch 'path', (path) =>
-          console.info path
-          if path? and path isnt ''
-            @image path
-
-        # @image "/Users/Jorrit/Development/Hida Private/Patientdata/ANONHBSAMCHERMES1/HIDASPECTFASE2RECONSCAC/1.2.752.37.1.1.3407820023.6.166606720130905"
-        # @viewport.voi.windowWidth = 185
-        # @viewport.voi.windowCenter = 84
-        # cornerstone.setViewport @element, @viewport        
+        $scope.$watch 'images', (images) =>
+          if images? and images isnt ''
+            @image images
 
       loaded: => @viewport?
 
@@ -87,6 +80,8 @@ module.directive 'dicom', ->
                 @frame = @frame + 1
                 @show()
 
+            @scope.$apply()
+
         @$element.mousedown (e) =>
           return if not @loaded()
 
@@ -110,23 +105,30 @@ module.directive 'dicom', ->
             @$document.unbind "mousemove"
             @$document.unbind "mouseup"
 
-      image: (file) =>
-        @reader = new DicomFileReader file
+      image: (files) =>
+        @reader = new DicomFileReader files
+
+        @frame = 1
+        @scroll_cumulative = 0
+
         @show()
 
       show: =>
-        @reader.get @frame
+        @reader.getFrame @frame
         .then (image) =>
           cornerstone.displayImage @element, image
           @viewport = cornerstone.getViewport @element
 
-          # console.info cornerstone
+          @viewport.voi.windowCenter = image.windowCenter
+          @viewport.voi.windowWidth = image.windowWidth
+          cornerstone.setViewport @element, @viewport
 
           @ww = @viewport.voi.windowWidth
           @wl = @viewport.voi.windowCenter
           @color = @reader.color_int
-          @frames = @reader.framecount
-          @scope.$apply()
+          @frames = @reader.getFrameCount()
+
+          @resize()
 
       resize: =>
         cornerstone.resize @element, true if @loaded()

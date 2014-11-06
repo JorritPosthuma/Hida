@@ -19,3 +19,11 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
     templateUrl: "parts/login.html"
 
   $urlRouterProvider.otherwise "/export"
+
+gui = require "nw.gui"
+
+shortcut = new gui.Shortcut
+  key: 'Ctrl+Q'
+  active: gui.App.quit
+
+gui.App.registerGlobalHotKey shortcut

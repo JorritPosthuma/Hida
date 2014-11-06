@@ -7,7 +7,7 @@ module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
     # Instance variables      #
     ###########################
 
-    path: ''
+    images: ''
 
     ###########################
     # constructor             #
@@ -16,8 +16,8 @@ module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
     constructor: ->
       super $scope, $rootScope
 
-      $rootScope.$watch 'image_path', (image_path) =>
-        @path = image_path
+      $rootScope.$watch 'images', (images) =>
+        @images = images
 
     ###########################
     # Methods                 #
