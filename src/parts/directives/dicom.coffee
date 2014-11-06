@@ -70,17 +70,16 @@ module.directive 'dicom', ->
           steps = Math.floor Math.abs(@scroll_cumulative) / @scroll_speed
 
           if steps isnt 0
-            @scroll_cumulative = @scroll_cumulative % @scroll_speed
-            if direction < 0
-              if @frame > 1
-                @frame = @frame - 1
-                @show()
-            else
-              if @frame < @frames
-                @frame = @frame + 1
-                @show()
-
-            @scope.$apply()
+            @scope.$evalAsync =>
+              @scroll_cumulative = @scroll_cumulative % @scroll_speed
+              if direction < 0
+                if @frame > 1
+                  @frame = @frame - 1
+                  @show()
+              else
+                if @frame < @frames
+                  @frame = @frame + 1
+                  @show()
 
         @$element.mousedown (e) =>
           return if not @loaded()
@@ -110,25 +109,28 @@ module.directive 'dicom', ->
 
         @frame = 1
         @scroll_cumulative = 0
+        @viewport = undefined
 
         @show()
 
       show: =>
         @reader.getFrame @frame
         .then (image) =>
-          cornerstone.displayImage @element, image
-          @viewport = cornerstone.getViewport @element
+          @scope.$evalAsync =>
+            cornerstone.displayImage @element, image
+            if not @viewport?
+              @viewport = cornerstone.getViewport @element
 
-          @viewport.voi.windowCenter = image.windowCenter
-          @viewport.voi.windowWidth = image.windowWidth
-          cornerstone.setViewport @element, @viewport
+              @viewport.voi.windowCenter = image.windowCenter
+              @viewport.voi.windowWidth = image.windowWidth
+              cornerstone.setViewport @element, @viewport
 
-          @ww = @viewport.voi.windowWidth
-          @wl = @viewport.voi.windowCenter
-          @color = @reader.color_int
-          @frames = @reader.getFrameCount()
+            @ww = @viewport.voi.windowWidth
+            @wl = @viewport.voi.windowCenter
+            @color = @reader.color_int
+            @frames = @reader.getFrameCount()
 
-          @resize()
+            @resize()
 
       resize: =>
         cornerstone.resize @element, true if @loaded()

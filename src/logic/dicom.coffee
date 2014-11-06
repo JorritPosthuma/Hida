@@ -11,16 +11,21 @@ color_interpretations = [
 class DicomFileReader
 
   ###########################
-  # Instance variables      #
-  ###########################
-
-  frames: []
-
-  ###########################
   # Constructor             #
   ###########################
 
   constructor: (@files) ->
+
+    ###########################
+    # Instance variables      #
+    ###########################
+
+    @frames = []
+
+    ###########################
+    # Init                    #
+    ###########################
+
     @fs = require "fs"
 
     for @file in @files
