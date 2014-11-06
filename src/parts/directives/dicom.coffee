@@ -1,5 +1,17 @@
 module = angular.module 'hida'
 
+parent = CanvasRenderingContext2D.prototype.putImageData
+CanvasRenderingContext2D.prototype.putImageData = (data, dx, dy) ->
+  # Draw image
+  parent.call this, data, dx, dy
+
+  # Draw rectangle
+  @beginPath()
+  @lineWidth = "2"
+  @strokeStyle = "red"
+  @rect 30, 30, 50, 50
+  @stroke()
+
 module.directive 'dicom', ->
   restrict: 'E'
   scope: 
