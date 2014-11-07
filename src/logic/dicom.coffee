@@ -66,6 +66,5 @@ class DicomFileReader
 class DicomFrame
 
   constructor: (@file, @id, @frame_nr, @image) ->
-    console.info @file.color_int
 
   getColorInt: => @file.color_int

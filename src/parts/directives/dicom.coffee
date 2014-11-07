@@ -1,17 +1,5 @@
 module = angular.module 'hida'
 
-parent = CanvasRenderingContext2D.prototype.putImageData
-CanvasRenderingContext2D.prototype.putImageData = (data, dx, dy) ->
-  # Draw image
-  parent.call this, data, dx, dy
-
-  # Draw rectangle
-  @beginPath()
-  @lineWidth = "2"
-  @strokeStyle = "red"
-  @rect 30, 30, 50, 50
-  @stroke()
-
 module.directive 'dicom', ->
   restrict: 'E'
   scope: 
@@ -54,6 +42,10 @@ module.directive 'dicom', ->
         $(window).resize @resize
 
         cornerstone.enable @element
+
+        @$element.on 'CornerstoneImageRendered', (event, data) =>
+          @postRender data.canvasContext
+
         @register()
 
         $scope.$watch 'images', (images) =>
@@ -61,6 +53,15 @@ module.directive 'dicom', ->
             @image images
 
       loaded: => @viewport?
+
+      postRender: (context) =>
+        console.info context
+
+        context.beginPath()
+        context.lineWidth = "2"
+        context.strokeStyle = "red"
+        context.rect 30, 30, 50, 50
+        context.stroke()
 
       register: =>
         @$element.bind 'mousewheel', (e) =>
