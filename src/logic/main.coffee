@@ -18,7 +18,7 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
     url: "/login"
     templateUrl: "parts/login.html"
 
-  $urlRouterProvider.otherwise "/export"
+  $urlRouterProvider.otherwise "/home"
 
 gui = require "nw.gui"
 
