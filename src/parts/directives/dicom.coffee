@@ -21,6 +21,9 @@ module.directive 'dicom', ->
 
       frame: 1
 
+      rois: []
+      roi: []
+
       scroll_speed: 100 # Higher is slower
       scroll_cumulative: 0
 
@@ -43,25 +46,33 @@ module.directive 'dicom', ->
 
         cornerstone.enable @element
 
+        @$canvas = @$element.find 'canvas'
+        @canvas = @$canvas[0]
+
         @$element.on 'CornerstoneImageRendered', (event, data) =>
           @postRender data.canvasContext
 
         @register()
 
-        $scope.$watch 'images', (images) =>
-          if images? and images isnt ''
-            @image images
+        # DEBUG
+        @image [ '/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905' ]
+        
+        $scope.$watch 'images', @image
 
       loaded: => @viewport?
 
       postRender: (context) =>
-        console.info context
+        for roi in @rois
+          context.beginPath()
+          context.lineWidth = "2"
+          context.strokeStyle = "red"
+          context.moveTo roi[0].x, roi[0].y
 
-        context.beginPath()
-        context.lineWidth = "2"
-        context.strokeStyle = "red"
-        context.rect 30, 30, 50, 50
-        context.stroke()
+          for point in roi
+            context.lineTo point.x, point.y
+
+          context.stroke()
+          context.closePath()
 
       register: =>
         @$element.bind 'mousewheel', (e) =>
@@ -99,47 +110,76 @@ module.directive 'dicom', ->
           lastX = e.pageX
           lastY = e.pageY
 
-          @$document.mousemove (e) =>
-            deltaX = e.pageX - lastX
-            deltaY = e.pageY - lastY
-            lastX = e.pageX
-            lastY = e.pageY
-            @viewport.voi.windowWidth += deltaX / @viewport.scale
-            @viewport.voi.windowCenter += deltaY / @viewport.scale
-            cornerstone.setViewport @element, @viewport
+          @roi = []
+          @rois.push @roi
 
-            @ww = Math.round @viewport.voi.windowWidth
-            @wl = Math.round @viewport.voi.windowCenter
-            @scope.$apply()
+          @$document.mousemove (e) =>
+            if true
+              w = @$canvas.width()
+              h = @$canvas.height()
+              size = Math.min w, h
+
+              xOffset = 0
+              yOffset = 0
+              if w > h then xOffset = (w - h) / 2
+              else yOffset = (h - w) / 2
+
+              x = e.offsetX - Math.floor xOffset
+              x = Math.min x, size
+              x = Math.max x, 0
+              y = e.offsetY - Math.floor yOffset
+              y = Math.min y, size
+              y = Math.max y, 0
+
+              x = x * (@current.rows / size)
+              y = y * (@current.rows / size)
+
+              @roi.push { x: x, y: y }
+              @resize()
+            else
+              deltaX = e.pageX - lastX
+              deltaY = e.pageY - lastY
+              lastX = e.pageX
+              lastY = e.pageY
+              @viewport.voi.windowWidth += deltaX / @viewport.scale
+              @viewport.voi.windowCenter += deltaY / @viewport.scale
+              cornerstone.setViewport @element, @viewport
+
+              @ww = Math.round @viewport.voi.windowWidth
+              @wl = Math.round @viewport.voi.windowCenter
+              @scope.$apply()
 
           @$document.mouseup (e) =>
+            @roi.push { x: @roi[0].x, y: @roi[0].y }
+            @resize()
             @$document.unbind "mousemove"
             @$document.unbind "mouseup"
 
       image: (files) =>
-        @reader = new DicomFileReader files
+        if files and files.length isnt 0
+          @reader = new DicomFileReader files
 
-        @frame = 1
-        @frames = @reader.getFrameCount()
-        @scroll_cumulative = 0
-        @viewport = undefined
+          @frame = 1
+          @frames = @reader.getFrameCount()
+          @scroll_cumulative = 0
+          @viewport = undefined
 
-        @show()
+          @show()
 
       show: (digest = false) =>
-        frame = @reader.getFrame @frame
-        frame.image.then (image) =>
-          cornerstone.displayImage @element, image
+        @file = @reader.getFrame @frame
+        @file.image.then (@current) =>
+          cornerstone.displayImage @element, @current
           if not @viewport?
             @viewport = cornerstone.getViewport @element
 
-            @viewport.voi.windowCenter = image.windowCenter
-            @viewport.voi.windowWidth = image.windowWidth
+            @viewport.voi.windowCenter = @current.windowCenter
+            @viewport.voi.windowWidth = @current.windowWidth
             cornerstone.setViewport @element, @viewport
 
           @ww = Math.round @viewport.voi.windowWidth
           @wl = Math.round @viewport.voi.windowCenter
-          @color = frame.getColorInt()
+          @color = @file.getColorInt()
 
           @resize()
 

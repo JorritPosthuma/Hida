@@ -7,7 +7,7 @@ module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
     # Instance variables      #
     ###########################
 
-    images: ''
+    images: []
 
     ###########################
     # constructor             #
