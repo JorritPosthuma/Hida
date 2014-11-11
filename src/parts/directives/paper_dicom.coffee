@@ -1,5 +1,10 @@
 module = angular.module 'hida'
 
+STATE_EMPTY     = 0
+STATE_NEW_FILE  = 1
+STATE_WINDOW    = 2
+STATE_PATH      = 3
+
 module.directive 'paperDicom', ->
   restrict: 'E'
   scope: 
@@ -21,8 +26,11 @@ module.directive 'paperDicom', ->
       constructor: ->
         super $scope, $rootScope
 
-        @scroll_speed = 100
-        @frames = 1
+        @scroll_speed   = 100
+        @frames         = 1
+        @state          = STATE_EMPTY
+        @lut_window     = {}
+        @rois           = []
 
       ###########################
       # Methods                 #
@@ -35,32 +43,48 @@ module.directive 'paperDicom', ->
         @canvas = @$canvas[0]
 
         @paper = paper.setup @canvas
-        @enableWindow()
+        # @enableWindow()
+        @enablePath()
         @enableScroll()
 
         $(window).resize @resize
 
         # Debug
-        @image [ '/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585320130905' ]
+        @image [ "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166584420130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166584820130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166584920130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585020130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585120130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585220130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585320130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585420130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585520130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585620130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585720130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585820130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166585920130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586020130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586120130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586220130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586320130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586420130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586520130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586620130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586720130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586820130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166586920130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587020130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587120130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587220130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587320130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587420130905","/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/ABD70SEC50I30F3/1.2.752.37.1.1.3407820023.6.166587520130905" ]
 
         $scope.$watch 'images', @image
 
-      loaded: => @current?
+      loaded: => @state > STATE_EMPTY
 
       enableWindow: =>
-        @tool = new @paper.Tool
+        @window_tool = new @paper.Tool
 
-        @tool.onMouseDown = (e) =>
-          @ww_cache = @ww
-          @wl_cache = @wl
-
-        @tool.onMouseDrag = (e) =>
-          @ww = @ww_cache + (e.point.x - e.downPoint.x)
-          @wl = @wl_cache + (e.point.y - e.downPoint.y)
+        @window_tool.onMouseDrag = (e) =>
+          @lut_window.width = @lut_window.width + e.delta.x
+          @lut_window.level = @lut_window.level + e.delta.y
 
           @scope.$apply()
 
           @draw()
+
+      enablePath: =>
+        @path_tool = new @paper.Tool
+
+        @path_tool.onMouseDown = (e) =>
+          @roi?.selected = false
+          @roi = new @paper.Path()
+          @rois.push @roi
+          @roi.strokeColor = 'red'
+          @roi.strokeWidth = 4
+          @roi.add e.point
+
+        @path_tool.onMouseDrag = (e) =>
+          @roi.add e.point
+
+        @path_tool.onMouseUp = (e) =>
+          @roi.simplify()
+          @roi.closed = true
+          # @roi.selected = true
 
       enableScroll: =>
         @$element.bind 'mousewheel', (e) =>
@@ -95,6 +119,7 @@ module.directive 'paperDicom', ->
             @scope.$apply()
 
       image: (files) =>
+        console.info files
         if files and files.length isnt 0
           @reader = new DicomFileReader files
 
@@ -107,9 +132,12 @@ module.directive 'paperDicom', ->
       show: =>
         @file = @reader.getFrame @frame
         @file.image.then (@current) =>
-          # Set defaults
-          @ww = @current.windowWidth if not @ww
-          @wl = @current.windowCenter if not @wl
+          if @state is STATE_EMPTY
+            # Set defaults
+            @lut_window.width = @current.windowWidth
+            @lut_window.level = @current.windowCenter
+
+            @state = STATE_NEW_FILE
 
           # Draw
           @draw()
@@ -132,7 +160,7 @@ module.directive 'paperDicom', ->
         # Overlay DICOM image
         image_data = @raster.getImageData new @paper.Rectangle 0, 0, @current.width, @current.height
 
-        cornerstone.generateLut @current, @ww, @wl, false
+        cornerstone.generateLut @current, @lut_window.width, @lut_window.level, false
         cornerstone.storedPixelDataToCanvasImageData @current.getPixelData(), @current.lut, image_data.data
 
         @raster.setImageData image_data, new @paper.Point 0, 0

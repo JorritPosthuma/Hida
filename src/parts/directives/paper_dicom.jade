@@ -1,15 +1,15 @@
-.dicom-directive(style="width: 100%; heigth: 100%;")
-  .dicom(style="width: 100%; heigth: 100%;")
+.dicom-directive
+  .dicom
     canvas(resize="true")
   table(style="position: absolute; top: 30px; left: 30px;")
     tr
       td
         strong Window Width: 
-      td {{ctrl.ww}}
+      td {{ctrl.lut_window.width}}
     tr
       td
         strong Window Level:
-      td {{ctrl.wl}}
+      td {{ctrl.lut_window.level}}
     tr
       td
         strong Frame:
