@@ -49,6 +49,18 @@ module.directive 'dicom', ->
         @$canvas = @$element.find 'canvas'
         @canvas = @$canvas[0]
 
+        @paper = new paper.PaperScope()
+        @paper.setup @canvas
+
+        path = new @paper.Path();
+        path.strokeColor = 'yellow';
+
+        start = new @paper.Point 0, 0  
+        path.moveTo start
+        path.lineTo start.add [ 50, 50 ]
+
+        @paper.view.draw()
+
         @$element.on 'CornerstoneImageRendered', (event, data) =>
           @postRender data.canvasContext
 
@@ -62,17 +74,25 @@ module.directive 'dicom', ->
       loaded: => @viewport?
 
       postRender: (context) =>
-        for roi in @rois
-          context.beginPath()
-          context.lineWidth = "2"
-          context.strokeStyle = "red"
-          context.moveTo roi[0].x, roi[0].y
+        # path = new @paper.Path();
+        # path.strokeColor = 'yellow';
 
-          for point in roi
-            context.lineTo point.x, point.y
+        # start = new @paper.Point 50, 50
+        # path.moveTo start
+        # path.lineTo start.add [ 100, 100 ]
 
-          context.stroke()
-          context.closePath()
+        @paper.view.draw()
+        # for roi in @rois
+        #   context.beginPath()
+        #   context.lineWidth = "2"
+        #   context.strokeStyle = "red"
+        #   context.moveTo roi[0].x, roi[0].y
+
+        #   for point in roi
+        #     context.lineTo point.x, point.y
+
+        #   context.stroke()
+        #   context.closePath()
 
       register: =>
         @$element.bind 'mousewheel', (e) =>
