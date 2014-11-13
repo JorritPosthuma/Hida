@@ -42,15 +42,41 @@
 }
 
 .main-home {
-  table {
+  .controls {
     position: absolute;
-    color: white;
-    top: 82px;
-    left: 32px;
+    background: black;
+    top: 0px;
+    bottom: 0;
+    width: 150px;
+    left: 0;
 
-    td {
-      padding: 2px 5px;
+    .action {
+      text-align: center;
+      margin: 30px 0 40px 0;
+      color: white;
+      cursor: pointer;
+
+      .icon {
+        font-size: 30px;
+        margin-bottom: 12px;
+      }
+
+      .text {
+        font-weight: bold;
+      }
     }
+
+    .action.selected {
+      color: #009dec;
+    }
+  }
+
+  .viewer {
+    position: absolute;
+    top: 0px;
+    bottom: 0;
+    left: 150px;
+    right: 0px;
   }
 }
 
@@ -60,6 +86,17 @@
   margin-top: 8px;
 }
 
-.dicom {
+.dicom-directive {
   background: black;
+
+  table {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    color: white;
+
+    td {
+      padding: 2px 5px;
+    }
+  }
 }

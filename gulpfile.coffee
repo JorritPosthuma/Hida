@@ -42,7 +42,7 @@ gulp.task "build", ->
       console.error error
 
 gulp.task "sass", ->
-  gulp.src paths.sass
+  gulp.src [ "./src/style/main.scss" ]
   .pipe $.sourcemaps.init()
     .pipe $.sass()
     .on 'error', handle_error
@@ -85,8 +85,8 @@ gulp.task "serve", [ "watch" ], ->
     default: "index.html"
 
 gulp.task "rewatch", [ "livereload" ], ->
-  gulp.watch [ "./app/**/*.scss" ], ["sass"]
-  gulp.watch paths.coffee, ["coffee"]
-  gulp.watch paths.jade, ["jade"]
+  gulp.watch paths.sass,    ["sass"]
+  gulp.watch paths.coffee,  ["coffee"]
+  gulp.watch paths.jade,    ["jade"]
 
 gulp.task "watch", [ "default", "rewatch" ]

@@ -7,6 +7,7 @@ STATE_PATH      = 3
 
 module.directive 'paperDicom', ->
   restrict: 'E'
+  # require: "^dicomTool"
   scope: 
     images: '='
   templateUrl: "parts/directives/paper_dicom.html"
@@ -73,8 +74,10 @@ module.directive 'paperDicom', ->
         @path_tool.onMouseDown = (e) =>
           @roi?.selected = false
           @roi = new @paper.Path()
+          @group.addChild @roi
           @rois.push @roi
-          @roi.strokeColor = 'red'
+          @roi.strokeColor = new @paper.Color 1, 0, 0, 0.5 # '#009dec'
+          @roi.selectedColor = new @paper.Color 1, 0, 0, 1
           @roi.strokeWidth = 4
           @roi.add e.point
 
@@ -82,9 +85,9 @@ module.directive 'paperDicom', ->
           @roi.add e.point
 
         @path_tool.onMouseUp = (e) =>
-          @roi.simplify()
+          @roi.simplify 5
           @roi.closed = true
-          # @roi.selected = true
+          @roi.fullySelected = true
 
       enableScroll: =>
         @$element.bind 'mousewheel', (e) =>
@@ -119,7 +122,6 @@ module.directive 'paperDicom', ->
             @scope.$apply()
 
       image: (files) =>
-        console.info files
         if files and files.length isnt 0
           @reader = new DicomFileReader files
 
@@ -136,34 +138,44 @@ module.directive 'paperDicom', ->
             # Set defaults
             @lut_window.width = @current.windowWidth
             @lut_window.level = @current.windowCenter
+            @color            = @file.getColorInt()
 
             @state = STATE_NEW_FILE
+            @initDraw()
 
           # Draw
           @draw()
 
+      initDraw: =>
+        # Create group
+        @group = new @paper.Group
+
+        # Create Raster
+        @raster = new @paper.Raster
+        @raster.setSize new @paper.Size @current.width, @current.height
+
+        # Add raster to group
+        @group.addChild @raster
+
       draw: =>
-        # Clean-up possible left-overs
-        @raster?.remove()
-
-        # Create white rectangle
-        dim = new @paper.Rectangle 0, 0, @current.width / 2, @current.height / 2
-        rect = new @paper.Shape.Rectangle dim
-        rect.fillColor = new @paper.Color 1, 1, 1
-
-        # Turn into white canvas
-        @raster = rect.rasterize()
-
-        # Remove original white rectangle
-        rect.remove()
+        cornerstone.generateLut @current, @lut_window.width, @lut_window.level, false
         
         # Overlay DICOM image
-        image_data = @raster.getImageData new @paper.Rectangle 0, 0, @current.width, @current.height
+        image_data = @raster.createImageData new @paper.Size @current.width, @current.height
 
-        cornerstone.generateLut @current, @lut_window.width, @lut_window.level, false
-        cornerstone.storedPixelDataToCanvasImageData @current.getPixelData(), @current.lut, image_data.data
+        i = 0
+        for pixel in @current.getPixelData()
+          pixel = @current.lut[pixel]
+          image_data.data[i]    = pixel
+          image_data.data[i+1]  = pixel
+          image_data.data[i+2]  = pixel
+          image_data.data[i+3]  = 255
+          i = i + 4
 
         @raster.setImageData image_data, new @paper.Point 0, 0
+
+        @scaling =
+          initial: @raster.scaling.x
 
         # Resize
         @resize()
@@ -172,4 +184,5 @@ module.directive 'paperDicom', ->
         @paper.view.draw()
 
       resize: =>
-        @raster.fitBounds @paper.view.bounds        
+        @group.fitBounds @paper.view.bounds
+        @scaling.current = @raster.scaling.x
