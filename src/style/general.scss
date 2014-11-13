@@ -49,26 +49,6 @@
     bottom: 0;
     width: 150px;
     left: 0;
-
-    .action {
-      text-align: center;
-      margin: 30px 0 40px 0;
-      color: white;
-      cursor: pointer;
-
-      .icon {
-        font-size: 30px;
-        margin-bottom: 12px;
-      }
-
-      .text {
-        font-weight: bold;
-      }
-    }
-
-    .action.selected {
-      color: #009dec;
-    }
   }
 
   .viewer {
@@ -86,7 +66,7 @@
   margin-top: 8px;
 }
 
-.dicom-directive {
+.dicom-viewer-directive {
   background: black;
 
   table {
@@ -98,5 +78,27 @@
     td {
       padding: 2px 5px;
     }
+  }
+}
+
+.dicom-controls-directive {
+  .action {
+    text-align: center;
+    margin: 30px 0 40px 0;
+    color: white;
+    cursor: pointer;
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+
+    .text {
+      font-weight: bold;
+    }
+  }
+
+  .action.selected {
+    color: #009dec;
   }
 }

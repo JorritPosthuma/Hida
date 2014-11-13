@@ -1,0 +1,15 @@
+input#file(style='display:none;', type='file', multiple='')
+
+.dicom-controls-directive
+  .action(ng-click="ctrl.load()")
+    i.icon.fa.fa-floppy-o
+    .text Load
+  .action(ng-click="ctrl.window()")
+    i.icon.fa.fa-picture-o
+    .text Window
+  .action(ng-click="ctrl.draw()")
+    i.icon.fa.fa-pencil-square-o
+    .text Draw
+  .action(ng-click="ctrl.edit()")
+    i.icon.fa.fa-arrows
+    .text Edit

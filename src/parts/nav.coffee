@@ -17,11 +17,3 @@ module.controller 'NavController', ($scope, $rootScope, $state) ->
     ###########################
     # Methods                 #
     ###########################
-
-    open: =>
-      file = $('#file')
-      file.change -> 
-        $rootScope.images = $(@).val().split ';'
-        $state.go 'main.home'
-      file.click()
-      return false
