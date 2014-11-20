@@ -29,7 +29,6 @@ module.directive 'dicomViewer', ->
         @frames         = 1
         @state          = @STATE_WINDOW
         @lut_window     = {}
-        @rois           = []
 
       ###########################
       # Linker                  #
@@ -43,10 +42,11 @@ module.directive 'dicomViewer', ->
 
         @paper = paper.setup @canvas
         @group = new @paper.Group
-        @registerWindowTool()
-        @registerDrawTool()
-        # @registerEditTool()
-        @edit_tool = new DicomViewerEditTool @
+
+        @window_tool  = new DicomViewerWindowTool @
+        @draw_tool    = new DicomViewerDrawTool @
+        @edit_tool    = new DicomViewerEditTool @
+
         @enableScroll()
 
         $(window).resize @resize
@@ -75,38 +75,6 @@ module.directive 'dicomViewer', ->
       ###########################
       # Tools                   #
       ###########################
-
-      registerWindowTool: =>
-        @window_tool = new @paper.Tool
-
-        @window_tool.onMouseDrag = @ifLoaded (e) =>
-          @lut_window.width = @lut_window.width + e.delta.x
-          @lut_window.level = @lut_window.level + e.delta.y
-
-          @scope.$apply()
-
-          @draw()
-
-      registerDrawTool: =>
-        @draw_tool = new @paper.Tool
-
-        @draw_tool.onMouseDown = @ifLoaded (e) =>
-          @roi?.selected = false
-          @roi = new @paper.Path()
-          @group.addChild @roi
-          @rois.push @roi
-          @roi.strokeColor = new @paper.Color 1, 0, 0, 0.5 # '#009dec'
-          @roi.selectedColor = new @paper.Color 1, 0, 0, 1
-          @roi.strokeWidth = 4
-          @roi.add e.point
-
-        @draw_tool.onMouseDrag = @ifLoaded (e) =>
-          return if not @loaded()
-          @roi.add e.point
-
-        @draw_tool.onMouseUp = @ifLoaded (e) =>
-          @roi.simplify 5
-          @roi.closed = true
 
       enableScroll: =>
         @$element.bind 'mousewheel', @ifLoaded (e) =>
@@ -181,7 +149,6 @@ module.directive 'dicomViewer', ->
 
       initDraw: =>
         @group.removeChildren()
-        @rois = []
 
         # Create Raster
         @raster = new @paper.Raster
