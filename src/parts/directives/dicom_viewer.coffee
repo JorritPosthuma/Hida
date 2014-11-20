@@ -32,7 +32,7 @@ module.directive 'dicomViewer', ->
         @rois           = []
 
       ###########################
-      # Methods                 #
+      # Linker                  #
       ###########################
 
       link: (@$element) =>
@@ -42,8 +42,11 @@ module.directive 'dicomViewer', ->
         @canvas = @$canvas[0]
 
         @paper = paper.setup @canvas
+        @group = new @paper.Group
         @registerWindowTool()
-        @registerPathTool()
+        @registerDrawTool()
+        # @registerEditTool()
+        @edit_tool = new DicomViewerEditTool @
         @enableScroll()
 
         $(window).resize @resize
@@ -53,21 +56,25 @@ module.directive 'dicomViewer', ->
 
         $scope.$watch 'binding', (control) => control.register @
 
+      ###########################
+      # External methods        #
+      ###########################
+
       enableWindow: =>
         @state = @STATE_WINDOW
         @window_tool.activate()
 
       enableDraw: =>
         @state = @STATE_DRAW
-        @path_tool.activate()
+        @draw_tool.activate()
 
       enableEdit: =>
         @state = @STATE_EDIT
+        @edit_tool.activate()
 
-      loaded: => @current?
-
-      ifLoaded: (fn) =>
-        => if @loaded() then fn.apply @, arguments
+      ###########################
+      # Tools                   #
+      ###########################
 
       registerWindowTool: =>
         @window_tool = new @paper.Tool
@@ -80,10 +87,10 @@ module.directive 'dicomViewer', ->
 
           @draw()
 
-      registerPathTool: =>
-        @path_tool = new @paper.Tool
+      registerDrawTool: =>
+        @draw_tool = new @paper.Tool
 
-        @path_tool.onMouseDown = @ifLoaded (e) =>
+        @draw_tool.onMouseDown = @ifLoaded (e) =>
           @roi?.selected = false
           @roi = new @paper.Path()
           @group.addChild @roi
@@ -93,14 +100,13 @@ module.directive 'dicomViewer', ->
           @roi.strokeWidth = 4
           @roi.add e.point
 
-        @path_tool.onMouseDrag = @ifLoaded (e) =>
+        @draw_tool.onMouseDrag = @ifLoaded (e) =>
           return if not @loaded()
           @roi.add e.point
 
-        @path_tool.onMouseUp = @ifLoaded (e) =>
+        @draw_tool.onMouseUp = @ifLoaded (e) =>
           @roi.simplify 5
           @roi.closed = true
-          @roi.fullySelected = true
 
       enableScroll: =>
         @$element.bind 'mousewheel', @ifLoaded (e) =>
@@ -133,6 +139,17 @@ module.directive 'dicomViewer', ->
 
             @scope.$apply()
 
+      ###########################
+      # General Methods         #
+      ###########################
+
+      # Proxy method that only continues if a image is loaded
+      ifLoaded: (fn) =>
+        => if @loaded() then fn.apply @, arguments
+
+      # Is an image loaded
+      loaded: => @current?
+
       image: (files) =>
         if files and files.length isnt 0
           # Clean previous
@@ -163,9 +180,8 @@ module.directive 'dicomViewer', ->
           @draw()
 
       initDraw: =>
-        # Create group
-        @group?.remove()
-        @group = new @paper.Group
+        @group.removeChildren()
+        @rois = []
 
         # Create Raster
         @raster = new @paper.Raster
