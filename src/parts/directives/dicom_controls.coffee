@@ -5,7 +5,7 @@ module.directive 'dicomControls', ->
   scope: 
     binding: '='
   templateUrl: "parts/directives/dicom_controls.html"
-  link: (scope, element, attrs, ctrl) ->
+  link: (scope) ->
     scope.binding = scope.ctrl
   controller: ($scope, $rootScope) ->
 
