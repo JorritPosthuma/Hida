@@ -47,6 +47,7 @@ module.directive 'dicomViewer', ->
         @draw_tool    = new DicomViewerDrawTool @
         @edit_tool    = new DicomViewerEditTool @
 
+        @enableDrop()
         @enableScroll()
 
         $(window).resize @resize
@@ -79,6 +80,19 @@ module.directive 'dicomViewer', ->
       ###########################
       # Tools                   #
       ###########################
+
+      enableDrop: =>
+        @element.addEventListener 'dragover', (e) ->
+          e.stopPropagation()
+          e.preventDefault()
+          e.dataTransfer.dropEffect = 'copy'
+        , false
+
+        @element.addEventListener 'drop', (e) => 
+          e.stopPropagation()
+          e.preventDefault()
+          @drop e.dataTransfer.files
+        , false
 
       enableScroll: =>
         @$element.bind 'mousewheel', @ifLoaded (e) =>
@@ -114,6 +128,15 @@ module.directive 'dicomViewer', ->
       ###########################
       # General Methods         #
       ###########################
+
+      drop: (files) =>
+        @reader = new DicomHTML5Reader files
+        @reader.run()
+        .then => 
+          @frame = 1
+          @frames = @reader.getFrameCount()
+          @scroll_cumulative = 0
+          @show()
 
       # Proxy method that only continues if a image is loaded
       ifLoaded: (fn) =>

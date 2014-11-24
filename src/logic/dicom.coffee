@@ -4,24 +4,27 @@ class AbstractDicomReader
     @files = []
     @frames = []
 
-
   # abstract read(path)
 
   run: =>
     # For all paths
-    Q.all @paths.map (path) =>
+
+    promises = for path in @paths
       # Read data
       @read path
       # Process data
       .then (buffer) =>
         # Create new file
-        file = new DicomFile buffer, path
+        file = new DicomFile buffer, @pathToId path
         # Parse frames
         file.parse()
 
+    Q.all promises
     .then (@files) =>
       @files.forEach (file) =>
         Array.prototype.push.apply @frames, file.frames
+
+  pathToId: (path) => path
 
   getFrame: (frame) =>
     @frames[frame - 1]
@@ -40,9 +43,11 @@ class DicomFSReader extends AbstractDicomReader
 
   read: (path) =>
     deferred = Q.defer()
+
     @fs.readFile path, (error, buffer) =>
       if error then deferred.reject error
       else deferred.resolve buffer
+
     deferred.promise
 
 class DicomHTML5Reader extends AbstractDicomReader
@@ -50,10 +55,16 @@ class DicomHTML5Reader extends AbstractDicomReader
   constructor: (paths) ->
     super paths
 
+  pathToId: (path) => path.name
+
   read: (path) => 
     deferred = Q.defer()
     reader = new FileReader()
-    reader.onload deferred.resolve
-    reader.onerror deferred.reject
+
+    reader.onload = ->
+      deferred.resolve reader.result
+    reader.onerror = (error) ->
+      deferred.reject error
+
     reader.readAsArrayBuffer path
     deferred.promise
