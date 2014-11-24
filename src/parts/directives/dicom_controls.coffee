@@ -31,6 +31,8 @@ module.directive 'dicomControls', ->
         file.click()
         return false
 
+      hida: => @viewer.startHida()
+
       window: => @viewer.enableWindow()
 
       draw: => @viewer.enableDraw()

@@ -4,6 +4,9 @@ input#file(style='display:none;', type='file', multiple='')
   .action(ng-click="ctrl.load()")
     i.icon.fa.fa-floppy-o
     .text Load
+  .action(ng-click="ctrl.hida()")
+    i.icon.fa.fa-cogs
+    .text HIDA
   .action(ng-click="ctrl.window()", ng-class="{selected: ctrl.viewer.state == ctrl.viewer.STATE_WINDOW}")
     i.icon.fa.fa-picture-o
     .text Window

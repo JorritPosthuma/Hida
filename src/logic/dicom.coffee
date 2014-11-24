@@ -1,70 +1,59 @@
-color_interpretations = [
-  "RGB"
-  "PALETTE COLOR" 
-  "YBR_FULL" 
-  "YBR_FULL_422"
-  "YBR_PARTIAL_422" 
-  "YBR_PARTIAL_420" 
-  "YBR_RCT"
-]
-
-class DicomFileReader
-
-  ###########################
-  # Constructor             #
-  ###########################
+class AbstractDicomReader
 
   constructor: (@paths) ->
-
-    ###########################
-    # Instance variables      #
-    ###########################
-
+    @files = []
     @frames = []
 
-    ###########################
-    # Init                    #
-    ###########################
 
+  # abstract read(path)
+
+  run: =>
+    # For all paths
+    Q.all @paths.map (path) =>
+      # Read data
+      @read path
+      # Process data
+      .then (buffer) =>
+        # Create new file
+        file = new DicomFile buffer, path
+        # Parse frames
+        file.parse()
+
+    .then (@files) =>
+      @files.forEach (file) =>
+        Array.prototype.push.apply @frames, file.frames
+
+  getFrame: (frame) =>
+    @frames[frame - 1]
+
+  getFrameCount: =>
+    @frames.length
+
+  isMultiFile: =>
+    @files.length > 1
+
+class DicomFSReader extends AbstractDicomReader
+
+  constructor: (paths) ->
     @fs = require "fs"
+    super paths
 
-    for path in @paths
-      @file = 
-        path: path
+  read: (path) =>
+    deferred = Q.defer()
+    @fs.readFile path, (error, buffer) =>
+      if error then deferred.reject error
+      else deferred.resolve buffer
+    deferred.promise
 
-      @_read()
-      @_load()
+class DicomHTML5Reader extends AbstractDicomReader
 
-  ###########################
-  # Methods                 #
-  ###########################
+  constructor: (paths) ->
+    super paths
 
-  _read: =>
-    buffer = @fs.readFileSync @file.path
-
-    @file.data        = dicomParser.parseDicom new Uint8Array buffer
-    @file.framecount  = @file.data.string("x00280008") || 1
-    @file.color_int   = @file.data.string("x00280004")
-    @file.is_color    = -1 isnt color_interpretations.indexOf @color_int
-
-  _load: =>
-    method = if @file.is_color
-    then cornerstoneWADOImageLoader.makeColorImage
-    else cornerstoneWADOImageLoader.makeGrayscaleImage
-
-    for frame_id in [0..@file.framecount - 1]
-      id = "#{@file.path}\##{frame_id}"
-      image = method id, @file.data, @file.data.byteArray, @file.color_int, frame_id
-
-      @frames.push new DicomFrame @file, id, frame_id, image
-
-
-  getFrame: (frame) => @frames[frame - 1]
-
-  getFrameCount: => @frames.length
-
-class DicomFrame
-
-  constructor: (@file, @id, @frame_nr, @image) ->
-
-  getColorInt: => @file.color_int
+  read: (path) => 
+    deferred = Q.defer()
+    reader = new FileReader()
+    reader.onload deferred.resolve
+    reader.onerror deferred.reject
+    reader.readAsArrayBuffer path
+    deferred.promise

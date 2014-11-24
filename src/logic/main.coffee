@@ -20,10 +20,15 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
 
   $urlRouterProvider.otherwise "/home"
 
-gui = require "nw.gui"
+window.nw = false
 
-shortcut = new gui.Shortcut
-  key: 'Ctrl+Q'
-  active: gui.App.quit
+if require?
+  gui = require "nw.gui"
 
-gui.App.registerGlobalHotKey shortcut
+  window.nw = gui?
+
+  shortcut = new gui.Shortcut
+    key: 'Ctrl+Q'
+    active: gui.App.quit
+
+  gui.App.registerGlobalHotKey shortcut
