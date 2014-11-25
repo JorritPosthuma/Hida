@@ -1,13 +1,23 @@
-class AbstractDicomReader
+class DicomReader
+
+  constructor: (@frames = []) ->
+
+  getFrame: (frame) =>
+    @frames[frame - 1]
+
+  getFrameCount: =>
+    @frames.length
+
+class DicomFileReader extends DicomReader
 
   constructor: (@paths) ->
+    super()
     @files = []
-    @frames = []
 
   # abstract read(path)
 
   run: =>
-    # For all paths
+  # For all paths
 
     promises = for path in @paths
       # Read data
@@ -23,19 +33,11 @@ class AbstractDicomReader
     .then (@files) =>
       @files.forEach (file) =>
         Array.prototype.push.apply @frames, file.frames
+      @
 
   pathToId: (path) => path
 
-  getFrame: (frame) =>
-    @frames[frame - 1]
-
-  getFrameCount: =>
-    @frames.length
-
-  isMultiFile: =>
-    @files.length > 1
-
-class DicomFSReader extends AbstractDicomReader
+class DicomFSReader extends DicomFileReader
 
   constructor: (paths) ->
     @fs = require "fs"
@@ -50,7 +52,7 @@ class DicomFSReader extends AbstractDicomReader
 
     deferred.promise
 
-class DicomHTML5Reader extends AbstractDicomReader
+class DicomHTML5Reader extends DicomFileReader
 
   constructor: (paths) ->
     super paths

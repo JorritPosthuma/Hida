@@ -15,6 +15,7 @@ class DicomViewerDrawTool extends DicomViewerTool
   down: (e) =>
     @roi?.selected = false
     @roi = new @paper.Path()
+    @viewer.rois.push @roi
     @group.addChild @roi
     @roi.strokeColor = new @paper.Color 1, 0, 0, 0.5 # '#009dec'
     @roi.selectedColor = new @paper.Color 1, 0, 0, 1
