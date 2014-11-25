@@ -15,7 +15,6 @@
     "gulp-shell": "^0.2.10",
     "gulp-sourcemaps": "1.2",
     "gulp-util": "3.0",
-    "lodash": "^2.4.1",
     "node-notifier": "4.0.2",
     "node-webkit-builder": "^0.3.0",
     "nodewebkit": "^0.11.0",

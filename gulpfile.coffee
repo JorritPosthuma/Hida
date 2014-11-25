@@ -26,12 +26,12 @@ gulp.task "run", [ "watch" ], $.shell.task [ nw + 'app' ]
 
 gulp.task "rerun", [ "rewatch" ], $.shell.task [ nw + 'app' ]
 
-gulp.task "build", ->
+gulp.task "build", [ "default" ], ->
   NWB = require 'node-webkit-builder'
 
   builder = new NWB
     files: './app/**'
-    platforms: [ 'osx' ]
+    platforms: [ 'osx', 'win' ]
 
   builder.on 'log',  console.log
 

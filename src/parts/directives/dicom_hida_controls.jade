@@ -1,4 +1,7 @@
 .dicom-controls-directive
-  .action(ng-click="")
+  .action(ng-show="!ctrl.merged", ng-click="ctrl.merge()")
     i.icon.fa.fa-picture-o
     .text Merge
+  .action(ng-show="ctrl.merged", ng-click="ctrl.unmerge()")
+    i.icon.fa.fa-picture-o
+    .text Unmerge

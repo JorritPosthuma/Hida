@@ -6,8 +6,6 @@ class Hida
     # Defaults
     ########################################
 
-    @viewer.read @reverseMerge @viewer.reader
-
     # Step 2 - Summarize ROI's
 
 
