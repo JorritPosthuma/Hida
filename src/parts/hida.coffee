@@ -1,5 +1,5 @@
 module = angular.module 'hida'
-module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
+module.controller 'HidaController', ($scope, $rootScope, $timeout) ->
 
   new class extends DefaultController
 

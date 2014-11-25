@@ -10,6 +10,10 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
     url: "/home"
     templateUrl: "parts/home.html"
     controller: "HomeController"
+  .state "main.hida",
+    url: "/hida"
+    templateUrl: "parts/hida.html"
+    controller: "HidaController"
   .state "main.export",
     url: "/export"
     templateUrl: "parts/export.html"

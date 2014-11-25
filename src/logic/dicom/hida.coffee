@@ -6,12 +6,10 @@ class Hida
     # Defaults
     ########################################
 
-    reader = @viewer.reader
-    rois   = @viewer.rois
+    @viewer.read @reverseMerge @viewer.reader
 
-    # Step 1 - Merge frames
-    reader = @reverseMerge reader
-    @viewer.read reader # Show
+    # Step 2 - Summarize ROI's
+
 
     # @viewer.group.children.map (child) =>
     #   if child.className is 'Path'
@@ -44,6 +42,10 @@ class Hida
 
     # # @t1.frame = # TODO
     # # @t2.frame = # TODO
+
+  ########################################
+  # Methods
+  ########################################
 
   reverseMerge: (reader) =>
     frame_count = reader.getFrameCount()

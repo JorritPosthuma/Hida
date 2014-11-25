@@ -1,11 +1,12 @@
 module = angular.module 'hida'
 
-module.directive 'dicomControls', ->
+module.directive 'dicomHidaControls', ->
   restrict: 'E'
   scope: 
     binding: '='
-  templateUrl: "parts/directives/dicom_controls.html"
-
+  templateUrl: "parts/directives/dicom_hida_controls.html"
+  link: (scope) ->
+    scope.binding = scope.ctrl
   controller: ($scope, $rootScope) ->
 
     new class extends DefaultController
@@ -17,12 +18,11 @@ module.directive 'dicomControls', ->
       constructor: ->
         super $scope, $rootScope
 
-        @scope.$watch 'binding', (@viewer) =>
-          console.info @viewer
-
       ###########################
       # Methods                 #
       ###########################
+
+      register: (@viewer) =>
 
       load: =>
         file = $('#file')
