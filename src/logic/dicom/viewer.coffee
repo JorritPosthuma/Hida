@@ -63,9 +63,6 @@ class DicomViewer
     @state = @STATE_EDIT
     @edit_tool.activate()
 
-  startHida: =>
-    new Hida @
-
   ###########################
   # Tools                   #
   ###########################

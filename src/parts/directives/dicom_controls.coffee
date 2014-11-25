@@ -6,7 +6,7 @@ module.directive 'dicomControls', ->
     binding: '='
   templateUrl: "parts/directives/dicom_controls.html"
 
-  controller: ($scope, $rootScope) ->
+  controller: ($scope, $rootScope, $state) ->
 
     new class extends DefaultController
 
@@ -17,8 +17,11 @@ module.directive 'dicomControls', ->
       constructor: ->
         super $scope, $rootScope
 
-        @scope.$watch 'binding', (@viewer) =>
-          console.info @viewer
+        @scope.$watch 'binding', (viewer) =>
+          if viewer?
+            @viewer = viewer
+            if @root.nw
+              @viewer.image [ "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905" ]
 
       ###########################
       # Methods                 #
@@ -31,7 +34,10 @@ module.directive 'dicomControls', ->
         file.click()
         return false
 
-      hida: => @viewer.startHida()
+      hida: =>
+        if @viewer.reader?
+          @root.temp.hida_reader = @viewer.reader
+          $state.go 'main.hida'
 
       window: => @viewer.enableWindow()
 

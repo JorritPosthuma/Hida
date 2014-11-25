@@ -1,3 +1,24 @@
+########################################
+# General init
+########################################
+
+window.nw = false
+
+if require?
+  gui = require "nw.gui"
+
+  window.nw = gui?
+
+  shortcut = new gui.Shortcut
+    key: 'Ctrl+Q'
+    active: gui.App.quit
+
+  gui.App.registerGlobalHotKey shortcut
+
+########################################
+# Angular
+########################################
+
 angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
 
 .config ($stateProvider, $urlRouterProvider) ->
@@ -24,15 +45,6 @@ angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
 
   $urlRouterProvider.otherwise "/home"
 
-window.nw = false
-
-if require?
-  gui = require "nw.gui"
-
-  window.nw = gui?
-
-  shortcut = new gui.Shortcut
-    key: 'Ctrl+Q'
-    active: gui.App.quit
-
-  gui.App.registerGlobalHotKey shortcut
+.run ($rootScope) ->
+  $rootScope.temp = {}
+  $rootScope.nw = window.nw

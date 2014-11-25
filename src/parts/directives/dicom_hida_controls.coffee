@@ -5,9 +5,8 @@ module.directive 'dicomHidaControls', ->
   scope: 
     binding: '='
   templateUrl: "parts/directives/dicom_hida_controls.html"
-  link: (scope) ->
-    scope.binding = scope.ctrl
-  controller: ($scope, $rootScope) ->
+
+  controller: ($scope, $rootScope, $state) ->
 
     new class extends DefaultController
 
@@ -18,23 +17,14 @@ module.directive 'dicomHidaControls', ->
       constructor: ->
         super $scope, $rootScope
 
+        @scope.$watch 'binding', (viewer) =>
+          if viewer?
+            @viewer = viewer
+            if @root.temp.hida_reader?
+              @viewer.read @root.temp.hida_reader
+              delete @root.temp.hida_reader
+            else $state.go 'main.home'
+
       ###########################
       # Methods                 #
       ###########################
-
-      register: (@viewer) =>
-
-      load: =>
-        file = $('#file')
-        viewer = @viewer
-        file.change -> viewer.image $(@).val().split ';'
-        file.click()
-        return false
-
-      hida: => @viewer.startHida()
-
-      window: => @viewer.enableWindow()
-
-      draw: => @viewer.enableDraw()
-
-      edit: => @viewer.enableEdit()
