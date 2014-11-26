@@ -63,6 +63,7 @@ class DicomViewerEditTool extends DicomViewerTool
     if @selected_handle?
       @selected_handle.x = @selected_handle.x + e.delta.x;
       @selected_handle.y = @selected_handle.y + e.delta.y;
+      @viewer.emit 'roi_sub_edit', @roi
 
   stopHandle: (e) =>
     if @selected_handle?

@@ -64,7 +64,6 @@ class Hida
             frame_sums[frame] += pixels[i]
 
     roi.data.sums = frame_sums
-    console.info roi.data.sums
 
   reverseMerge: (reader) =>
     frame_count = reader.getFrameCount()

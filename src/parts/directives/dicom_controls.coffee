@@ -3,7 +3,7 @@ module = angular.module 'hida'
 module.directive 'dicomControls', ->
   restrict: 'E'
   scope: 
-    binding: '='
+    viewer: '='
   templateUrl: "parts/directives/dicom_controls.html"
 
   controller: ($scope, $rootScope, $state) ->
@@ -17,7 +17,7 @@ module.directive 'dicomControls', ->
       constructor: ->
         super $scope, $rootScope
 
-        @scope.$watch 'binding', (viewer) =>
+        @scope.$watch 'viewer', (viewer) =>
           if viewer?
             @viewer = viewer
             

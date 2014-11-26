@@ -28,6 +28,6 @@ class DicomViewerDrawTool extends DicomViewerTool
     @viewer.emit 'roi_move', @roi
 
   up: (e) =>
-    @roi.simplify 5
+    @roi.simplify 15
     @roi.closed = true
     @viewer.emit 'roi_add', @roi

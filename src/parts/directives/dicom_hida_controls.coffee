@@ -3,7 +3,8 @@ module = angular.module 'hida'
 module.directive 'dicomHidaControls', ->
   restrict: 'E'
   scope: 
-    binding: '='
+    viewer: '='
+    graph: '='
   templateUrl: "parts/directives/dicom_hida_controls.html"
 
   controller: ($scope, $rootScope, $state) ->
@@ -17,7 +18,10 @@ module.directive 'dicomHidaControls', ->
       constructor: ->
         super $scope, $rootScope
 
-        @scope.$watch 'binding', (viewer) =>
+        @scope.$watch 'graph', (@graph) =>
+          console.info @graph
+
+        @scope.$watch 'viewer', (viewer) =>
           if viewer?
             if @root.temp.hida_reader?
               @start viewer, @root.temp.hida_reader
@@ -55,6 +59,7 @@ module.directive 'dicomHidaControls', ->
         @hida = new Hida @viewer
 
         @viewer.on 'roi_add', (roi) => @updateRoi roi
+        @viewer.on 'roi_sub_edit', (roi) => @updateRoi roi
         @viewer.on 'roi_edit', (roi) => @updateRoi roi
 
       ###########################
@@ -63,6 +68,7 @@ module.directive 'dicomHidaControls', ->
 
       updateRoi: (roi) =>
         @hida.updateRoi roi, @viewer.raster, @viewer.reader.frames
+        @graph.addRoi roi
 
       merge: =>
         @merged = true

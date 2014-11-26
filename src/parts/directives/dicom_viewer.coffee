@@ -3,7 +3,7 @@ module = angular.module 'hida'
 module.directive 'dicomViewer', ->
   restrict: 'E'
   scope: 
-    binding: '='
+    controls: '='
   templateUrl: "parts/directives/dicom_viewer.html"
   link: (scope, element) -> scope.ctrl.link element
   controller: ($scope, $rootScope, $timeout) ->
@@ -27,4 +27,4 @@ module.directive 'dicomViewer', ->
 
       link: (element) =>
         @viewer.link element
-        @scope.binding = @viewer
+        @scope.controls = @viewer
