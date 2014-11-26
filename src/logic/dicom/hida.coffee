@@ -45,7 +45,26 @@ class Hida
   # Public methods
   ########################################
 
-  sumRoi: =>
+  updateRoi: (roi, raster, frames) =>
+    frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
+    frame_sums    = frame_pixels.map -> 0
+
+    # Determine scaling
+    offset = raster.getBounds()
+    scaling = raster.getScaling().x
+
+    for x in [0 ... raster.width] by 1
+      x_scale = x * scaling + offset.x
+      for y in [0 ... raster.height] by 1
+        # Calculate relative point
+        point = new paper.Point x_scale, y * scaling + offset.y
+        if roi.contains point
+          i = y * raster.width + x
+          for pixels, frame in frame_pixels
+            frame_sums[frame] += pixels[i]
+
+    roi.data.sums = frame_sums
+    console.info roi.data.sums
 
   reverseMerge: (reader) =>
     frame_count = reader.getFrameCount()

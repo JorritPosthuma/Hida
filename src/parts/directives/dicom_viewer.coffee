@@ -18,7 +18,8 @@ module.directive 'dicomViewer', ->
         super $scope, $rootScope
 
         @viewer = new DicomViewer
-        @viewer.on 'update', @scope.$apply
+        @viewer.on 'update', =>
+          @scope.$apply()
 
       ###########################
       # Linker                  #

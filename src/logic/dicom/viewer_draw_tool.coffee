@@ -21,10 +21,13 @@ class DicomViewerDrawTool extends DicomViewerTool
     @roi.selectedColor = new @paper.Color 1, 0, 0, 1
     @roi.strokeWidth = 4
     @roi.add e.point
+    @viewer.emit 'roi_start', @roi
 
   drag: (e) =>
     @roi.add e.point
+    @viewer.emit 'roi_move', @roi
 
   up: (e) =>
     @roi.simplify 5
     @roi.closed = true
+    @viewer.emit 'roi_add', @roi

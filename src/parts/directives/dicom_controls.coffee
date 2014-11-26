@@ -20,9 +20,7 @@ module.directive 'dicomControls', ->
         @scope.$watch 'binding', (viewer) =>
           if viewer?
             @viewer = viewer
-            if @root.nw
-              @viewer.image [ "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905" ]
-
+            
       ###########################
       # Methods                 #
       ###########################

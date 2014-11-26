@@ -51,6 +51,7 @@ class DicomViewerEditTool extends DicomViewerTool
     hit = @group.hitTest e.point, @handle_options
 
     if hit?
+      @roi = hit.item
       @selected_handle =
         switch hit.type
           when 'segment'    then  hit.segment.point
@@ -66,3 +67,5 @@ class DicomViewerEditTool extends DicomViewerTool
   stopHandle: (e) =>
     if @selected_handle?
       @selected_handle = undefined
+      @viewer.emit 'roi_edit', @roi
+      @roi = undefined
