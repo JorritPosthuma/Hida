@@ -14,6 +14,6 @@ class DicomViewerWindowTool extends DicomViewerTool
     @viewer.lut_window.width = @viewer.lut_window.width + e.delta.x
     @viewer.lut_window.level = @viewer.lut_window.level + e.delta.y
 
-    @viewer.update?()
+    @viewer.emit 'update'
 
     @viewer.draw()

@@ -15,6 +15,7 @@ class DicomViewer
   constructor: ->
     # Config
     @scroll_speed       = 100
+    @channels           = {}
 
   init: =>
     @state              = @STATE_WINDOW
@@ -109,7 +110,7 @@ class DicomViewer
             @frame = @frame + 1
             @show()
 
-        @apply?()
+        @emit 'update'
 
   ###########################
   # General Methods         #
@@ -196,3 +197,17 @@ class DicomViewer
     if @loaded()
       @group.fitBounds @paper.view.bounds
       @scaling.current = @raster.scaling.x
+
+  ###########################
+  # Simple Pub/Sub
+  # https://gist.github.com/rjz/3099426
+  ###########################
+
+  on: (name, callback) ->
+    @channels[name] = [] unless @channels[name]?
+    @channels[name].push context: @, callback: callback
+    @
+ 
+  emit: (name, data...) ->
+    for sub in @channels[name]
+      sub.callback.apply(sub.context, data)

@@ -1,6 +1,6 @@
 class Hida
 
-  constructor: (@viewer) ->
+  constructor: ->
 
     ########################################
     # Defaults
@@ -42,8 +42,10 @@ class Hida
     # # @t2.frame = # TODO
 
   ########################################
-  # Methods
+  # Public methods
   ########################################
+
+  sumRoi: =>
 
   reverseMerge: (reader) =>
     frame_count = reader.getFrameCount()
@@ -57,12 +59,16 @@ class Hida
       left_frame  = reader.getFrame left
       right_frame = reader.getFrame right
 
-      @reverseMergeFrames left_frame, right_frame
+      @_reverseMergeFrames left_frame, right_frame
 
     new DicomReader frames
 
+  ########################################
+  # Private methods
+  ########################################
+
   # sqrt ( l^2 + r^2 )
-  reverseMergeFrames: (left, right) =>
+  _reverseMergeFrames: (left, right) =>
     width = left.image.height
     height = left.image.width
 

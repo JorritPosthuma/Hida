@@ -40,7 +40,5 @@ module.directive 'dicomControls', ->
           $state.go 'main.hida'
 
       window: => @viewer.enableWindow()
-
-      draw: => @viewer.enableDraw()
-
-      edit: => @viewer.enableEdit()
+      draw:   => @viewer.enableDraw()
+      edit:   => @viewer.enableEdit()

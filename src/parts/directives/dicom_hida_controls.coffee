@@ -37,10 +37,14 @@ module.directive 'dicomHidaControls', ->
       merge: =>
         @merged = true
         @unmerged_reader = @reader
-        @reader = @hida.reverseMerge @unmerged_reader
+        @reader = @hida.reverseMerge @reader
         @viewer.read @reader
 
       unmerge: =>
         @merged = false
         @reader = @unmerged_reader
         @viewer.read @reader
+
+      window: => @viewer.enableWindow()
+      draw:   => @viewer.enableDraw()
+      edit:   => @viewer.enableEdit()
