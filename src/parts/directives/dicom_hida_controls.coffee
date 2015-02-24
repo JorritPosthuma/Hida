@@ -19,7 +19,7 @@ module.directive 'dicomHidaControls', ->
         super $scope, $rootScope
 
         @scope.$watch 'graph', (@graph) =>
-          console.info @graph
+          # console.info @graph
 
         @scope.$watch 'viewer', (viewer) =>
           if viewer?
@@ -57,10 +57,11 @@ module.directive 'dicomHidaControls', ->
 
         @viewer.read reader
         @hida = new Hida @viewer
+        @hida.validate @viewer.reader.frames[0].file
 
-        @viewer.on 'roi_add', (roi) => @updateRoi roi
+        @viewer.on 'roi_add',      (roi) => @updateRoi roi
         @viewer.on 'roi_sub_edit', (roi) => @updateRoi roi
-        @viewer.on 'roi_edit', (roi) => @updateRoi roi
+        @viewer.on 'roi_edit',     (roi) => @updateRoi roi
 
       ###########################
       # Methods                 #

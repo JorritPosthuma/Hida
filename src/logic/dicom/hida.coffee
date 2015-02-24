@@ -45,6 +45,21 @@ class Hida
   # Public methods
   ########################################
 
+  test: (cond, error) ->
+    if not cond
+      console.info error
+
+  validate: (file) =>
+    
+    # @test file.imageType().contains is "DYNAMIC", "Image isn't of dynamic type"
+    # @test file.modality() is "NM", "Image doesn't have modality NM"
+    # console.info file.detectorVector()
+    # @test file.detectorVector() is "", "Image "
+    # @test file.patientPosition() is "FFS", "Image "
+    # @test file.imageOrientation() is "", "Image "
+    # @test file.actualFrameDuration() is "", "Image "
+    # @test file.timeSliceVector() is "", "Image "
+
   updateRoi: (roi, raster, frames) =>
     frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
     frame_sums    = frame_pixels.map -> 0
@@ -67,7 +82,7 @@ class Hida
 
   reverseMerge: (reader) =>
     frame_count = reader.getFrameCount()
-    frame_count_result = frame_count / 2
+    frame_count_result = Math.floor frame_count / 2
 
     console.assert frame_count % 2 is 0, "Even frame count"
 

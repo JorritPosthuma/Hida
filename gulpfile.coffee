@@ -4,7 +4,7 @@ gutil      = require "gulp-util"
 notifier   = require "node-notifier"
 $          = require("gulp-load-plugins")()
 
-nw = './node_modules/nodewebkit/bin/nodewebkit '
+nw = './node_modules/.bin/nw '
 
 paths =
   sass:   [ "./src/style/main.scss", "./src/parts/**/*.scss" ]
@@ -46,7 +46,7 @@ gulp.task "sass", ->
   .pipe $.sourcemaps.init()
     .pipe $.sass()
     .on 'error', handle_error
-  .pipe $.sourcemaps.write()
+  .pipe $.sourcemaps.write '.'
   .pipe gulp.dest "./app/css/"
   .pipe $.livereload()
 
@@ -56,16 +56,16 @@ gulp.task "coffee", ->
     .pipe $.coffee bare: true
     .on 'error', handle_error
     .pipe $.concat "main.js"
-  .pipe $.sourcemaps.write()
+  .pipe $.sourcemaps.write '.'
   .pipe gulp.dest "./app/logic/"
   .pipe $.livereload()
 
 gulp.task "jade", ->
   gulp.src paths.jade
-  .pipe $.sourcemaps.init()
+  # .pipe $.sourcemaps.init()
     .pipe $.jade pretty: true
     .on 'error', handle_error
-  .pipe $.sourcemaps.write()
+  # .pipe $.sourcemaps.write()
   .pipe gulp.dest "./app/"
   .pipe $.livereload()
 

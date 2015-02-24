@@ -5,9 +5,9 @@
   "main": "index.html",
   "window": {
     "title": "Hida",
-    "toolbar": false,
+    "toolbar": true,
     "frame": true,
-    "width": 1080,
-    "height": 505
+    "width": 1100,
+    "height": 600
   }
 }
