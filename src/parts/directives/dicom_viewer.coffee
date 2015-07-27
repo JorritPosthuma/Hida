@@ -1,38 +1,40 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomViewer', ->
-  restrict: 'E'
-  scope: 
-    controls: '='
-  templateUrl: "parts/directives/dicom_viewer.html"
-  link: (scope, element) -> scope.ctrl.link element
-  controller: ($scope, $rootScope, $timeout) ->
+module.exports = (module) ->
 
-    new class extends DefaultController
+  module.directive 'dicomViewer', ->
+    restrict: 'E'
+    scope: 
+      controls: '='
+    template: "./dicom_viewer.jade"
+    link: (scope, element) -> scope.ctrl.link element
+    controller: ($scope, $rootScope, $timeout) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        @viewer = new DicomViewer
-        @viewer.on 'update', -> $timeout()
-        @details = false
+        constructor: ->
+          super $scope, $rootScope
 
-      ###########################
-      # Linker                  #
-      ###########################
+          @viewer = new DicomViewer
+          @viewer.on 'update', -> $timeout()
+          @details = false
 
-      link: (element) =>
-        @viewer.link element
-        @scope.controls = @viewer
+        ###########################
+        # Linker                  #
+        ###########################
 
-      showInfo: =>
-        @details = true
-        @viewer.allowScroll = true
+        link: (element) =>
+          @viewer.link element
+          @scope.controls = @viewer
 
-      showImage: =>
-        @details = false
-        @viewer.allowScroll = false
+        showInfo: =>
+          @details = true
+          @viewer.allowScroll = true
+
+        showImage: =>
+          @details = false
+          @viewer.allowScroll = false

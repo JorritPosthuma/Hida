@@ -72,3 +72,7 @@ class DicomHTML5Reader extends DicomFileReader
 
     reader.readAsArrayBuffer path
     deferred.promise
+
+module.exports =
+  DicomFSReader: DicomFSReader
+  DicomHTML5Reader: DicomHTML5Reader

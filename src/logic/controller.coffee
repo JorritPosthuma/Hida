@@ -1,4 +1,4 @@
-class DefaultController
+module.exports = class DefaultController
 
   constructor: (@scope, @root) ->
     @scope.root = @root

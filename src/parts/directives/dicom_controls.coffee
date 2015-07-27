@@ -1,42 +1,44 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomControls', ->
-  restrict: 'E'
-  scope: 
-    viewer: '='
-  templateUrl: "parts/directives/dicom_controls.html"
+module.exports = (module) ->
 
-  controller: ($scope, $rootScope, $state) ->
+  module.directive 'dicomControls', ->
+    restrict: 'E'
+    scope: 
+      viewer: '='
+    template: require "./dicom_controls.jade"
 
-    new class extends DefaultController
+    controller: ($scope, $rootScope, $state) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        @scope.$watch 'viewer', (viewer) =>
-          if viewer?
-            @viewer = viewer
-            
-      ###########################
-      # Methods                 #
-      ###########################
+        constructor: ->
+          super $scope, $rootScope
 
-      load: =>
-        file = $('#file')
-        viewer = @viewer
-        file.change -> viewer.image $(@).val().split ';'
-        file.click()
-        return false
+          @scope.$watch 'viewer', (viewer) =>
+            if viewer?
+              @viewer = viewer
+              
+        ###########################
+        # Methods                 #
+        ###########################
 
-      hida: =>
-        if @viewer.reader?
-          @root.temp.hida_reader = @viewer.reader
-          $state.go 'main.hida'
+        load: =>
+          file = $('#file')
+          viewer = @viewer
+          file.change -> viewer.image $(@).val().split ';'
+          file.click()
+          return false
 
-      window: => @viewer.enableWindow()
-      draw:   => @viewer.enableDraw()
-      edit:   => @viewer.enableEdit()
+        hida: =>
+          if @viewer.reader?
+            @root.temp.hida_reader = @viewer.reader
+            $state.go 'main.hida'
+
+        window: => @viewer.enableWindow()
+        draw:   => @viewer.enableDraw()
+        edit:   => @viewer.enableEdit()

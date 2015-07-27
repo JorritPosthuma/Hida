@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "coffee-loader": "^0.7.2",
     "coffee-script": "^1.9.3",
     "gulp": "^3.9.0",
     "gulp-coffee": "^2.3.1",
@@ -15,9 +16,14 @@
     "gulp-shell": "^0.4.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "3.0",
+    "jade": "^1.11.0",
+    "jade-loader": "^0.7.1",
     "node-notifier": "^4.2.3",
+    "node-sass": "^3.2.0",
     "nw": "^0.12.2",
     "nw-builder": "^2.0.1",
-    "restify": "^3.0.3"
+    "restify": "^3.0.3",
+    "sass-loader": "^1.0.3",
+    "webpack": "^1.10.5"
   }
 }

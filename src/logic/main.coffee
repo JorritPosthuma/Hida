@@ -4,46 +4,64 @@
 
 window.nw = false
 
-if require?
-  gui = require "nw.gui"
+# if require?
+#   gui = require "nw.gui"
 
-  window.nw = gui?
+#   window.nw = gui?
 
-  win = gui.Window.get()
-  menu = new gui.Menu type: "menubar"
-  menu.createMacBuiltin "Hida"
-  win.menu = menu
+#   win = gui.Window.get()
+#   menu = new gui.Menu type: "menubar"
+#   menu.createMacBuiltin "Hida"
+#   win.menu = menu
 
 ########################################
 # Angular
 ########################################
 
-angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
+require 'angular'
 
-.config ($stateProvider, $urlRouterProvider) ->
+require 'ui-router'
+require 'angular-bootstrap'
+
+module = angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
+
+require('./filters')(module)
+
+require('../parts/directives/dicom_controls')(module)
+require('../parts/directives/dicom_graph')(module)
+require('../parts/directives/dicom_hida_controls')(module)
+require('../parts/directives/dicom_viewer')(module)
+
+require('../parts/export')(module)
+require('../parts/hida')(module)
+require('../parts/home')(module)
+require('../parts/login')(module)
+require('../parts/main')(module)
+require('../parts/nav')(module)
+
+module.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
   .state 'main',
     abstract: true
-    templateUrl: 'parts/main.html'
+    template: require '../parts/main.jade'
     controller: 'MainController'
   .state 'main.home',
     url: '/home'
-    templateUrl: 'parts/home.html'
+    template: require '../parts/home.jade'
     controller: 'HomeController'
   .state 'main.hida',
     url: '/hida'
-    templateUrl: 'parts/hida.html'
+    template: require '../parts/hida.jade'
     controller: 'HidaController'
   .state 'main.export',
     url: '/export'
-    templateUrl: 'parts/export.html'
+    template: require '../parts/export.jade'
     controller: 'ExportController'
   .state 'login',
     url: '/login'
-    templateUrl: 'parts/login.html'
+    template: require '../parts/login.jade'
 
   $urlRouterProvider.otherwise "/home"
 
 .run ($rootScope) ->
   $rootScope.temp = {}
-  $rootScope.nw = window.nw

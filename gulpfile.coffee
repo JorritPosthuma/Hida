@@ -70,7 +70,7 @@ gulp.task "jade", ->
 gulp.task "livereload", ->
   $.livereload.listen()
 
-gulp.task "serve", [ "watch" ], ->
+gulp.task "server", ->
   restify = require "restify"
   server  = restify.createServer name: "When"
   port    = process.env.PORT || 3000
@@ -81,6 +81,8 @@ gulp.task "serve", [ "watch" ], ->
   server.get /.*/, restify.serveStatic
     directory: "./app"
     default: "index.html"
+
+gulp.task "serve", [ "watch", "server"]
 
 gulp.task "rewatch", [ "livereload" ], ->
   gulp.watch paths.sass,    ["sass"]

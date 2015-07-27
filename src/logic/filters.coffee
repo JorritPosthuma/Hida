@@ -1,6 +1,6 @@
-module = angular.module 'hida'
+module.exports = (angular) ->
 
-module.filter 'log',     -> (data) -> console.log data; data
-module.filter 'print',   -> (data) -> JSON.stringify data
+  angular.filter 'log',     -> (data) -> console.log data; data
+  angular.filter 'print',   -> (data) -> JSON.stringify data
 
-module.filter 'replace', -> (text, a, b) -> text.replace a, b
+  angular.filter 'replace', -> (text, a, b) -> text.replace a, b

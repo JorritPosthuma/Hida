@@ -1,11 +1,14 @@
-module = angular.module 'hida'
-module.controller 'HidaController', ($scope, $rootScope, $timeout) ->
+DefaultController = require '../logic/controller'
 
-  new class extends DefaultController
+module.exports = (angular) ->
 
-    ###########################
-    # constructor             #
-    ###########################
+  angular.controller 'HidaController', ($scope, $rootScope, $timeout) ->
 
-    constructor: ->
-      super $scope, $rootScope
+    new class extends DefaultController
+
+      ###########################
+      # constructor             #
+      ###########################
+
+      constructor: ->
+        super $scope, $rootScope
