@@ -36,10 +36,8 @@ gulp.task "build", [ "default" ], ->
   builder.on 'log',  console.log
 
   builder.build()
-  .then ->
-     console.log 'all done!'
-  .catch (error) ->
-      console.error error
+  .then -> console.log 'all done!'
+  .catch (error) -> console.error error
 
 gulp.task "sass", ->
   gulp.src [ "./src/style/main.scss" ]

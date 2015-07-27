@@ -46,7 +46,7 @@ class DicomViewer
     @enableDrop()
     @enableScroll()
 
-    $(window).resize @resize
+    $(window).resize _.debounce @resize, 500
 
   ###########################
   # External methods        #
@@ -110,8 +110,6 @@ class DicomViewer
           if @frame < @frames
             @frame = @frame + 1
             @show()
-
-        @emit 'update'
 
   ###########################
   # General Methods         #
@@ -193,6 +191,8 @@ class DicomViewer
 
     # Force draw!
     @paper.view.draw()
+
+    @emit 'update'
 
   resize: =>
     if @loaded()
