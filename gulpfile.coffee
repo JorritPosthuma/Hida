@@ -27,7 +27,7 @@ gulp.task "run", [ "watch" ], $.shell.task [ nw + 'app' ]
 gulp.task "rerun", [ "rewatch" ], $.shell.task [ nw + 'app' ]
 
 gulp.task "build", [ "default" ], ->
-  NWB = require 'node-webkit-builder'
+  NWB = require 'nw-builder'
 
   builder = new NWB
     files: './app/**'
@@ -75,7 +75,7 @@ gulp.task "livereload", ->
 gulp.task "serve", [ "watch" ], ->
   restify = require "restify"
   server  = restify.createServer name: "When"
-  port    = process.env.PORT || 8080
+  port    = process.env.PORT || 3000
 
   server.listen port, ->
     console.log "#{server.name} listening at #{server.url}"
