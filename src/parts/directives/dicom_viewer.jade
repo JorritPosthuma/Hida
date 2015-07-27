@@ -1,19 +1,28 @@
 .dicom-viewer-directive
-  canvas(resize="true")
-  table
-    tr
-      td
-        strong Window Width: 
-      td {{ctrl.viewer.lut_window.width}}
-    tr
-      td
-        strong Window Level:
-      td {{ctrl.viewer.lut_window.level}}
-    tr
-      td
-        strong Frame:
-      td {{ctrl.viewer.frame}} of {{ctrl.viewer.frames}}
-    tr
-      td
-        strong Color:
-      td {{ctrl.viewer.color}}
+  .placeholder(ng-show="!ctrl.viewer.loaded()")
+    h1 No image loaded!
+    h2 You can use drag & drop to load files
+  .image(ng-show="ctrl.viewer.loaded() && !ctrl.details")
+    canvas(resize="true")
+    i.fa.fa-info-circle(ng-click="ctrl.showInfo()")
+    table
+      tr
+        td.name Window Width: 
+        td {{ctrl.viewer.lut_window.width}}
+      tr
+        td.name Window Level:
+        td {{ctrl.viewer.lut_window.level}}
+      tr
+        td.name Frame:
+        td {{ctrl.viewer.frame}} of {{ctrl.viewer.frames}}
+      tr
+        td.name Color:
+        td {{ctrl.viewer.color}}
+  .info(ng-show="ctrl.viewer.loaded() && ctrl.details")
+    h2 DICOM Image information
+    i.fa.fa-picture-o(ng-click="ctrl.showImage()")
+    table
+      tr(ng-repeat="(tag, element) in ctrl.viewer.file.file.data.elements")
+        td.tag {{element.display}}
+        td.name {{element.info.name}}
+        td.value {{element.value}}

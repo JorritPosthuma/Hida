@@ -45,20 +45,18 @@ class Hida
   # Public methods
   ########################################
 
-  test: (cond, error) ->
-    if not cond
-      console.info error
+  # test: (left, right error) ->
+  #   if not cond
+  #     console.info error
 
   validate: (file) =>
-    
-    # @test file.imageType().contains is "DYNAMIC", "Image isn't of dynamic type"
-    # @test file.modality() is "NM", "Image doesn't have modality NM"
-    # console.info file.detectorVector()
-    # @test file.detectorVector() is "", "Image "
-    # @test file.patientPosition() is "FFS", "Image "
-    # @test file.imageOrientation() is "", "Image "
-    # @test file.actualFrameDuration() is "", "Image "
-    # @test file.timeSliceVector() is "", "Image "
+    console.info 'imageType', file.imageType()
+    console.info 'modality', file.modality()
+    console.info 'detectorVector', file.detectorVector()
+    console.info 'patientPosition', file.patientPosition()
+    console.info 'imageOrientation', file.imageOrientation()
+    console.info 'actualFrameDuration', file.actualFrameDuration()
+    console.info 'timeSliceVector', file.timeSliceVector()
 
   updateRoi: (roi, raster, frames) =>
     frame_pixels  = frames.map (frame) -> frame.image.getPixelData()

@@ -16,6 +16,7 @@ class DicomViewer
     # Config
     @scroll_speed       = 100
     @channels           = {}
+    @allowScroll        = false
 
   init: =>
     @state              = @STATE_WINDOW
@@ -83,7 +84,11 @@ class DicomViewer
     , false
 
   enableScroll: =>
-    @$element.bind 'mousewheel', @ifLoaded (e) =>
+    @$element.on 'mousewheel', @ifLoaded (e) =>
+      # Allow temporarily disable scroll
+      return if @allowScroll
+
+      # Do not scroll page
       e.preventDefault()
 
       direction = e.originalEvent.wheelDelta

@@ -19,6 +19,7 @@ module.directive 'dicomViewer', ->
 
         @viewer = new DicomViewer
         @viewer.on 'update', -> $timeout()
+        @details = false
 
       ###########################
       # Linker                  #
@@ -27,3 +28,11 @@ module.directive 'dicomViewer', ->
       link: (element) =>
         @viewer.link element
         @scope.controls = @viewer
+
+      showInfo: =>
+        @details = true
+        @viewer.allowScroll = true
+
+      showImage: =>
+        @details = false
+        @viewer.allowScroll = false

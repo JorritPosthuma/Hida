@@ -99,16 +99,53 @@
   width: 100%;
   height: 100%;
 
-  canvas {
+  .placeholder, .image, .info, canvas {
     width: 100%;
     height: 100%;
   }
 
-  table {
+  .placeholder {
+    @include flexbox();
+    @include justify-content(center);
+    @include align-items(center);
+    @include flex-direction(column);
+
+    h1 {
+      color: white;
+    }
+  }
+
+  .info {
+    overflow: auto;
+  }
+
+  i {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+
+    font-size: 15px;
+    color: #009dec;
+  }
+
+  .image table {
     position: absolute;
     top: 30px;
     left: 30px;
+  }
+
+  table {
     color: white;
+
+    .tag {
+      font-size: 9px;
+      color: #AAA;
+      font-family: "Lucida Console", Monaco, monospace;
+    }
+
+    .name {
+      font-weight: bold;
+    }
 
     td {
       padding: 2px 5px;
