@@ -9,11 +9,10 @@ if require?
 
   window.nw = gui?
 
-  shortcut = new gui.Shortcut
-    key: 'Ctrl+Q'
-    active: gui.App.quit
-
-  gui.App.registerGlobalHotKey shortcut
+  win = gui.Window.get()
+  menu = new gui.Menu type: "menubar"
+  menu.createMacBuiltin "Hida"
+  win.menu = menu
 
 ########################################
 # Angular

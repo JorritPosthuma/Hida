@@ -17,8 +17,7 @@ class DicomFileReader extends DicomReader
   # abstract read(path)
 
   run: =>
-  # For all paths
-
+    # For all paths
     promises = for path in @paths
       # Read data
       @read path
@@ -28,6 +27,9 @@ class DicomFileReader extends DicomReader
         file = new DicomFile buffer, @pathToId path
         # Parse frames
         file.parse()
+      .catch (error) =>
+        console.error error.toString()
+        console.info error
 
     Q.all promises
     .then (@files) =>

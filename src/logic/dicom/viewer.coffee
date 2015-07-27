@@ -78,6 +78,7 @@ class DicomViewer
     @element.addEventListener 'drop', (e) => 
       e.stopPropagation()
       e.preventDefault()
+
       @drop e.dataTransfer.files
     , false
 
