@@ -8,6 +8,18 @@ COLOR_TYPES = [
   "YBR_RCT"
 ]
 
+class DicomDate
+  constructor: (@dateString) -> @date = moment @dateString, 'YYYYMMDD'
+  toString:                  -> @date.format 'LL'
+
+class DicomTime
+  constructor: (@timeString) -> @time = moment @timeString, 'HHmmss.SSSS'
+  toString:                  -> @time.format 'HH:mm.ss SSSS'
+
+class DicomName
+  constructor: (name)  -> @name = dicomParser.parsePN name
+  toString:            -> "#{@name.givenName} #{@name.familyName}"
+
 class DicomFile
 
   constructor: (@buffer, @path) ->
@@ -28,21 +40,51 @@ class DicomFile
   _readMultipleFloat:  (element) =>  [0 ... (element.length / 4)].map (i) => @data.float  element.tag, i
   _readMultipleDouble: (element) =>  [0 ... (element.length / 8)].map (i) => @data.double element.tag, i
 
+  _singleOrMultple: (element, method) ->
+    element.value = 
+      if _.isArray element.value
+        _.map element.value, method
+      else method element.value
+
   read: (element, tag, values) =>
+    # Start of with normal type
+    element.type = 'normal'
+
     # Create display tag
     one = tag.substring 1, 5
     two = tag.substring 5, 9
     element.display = "(#{one},#{two})".toUpperCase()
 
+    # Get tag info (e.g. name)
+    upperTag = tag.toUpperCase().replace 'X', 'x'
+    if _.has DicomTags, upperTag
+      element.info = DicomTags[upperTag]
+
+    # We don't support sequences (yet)
+    if element.vr is 'SQ'
+      element.type = 'sequence'
+
     # Gather data
     if _.has values, tag
       element.value = values[tag]
-    if _.has DicomTags, tag
-      element.info = DicomTags[tag]
 
-      # Do some custom mapping
       switch element.vr
-        when 'US' then element.value = @_readMultipleUShort element
+        when 'PN' then @_singleOrMultple element, (v) -> new DicomName v
+        when 'DA' then @_singleOrMultple element, (v) -> new DicomDate v
+        when 'TM' then @_singleOrMultple element, (v) -> new DicomTime v
+
+    # Do some custom mapping
+    if element.value? and element.info?
+      if element.info.vm isnt '1'
+        switch element.vr
+          when 'US' then element.value = @_readMultipleUShort element
+
+    # If it is still unknown
+    if element.value?
+      if element.value.dataOffset? and element.value.length?
+        element.type = 'unsupported'
+    else
+      element.type = 'unsupported'
 
   parse: =>
     method = if @isColor()
@@ -67,14 +109,12 @@ class DicomFile
 
   isColor:             => COLOR_TYPES.indexOf(@colorInt()) isnt -1
 
-  framecount:          => parseInt @data.elements['x00280008']?.value
+  actualFrameDuration: => @data.elements['x00181242']?.value
   colorInt:            => @data.elements['x00280004']?.value
+  detectorVector:      => @data.elements['x00540020']?.value
+  framecount:          => parseInt @data.elements['x00280008']?.value
+  imageOrientation:    => @data.elements['x00200037']?.value
   imageType:           => @data.elements['x00080008']?.value
   modality:            => @data.elements['x00080060']?.value
-
-  detectorVector:      => @data.elements['x00540020']?.value
-
   patientPosition:     => @data.elements['x00185100']?.value
-  imageOrientation:    => @data.elements['x00200037']?.value
-  actualFrameDuration: => @data.elements['x00181242']?.value
   timeSliceVector:     => @data.elements['x00540100']?.value

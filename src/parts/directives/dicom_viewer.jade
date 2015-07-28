@@ -25,4 +25,7 @@
       tr(ng-repeat="(tag, element) in ctrl.viewer.file.file.data.elements")
         td.tag {{element.display}}
         td.name {{element.info.name}}
-        td.value {{element.value}}
+        td.value(ng-switch="element.type")
+          span.unsupported(ng-switch-when="unsupported") Unsupported tag of {{element.length}} bytes
+          span.unsupported(ng-switch-when="sequence") Unsupported sequence of {{element.length}} bytes
+          span(ng-switch-default) {{element.value.toString()}}
