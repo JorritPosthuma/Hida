@@ -46,6 +46,29 @@ class Hida extends EventBus
   # Public methods
   ########################################
 
+  analyse: (length, weigth) =>
+    BSA = Math.sqrt(length * weigth / 3600)
+
+    # frameStart = Math.round 150 / averageFrameDuration
+    # frameEnd = Math.round 350 / averageFrameDuration
+
+    # bloodSumStart = csum(bloodCurve, frameStart - 1, frameStart + 1) / 2
+    # liverSumStart = csum(liverCurve, frameStart - 1, frameStart + 1) / 2
+    # liverSumEnd = csum(liverCurve, frameEnd - 1, frameEnd + 1) / 2
+    # totalSumStart = csum(totalCurve, frameStart - 1, frameStart + 1) / 2
+    # totalSumEnd = csum(totalCurve, frameEnd - 1, frameEnd + 1) / 2
+
+    # bloodSumEndNorm = csum(bloodCurve, frameEnd - 1, frameEnd + 1) / (2 * bloodSumStart)
+
+    # At1 = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
+    # LClr = (liverSumEnd - liverSumStart) / (At1 * csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
+    # LClr_min = 100 * LClr * 60 / averageFrameDuration
+
+    # totalLiverCounts = csum(liverCurve, frameStart, frameEnd)
+    # remnantLiverCounts = csum(c4, frameStart, frameEnd)
+    # FRLF = 100 * remnantLiverCounts / totalLiverCounts
+    # FRLF_BSA_Corrected = (FRLF / 100) * LClr_min / BSA
+
   validate: (file) =>
     test = (file, tag, compare) =>
       # Get element

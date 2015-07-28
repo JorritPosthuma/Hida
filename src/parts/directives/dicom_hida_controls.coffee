@@ -19,6 +19,7 @@ module.directive 'dicomHidaControls', ->
 
         # Init
         @merged = false
+        @analysis = false
 
         # Make myself known to bridge
         @bridge = @scope.bridge
@@ -41,3 +42,6 @@ module.directive 'dicomHidaControls', ->
       window: => @bridge.viewerDir.viewer.enableWindow()
       draw:   => @bridge.viewerDir.viewer.enableDraw()
       edit:   => @bridge.viewerDir.viewer.enableEdit()
+
+      analyse:   => @analysis = true
+      unAnalyse: => @analysis = false

@@ -1,6 +1,6 @@
 .dicom-viewer-directive
   .placeholder(ng-if="!ctrl.viewer.loaded()")
-    h1 No image loaded!
+    h1 No DICOM image loaded!
     h2 You can use drag & drop to load files
   .image(ng-show="ctrl.viewer.loaded() && !ctrl.details")
     canvas(resize="true")

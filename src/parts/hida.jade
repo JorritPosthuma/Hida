@@ -1,4 +1,4 @@
 dicom-hida-controls.controls(bridge="ctrl")
 dicom-graph.graph(bridge="ctrl")
-dicom-viewer.viewer(bridge="ctrl")
-dicom-hida-analysis.analysis(bridge="ctrl")
+dicom-viewer.viewer(ng-hide="ctrl.controlsDir.analysis", bridge="ctrl")
+dicom-hida-analysis.analysis(ng-if="ctrl.controlsDir.analysis", bridge="ctrl")
