@@ -7,6 +7,12 @@
     i.fa.fa-info-circle(ng-click="ctrl.showInfo()")
     table
       tr
+        td.name Patient ID:
+        td {{ctrl.viewer.file.file.get('x00100020').toString()}}
+      tr
+        td.name DOB:
+        td {{ctrl.viewer.file.file.get('x00100030').toString()}}
+      tr
         td.name Window Width: 
         td {{ctrl.viewer.lut_window.width}}
       tr
@@ -15,9 +21,6 @@
       tr
         td.name Frame:
         td {{ctrl.viewer.frame}} of {{ctrl.viewer.frames}}
-      tr
-        td.name Color:
-        td {{ctrl.viewer.color}}
   .info(ng-show="ctrl.viewer.loaded() && ctrl.details")
     h2 DICOM Image information
     i.fa.fa-picture-o(ng-click="ctrl.showImage()")

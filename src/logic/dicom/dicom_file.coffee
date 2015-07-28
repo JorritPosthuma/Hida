@@ -107,14 +107,17 @@ class DicomFile
   # Public
   #######################################
 
-  isColor:             => COLOR_TYPES.indexOf(@colorInt()) isnt -1
+  isColor: => COLOR_TYPES.indexOf(@colorInt()) isnt -1
 
-  actualFrameDuration: => @data.elements['x00181242']?.value
-  colorInt:            => @data.elements['x00280004']?.value
-  detectorVector:      => @data.elements['x00540020']?.value
-  framecount:          => parseInt @data.elements['x00280008']?.value
-  imageOrientation:    => @data.elements['x00200037']?.value
-  imageType:           => @data.elements['x00080008']?.value
-  modality:            => @data.elements['x00080060']?.value
-  patientPosition:     => @data.elements['x00185100']?.value
-  timeSliceVector:     => @data.elements['x00540100']?.value
+  get: (tag) => @data.elements[tag]?.value
+
+  framecount: => parseInt @get 'x00280008'
+  colorInt: => @get 'x00280004'
+
+  # actualFrameDuration: => console.info 'actualFrameDuration'; @get 'x00181242'
+  # detectorVector:      => console.info 'detectorVector';      @get 'x00540020'
+  # imageOrientation:    => console.info 'imageOrientation';    @get 'x00200037'
+  # imageType:           => console.info 'imageType';           @get 'x00080008'
+  # modality:            => console.info 'modality';            @get 'x00080060'
+  # patientPosition:     => console.info 'patientPosition';     @get 'x00185100'
+  # timeSliceVector:     => console.info 'timeSliceVector';     @get 'x00540100'

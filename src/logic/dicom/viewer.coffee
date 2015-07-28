@@ -154,7 +154,6 @@ class DicomViewer
       # Set defaults
       @lut_window.width = @file.image.windowWidth
       @lut_window.level = @file.image.windowCenter
-      @color            = @file.file.colorInt()
 
       @initDraw()
 
