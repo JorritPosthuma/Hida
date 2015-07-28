@@ -1,10 +1,10 @@
 .dicom-viewer-directive
-  .placeholder(ng-show="!ctrl.viewer.loaded()")
+  .placeholder(ng-if="!ctrl.viewer.loaded()")
     h1 No image loaded!
     h2 You can use drag & drop to load files
   .image(ng-show="ctrl.viewer.loaded() && !ctrl.details")
     canvas(resize="true")
-    i.fa.fa-info-circle(ng-click="ctrl.showInfo()")
+    i.infoToggle.fa.fa-info-circle(ng-click="ctrl.showInfo()")
     table
       tr
         td.name Patient ID:
@@ -21,9 +21,15 @@
       tr
         td.name Frame:
         td {{ctrl.viewer.frame}} of {{ctrl.viewer.frames}}
-  .info(ng-show="ctrl.viewer.loaded() && ctrl.details")
+    .warnings
+      .warning(ng-repeat="warning in ctrl.warnings")
+        span.head
+          i.fa.fa-exclamation-triangle
+          | &nbsp;Warning: 
+        span.message {{warning}}
+  .info(ng-if="ctrl.viewer.loaded() && ctrl.details")
     h2 DICOM Image information
-    i.fa.fa-picture-o(ng-click="ctrl.showImage()")
+    i.infoToggle.fa.fa-picture-o(ng-click="ctrl.showImage()")
     table
       tr(ng-repeat="(tag, element) in ctrl.viewer.file.file.data.elements")
         td.tag {{element.display}}

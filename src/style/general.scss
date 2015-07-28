@@ -119,7 +119,7 @@
     overflow: auto;
   }
 
-  i {
+  i.infoToggle {
     position: absolute;
     top: 30px;
     right: 30px;
@@ -132,6 +132,17 @@
     position: absolute;
     top: 30px;
     left: 30px;
+  }
+
+  .warnings {
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+
+    .head {
+      color: red;
+      font-weight: bold;
+    }
   }
 
   table {
@@ -177,5 +188,22 @@
 
   .action.selected {
     color: #009dec;
+  }
+}
+
+.sweet-alert {
+  border-radius: 3px;
+
+  h2 {
+    font-weight: 100;
+  }
+
+  input {
+    font-family: $font-stack;
+    font-weight: 200;
+  }
+
+  button {
+    border-radius: 3px;
   }
 }

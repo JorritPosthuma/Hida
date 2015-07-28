@@ -1,6 +1,7 @@
-class DefaultController
+class DefaultController extends EventBus
 
   constructor: (@scope, @root) ->
+    super()
     @scope.root = @root
     @scope.ctrl = @
 

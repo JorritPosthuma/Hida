@@ -109,7 +109,8 @@ class DicomFile
 
   isColor: => COLOR_TYPES.indexOf(@colorInt()) isnt -1
 
-  get: (tag) => @data.elements[tag]?.value
+  getElement: (tag) => @data.elements[tag]
+  get:        (tag) => @data.elements[tag]?.value
 
   framecount: => parseInt @get 'x00280008'
   colorInt: => @get 'x00280004'

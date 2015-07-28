@@ -3,7 +3,7 @@ module = angular.module 'hida'
 module.directive 'dicomViewer', ->
   restrict: 'E'
   scope: 
-    controls: '='
+    bridge: '='
   templateUrl: "parts/directives/dicom_viewer.html"
   link: (scope, element) -> scope.ctrl.link element
   controller: ($scope, $rootScope, $timeout) ->
@@ -17,9 +17,11 @@ module.directive 'dicomViewer', ->
       constructor: ->
         super $scope, $rootScope
 
+        @bridge = @scope.bridge
         @viewer = new DicomViewer
         @viewer.on 'update', -> $timeout()
         @details = false
+        @warnings = []
 
       ###########################
       # Linker                  #
@@ -27,7 +29,7 @@ module.directive 'dicomViewer', ->
 
       link: (element) =>
         @viewer.link element
-        @scope.controls = @viewer
+        @bridge.setViewer @
 
       showInfo: =>
         @details = true
@@ -36,3 +38,6 @@ module.directive 'dicomViewer', ->
       showImage: =>
         @details = false
         @viewer.allowScroll = false
+
+      addWarning: (message) =>
+        @warnings.push message

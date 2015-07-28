@@ -3,7 +3,7 @@ module = angular.module 'hida'
 module.directive 'dicomGraph', ->
   restrict: 'E'
   scope: 
-    controls: '='
+    bridge: '='
   template: '<div></div>'
   link: (scope, element) -> scope.ctrl.link element
 
@@ -17,6 +17,8 @@ module.directive 'dicomGraph', ->
 
       constructor: ->
         super $scope, $rootScope
+
+        @bridge = @scope.bridge
             
       ###########################
       # Methods                 #
@@ -24,7 +26,6 @@ module.directive 'dicomGraph', ->
 
       link: (@$element) =>
         @element = @$element.find('div')[0]
-        @scope.controls = @
         @chart = c3.generate
           bindto: @element
           data:
@@ -41,6 +42,8 @@ module.directive 'dicomGraph', ->
             duration: 0
           interaction:
             enabled: false
+
+        @bridge.setGraph @
 
       addRoi: (roi) =>
         roi.data.sums.unshift roi.id

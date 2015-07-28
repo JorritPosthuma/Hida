@@ -1,6 +1,7 @@
-class Hida
+class Hida extends EventBus
 
-  constructor: ->
+  constructor: (@viewer) ->
+    super()
 
     ########################################
     # Defaults
@@ -45,18 +46,34 @@ class Hida
   # Public methods
   ########################################
 
-  # test: (left, right error) ->
-  #   if not cond
-  #     console.info error
-
   validate: (file) =>
-    console.info 'imageType', file.imageType()
-    console.info 'modality', file.modality()
-    console.info 'detectorVector', file.detectorVector()
-    console.info 'patientPosition', file.patientPosition()
-    console.info 'imageOrientation', file.imageOrientation()
-    console.info 'actualFrameDuration', file.actualFrameDuration()
-    console.info 'timeSliceVector', file.timeSliceVector()
+    test = (file, tag, compare) =>
+      # Get element
+      element = file.getElement tag
+
+      # Test if has tag
+      if not element?
+        if _.has DicomTags, tag
+          info = DicomTags[tag]
+          @emit 'warning', "DICOM tag '#{info.name}' #{info.tag} is missing"
+        else
+          @emit 'warning', "DICOM tag #{tag} is missing"
+        return
+
+      # Test value
+      if not compare element.value
+        @emit 'warning', "The value of DICOM tag '#{element.info.name}' #{element.info.tag} is incorrect"
+
+    test file, 'x00080008', (value) -> _.contains value, 'DYNAMIC'
+    test file, 'x00080060', (value) -> value is 'NM'
+    test file, 'x00540020', (value) -> _.isEqual value, [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                                         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+    test file, 'x00185100', (value) -> value is 'FFS'
+    test file, 'x00280008', (value) -> value is '72'
+    test file, 'x00200037', (value) -> false # TODO
+    test file, 'x00181242', (value) -> false # TODO
+    test file, 'x00540100', (value) -> _.isEqual value, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
+                                                         1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
 
   updateRoi: (roi, raster, frames) =>
     frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
