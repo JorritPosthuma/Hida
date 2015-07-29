@@ -1,4 +1,4 @@
-class EventBus
+module.exports = class EventBus
 
   constructor: ->
     channels = {}

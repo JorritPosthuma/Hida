@@ -1,4 +1,4 @@
-class DicomViewerTool
+module.exports = class DicomViewerTool
 
   constructor: (@viewer) ->
     @paper = @viewer.paper

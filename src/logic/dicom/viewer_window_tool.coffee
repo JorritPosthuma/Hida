@@ -1,4 +1,6 @@
-class DicomViewerWindowTool extends DicomViewerTool
+DicomViewerTool = require './viewer_base_tool'
+
+module.exports = class DicomViewerWindowTool extends DicomViewerTool
 
   constructor: (viewer) ->
     super viewer

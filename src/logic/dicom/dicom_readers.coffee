@@ -1,3 +1,5 @@
+DicomFile = require './dicom_file'
+
 class DicomReader
 
   constructor: (@frames = []) ->

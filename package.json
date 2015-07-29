@@ -25,5 +25,11 @@
     "restify": "^3.0.3",
     "sass-loader": "^1.0.3",
     "webpack": "^1.10.5"
+  },
+  "dependencies": {
+    "webpack-dev-server": "^1.10.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --hot --inline"
   }
 }

@@ -1,4 +1,11 @@
-class DicomViewer extends EventBus
+EventBus = require '../events'
+DicomViewerWindowTool = require './viewer_window_tool'
+DicomViewerDrawTool = require './viewer_draw_tool'
+DicomViewerEditTool = require './viewer_edit_tool'
+
+{ DicomFSReader, DicomHTML5Reader } = require './dicom_readers'
+
+module.exports = class DicomViewer extends EventBus
 
   ###########################
   # Instance variables      #

@@ -1,4 +1,6 @@
-class Hida extends EventBus
+EventBus = require '../events'
+
+module.exports = class Hida extends EventBus
 
   constructor: (@bridge) ->
     super()

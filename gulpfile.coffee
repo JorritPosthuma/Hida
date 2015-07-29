@@ -1,6 +1,10 @@
 gulp       = require "gulp"
 gutil      = require "gulp-util"
 
+path       = require 'path'
+webpack    = require 'webpack'
+server     = require 'webpack-dev-server'
+
 notifier   = require "node-notifier"
 $          = require("gulp-load-plugins")()
 
@@ -19,6 +23,35 @@ handle_error = (e) ->
   gutil.log e
   gutil.beep()
   @emit 'end'
+
+webpack.config = 
+  entry: './src/logic/main'
+  output:
+    filename: './app/logic/main.js'
+  resolve: {}
+  module: loaders: [
+    { test: /\.coffee$/, loader: 'coffee-loader' }
+    { test: /\.jade$/, loader: 'jade-loader' }
+    { test: /\.scss$/, loader: 'sass-loader' }
+  ]
+  resolve:
+    root: [ path.join(__dirname, 'app/lib/bower') ]
+    extensions: ['', '.js', '.json', '.coffee']
+  plugins: [
+    new webpack.ResolverPlugin(
+      new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin 'bower.json', [ 'main' ]
+    )
+  ]
+
+handleWebpack = (done) ->
+  (err, stats) ->
+    throw new gutil.PluginError "webpack", err if err
+    gutil.log "[webpack]", stats.toString colors: true
+    done?()
+
+gulp.task "wp", (done) ->
+  webpack webpack.config
+  .watch 100, handleWebpack()
 
 gulp.task "default", [ "sass", "coffee", "jade" ]
 

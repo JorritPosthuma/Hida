@@ -11,7 +11,7 @@ module.exports = (module) ->
 
     controller: ($scope, $rootScope) ->
 
-      new class extends DefaultController
+      new class DicomGraphController extends DefaultController
 
         ###########################
         # Constructor & init      #

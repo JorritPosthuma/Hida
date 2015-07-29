@@ -4,15 +4,15 @@
 
 window.nw = false
 
-# if require?
-#   gui = require "nw.gui"
+if window.require?
+  gui = require "nw.gui"
 
-#   window.nw = gui?
+  window.nw = gui?
 
-#   win = gui.Window.get()
-#   menu = new gui.Menu type: "menubar"
-#   menu.createMacBuiltin "Hida"
-#   win.menu = menu
+  win = gui.Window.get()
+  menu = new gui.Menu type: "menubar"
+  menu.createMacBuiltin "Hida"
+  win.menu = menu
 
 ########################################
 # Angular

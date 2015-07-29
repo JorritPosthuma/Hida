@@ -1,15 +1,16 @@
 DefaultController = require '../../logic/controller'
+DicomViewer = require '../../logic/dicom/viewer'
 
 module.exports = (module) ->
   module.directive 'dicomViewer', ->
     restrict: 'E'
     scope: 
-      controls: '='
-    template: "./dicom_viewer.jade"
+      bridge: '='
+    template: require "./dicom_viewer.jade"
     link: (scope, element) -> scope.ctrl.link element
     controller: ($scope, $rootScope, $timeout) ->
 
-      new class extends DefaultController
+      new class DicomViewerDirective extends DefaultController
 
         ###########################
         # Constructor & init      #
@@ -17,7 +18,6 @@ module.exports = (module) ->
 
         constructor: ->
           super $scope, $rootScope
-
           @bridge = @scope.bridge
           @viewer = new DicomViewer
           @viewer.on 'update', -> $timeout()

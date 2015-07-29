@@ -1,4 +1,4 @@
-class DicomFrame
+module.exports = class DicomFrame
 
   constructor: (@file, @id, @frame_nr, @image) ->
 

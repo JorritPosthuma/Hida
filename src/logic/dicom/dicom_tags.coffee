@@ -1,4 +1,4 @@
-DicomTags = 
+module.exports =
     'x00000000': { tag: '(0000,0000)', vr: 'UL', vm: '1', name: 'Command Group Length' }
     'x00000001': { tag: '(0000,0001)', vr: 'UL', vm: '1', name: 'Command Length To End' }
     'x00000002': { tag: '(0000,0002)', vr: 'UI', vm: '1', name: 'Affected SOP Class UID' }

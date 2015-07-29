@@ -10,7 +10,7 @@ module.exports = (module) ->
 
     controller: ($scope, $rootScope, $state) ->
 
-      new class extends DefaultController
+      new class DicomControlsController extends DefaultController
 
         ###########################
         # Constructor & init      #

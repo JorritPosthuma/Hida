@@ -7,7 +7,7 @@ module.directive 'dicomHidaAnalysis', ->
   templateUrl: "parts/directives/dicom_hida_analysis.html"
   controller: ($scope, $rootScope) ->
 
-    new class extends DefaultController
+    new class DicomHidaAnalysisController extends DefaultController
 
       ###########################
       # Constructor & init      #
