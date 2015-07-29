@@ -5,7 +5,7 @@ module.exports = (module) ->
   module.directive 'dicomControls', ->
     restrict: 'E'
     scope: 
-      viewer: '='
+      bridge: '='
     template: require "./dicom_controls.jade"
 
     controller: ($scope, $rootScope, $state) ->
@@ -19,9 +19,9 @@ module.exports = (module) ->
         constructor: ->
           super $scope, $rootScope
 
-          @scope.$watch 'viewer', (viewer) =>
-            if viewer?
-              @viewer = viewer
+          # Make myself known to bridge
+          @bridge = @scope.bridge
+          @bridge.setControls @
               
         ###########################
         # Methods                 #
@@ -29,16 +29,16 @@ module.exports = (module) ->
 
         load: =>
           file = $('#file')
-          viewer = @viewer
+          viewer = @bridge.viewerDir.viewer
           file.change -> viewer.image $(@).val().split ';'
           file.click()
           return false
 
         hida: =>
-          if @viewer.reader?
-            @root.temp.hida_reader = @viewer.reader
+          if @bridge.viewerDir.viewer.reader?
+            @root.temp.hida_reader = @bridge.viewerDir.viewer.reader
             $state.go 'main.hida'
 
-        window: => @viewer.enableWindow()
-        draw:   => @viewer.enableDraw()
-        edit:   => @viewer.enableEdit()
+        window: => @bridge.viewerDir.viewer.enableWindow()
+        draw:   => @bridge.viewerDir.viewer.enableDraw()
+        edit:   => @bridge.viewerDir.viewer.enableEdit()

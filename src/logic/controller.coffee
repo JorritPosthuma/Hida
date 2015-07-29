@@ -1,6 +1,9 @@
-module.exports = class DefaultController
+EventBus = require './events'
+
+module.exports = class DefaultController extends EventBus
 
   constructor: (@scope, @root) ->
+    super()
     @scope.root = @root
     @scope.ctrl = @
 

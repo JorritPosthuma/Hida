@@ -5,7 +5,7 @@ module.exports = (module) ->
   module.directive 'dicomGraph', ->
     restrict: 'E'
     scope: 
-      controls: '='
+      bridge: '='
     template: '<div></div>'
     link: (scope, element) -> scope.ctrl.link element
 
@@ -19,6 +19,8 @@ module.exports = (module) ->
 
         constructor: ->
           super $scope, $rootScope
+
+          @bridge = @scope.bridge
               
         ###########################
         # Methods                 #
@@ -26,7 +28,6 @@ module.exports = (module) ->
 
         link: (@$element) =>
           @element = @$element.find('div')[0]
-          @scope.controls = @
           @chart = c3.generate
             bindto: @element
             data:
@@ -43,6 +44,8 @@ module.exports = (module) ->
               duration: 0
             interaction:
               enabled: false
+
+          @bridge.setGraph @
 
         addRoi: (roi) =>
           roi.data.sums.unshift roi.id

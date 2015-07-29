@@ -1,10 +1,9 @@
 DefaultController = require '../logic/controller'
 
-module.exports = (angular) ->
+module.exports = (module) ->
+  module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
 
-  angular.controller 'HomeController', ($scope, $rootScope, $timeout) ->
-
-    new class extends DefaultController
+    new class HomeController extends DefaultController
 
       ###########################
       # constructor             #
@@ -12,3 +11,16 @@ module.exports = (angular) ->
 
       constructor: ->
         super $scope, $rootScope
+
+        @controlsDefer = Q.defer()
+        @viewerDefer = Q.defer()
+   
+        Q.all [@controlsDefer.promise, @viewerDefer.promise]
+        .then @start
+      
+      ###########################
+      # Bridge Methods          #
+      ###########################
+
+      setControls: (@controlsDir) => @controlsDefer.resolve @controlsDir
+      setViewer:   (@viewerDir)   => @viewerDefer.resolve @viewerDir

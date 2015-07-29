@@ -1,7 +1,6 @@
 DefaultController = require '../../logic/controller'
 
 module.exports = (module) ->
-
   module.directive 'dicomViewer', ->
     restrict: 'E'
     scope: 
@@ -19,9 +18,11 @@ module.exports = (module) ->
         constructor: ->
           super $scope, $rootScope
 
+          @bridge = @scope.bridge
           @viewer = new DicomViewer
           @viewer.on 'update', -> $timeout()
           @details = false
+          @warnings = []
 
         ###########################
         # Linker                  #
@@ -29,7 +30,7 @@ module.exports = (module) ->
 
         link: (element) =>
           @viewer.link element
-          @scope.controls = @viewer
+          @bridge.setViewer @
 
         showInfo: =>
           @details = true
@@ -38,3 +39,6 @@ module.exports = (module) ->
         showImage: =>
           @details = false
           @viewer.allowScroll = false
+
+        addWarning: (message) =>
+          @warnings.push message

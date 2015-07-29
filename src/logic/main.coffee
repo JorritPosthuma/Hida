@@ -57,9 +57,6 @@ module.config ($stateProvider, $urlRouterProvider) ->
     url: '/export'
     template: require '../parts/export.jade'
     controller: 'ExportController'
-  .state 'login',
-    url: '/login'
-    template: require '../parts/login.jade'
 
   $urlRouterProvider.otherwise "/home"
 

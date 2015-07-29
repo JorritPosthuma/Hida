@@ -3638,8 +3638,8 @@ DicomTags =
     'x7Fxx0020': { tag: '(7Fxx,0020)', vr: 'OW', vm: '1', name: 'Variable Coefficients SDVN' }
     'x7Fxx0030': { tag: '(7Fxx,0030)', vr: 'OW', vm: '1', name: 'Variable Coefficients SDHN' }
     'x7Fxx0040': { tag: '(7Fxx,0040)', vr: 'OW', vm: '1', name: 'Variable Coefficients SDDN' }
-    'x FFFAFFFA': { tag: '(FFFA,FFFA)', vr: 'SQ', vm: '1', name: 'Digital Signatures Sequence' }
-    'x FFFCFFFC': { tag: '(FFFC,FFFC)', vr: 'OB', vm: '1', name: 'Data Set Trailing Padding' }
-    'x FFFEE000': { tag: '(FFFE,E000)', vr: '', vm: '1', name: 'Item' }
-    'x FFFEE00D': { tag: '(FFFE,E00D)', vr: '', vm: '1', name: 'Item Delimitation Item' }
-    'x FFFEE0DD': { tag: '(FFFE,E0DD)', vr: '', vm: '1', name: 'Sequence Delimitation Item' }
+    'xFFFAFFFA': { tag: '(FFFA,FFFA)', vr: 'SQ', vm: '1', name: 'Digital Signatures Sequence' }
+    'xFFFCFFFC': { tag: '(FFFC,FFFC)', vr: 'OB', vm: '1', name: 'Data Set Trailing Padding' }
+    'xFFFEE000': { tag: '(FFFE,E000)', vr: '', vm: '1', name: 'Item' }
+    'xFFFEE00D': { tag: '(FFFE,E00D)', vr: '', vm: '1', name: 'Item Delimitation Item' }
+    'xFFFEE0DD': { tag: '(FFFE,E0DD)', vr: '', vm: '1', name: 'Sequence Delimitation Item' }
