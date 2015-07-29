@@ -1,73 +1,105 @@
 class Hida extends EventBus
 
-  constructor: (@viewer) ->
+  constructor: (@bridge) ->
     super()
-
-    ########################################
-    # Defaults
-    ########################################
-
-    # Step 2 - Summarize ROI's
-
-
-    # @viewer.group.children.map (child) =>
-    #   if child.className is 'Path'
-    #     mask =
-    #     for x in [0...@width]
-    #       for y in [0...@height]
-    #         child.contains x, y
-
-    #     console.info mask
-
-    # if @reader.isMultiFile()
-    #   alert "HIDA doesn't support multi-frame analysis"
-
-    # @file = @viewer.file
-
-    # #######################################
-    # # Input
-    # #######################################
-
-    # # Patient Length
-    # @patient =
-    #   length: 180   # TODO - CM
-    #   weight: 80    # TODO - KG
-
-    # # BSA calculation based on Mosteller formula
-    # @bsa = Math.sqrt ((@patient.length * @patient.weight) / 3600)
-
-    # @t1 = time: 150 # Time of evenly distributed tracer 
-    # @t2 = time: 350 # ???
-
-    # # @t1.frame = # TODO
-    # # @t2.frame = # TODO
 
   ########################################
   # Public methods
   ########################################
 
   analyse: (length, weigth) =>
+    # Basic access variables
+    viewer = @bridge.viewerDir.viewer
+
+    console.info "Patient length", length
+    console.info "Patient weigth", weigth
+
+    # Constants
+    averageFrameDuration = 10002 / 1000 # In seconds!
+
+    console.info "Frame duration (seconds)", averageFrameDuration
+
+    # Curves
+    liverCurve = @curve viewer.rois[0]
+    bloodCurve = @curve viewer.rois[2]
+    remnantLiverCurve = @curve viewer.rois[1]
+    totalCurve = @totalCurve()
+
+    console.info "Total curve | F", totalCurve
+    console.info "Blood curve | C", bloodCurve
+    console.info "Liver curve | L", liverCurve
+    console.info "Future remnant liver curve", remnantLiverCurve
+
+    # Start
     BSA = Math.sqrt(length * weigth / 3600)
 
-    # frameStart = Math.round 150 / averageFrameDuration
-    # frameEnd = Math.round 350 / averageFrameDuration
+    console.info "BSA", BSA
 
-    # bloodSumStart = csum(bloodCurve, frameStart - 1, frameStart + 1) / 2
-    # liverSumStart = csum(liverCurve, frameStart - 1, frameStart + 1) / 2
-    # liverSumEnd = csum(liverCurve, frameEnd - 1, frameEnd + 1) / 2
-    # totalSumStart = csum(totalCurve, frameStart - 1, frameStart + 1) / 2
-    # totalSumEnd = csum(totalCurve, frameEnd - 1, frameEnd + 1) / 2
+    frameStart = Math.round(150 / averageFrameDuration)
+    frameEnd = Math.round(350 / averageFrameDuration)
 
-    # bloodSumEndNorm = csum(bloodCurve, frameEnd - 1, frameEnd + 1) / (2 * bloodSumStart)
+    console.info "Frame start", frameStart
+    console.info "Frame end", frameEnd
 
-    # At1 = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
-    # LClr = (liverSumEnd - liverSumStart) / (At1 * csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
-    # LClr_min = 100 * LClr * 60 / averageFrameDuration
+    bloodSumStart   = @csum(bloodCurve, frameStart - 1, frameStart + 1) / 2
+    liverSumStart   = @csum(liverCurve, frameStart - 1, frameStart + 1) / 2
+    liverSumEnd     = @csum(liverCurve, frameEnd - 1, frameEnd + 1) / 2
+    totalSumStart   = @csum(totalCurve, frameStart - 1, frameStart + 1) / 2
+    totalSumEnd     = @csum(totalCurve, frameEnd - 1, frameEnd + 1) / 2
 
-    # totalLiverCounts = csum(liverCurve, frameStart, frameEnd)
-    # remnantLiverCounts = csum(c4, frameStart, frameEnd)
-    # FRLF = 100 * remnantLiverCounts / totalLiverCounts
-    # FRLF_BSA_Corrected = (FRLF / 100) * LClr_min / BSA
+    console.info "Blood Sum (150 sec) | C(t1)", bloodSumStart
+    console.info "Liver Sum (150 sec) | L(t1)", liverSumStart
+    console.info "Liver Sum (350 sec) | L(t2)", liverSumEnd
+    console.info "Total Sum (150 sec) | F(t1)", totalSumStart
+    console.info "Total Sum (350 sec) | F(t2)", totalSumEnd
+    
+    bloodSumEndNorm = @csum(bloodCurve, frameEnd - 1, frameEnd + 1) / (2 * bloodSumStart)
+
+    console.info "Blood Sum (350 sec) normalized | Cnorm(t2)", bloodSumEndNorm
+
+    At1 = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
+    LClr = (liverSumEnd - liverSumStart) / (At1 * @csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
+    LClr_min = 100 * LClr * 60 / averageFrameDuration
+
+    console.info "A(t1)", At1
+    console.info "LClr [/frame]", LClr
+    console.info "LClr [%/min]", LClr_min
+
+    totalLiverCounts   = @csum(liverCurve, frameStart, frameEnd)
+    remnantLiverCounts = @csum(remnantLiverCurve, frameStart, frameEnd)
+
+    console.info "Total liver counts", totalLiverCounts
+    console.info "Remnant liver counts", remnantLiverCounts
+    
+    FRLF = 100 * remnantLiverCounts / totalLiverCounts
+    FRLF_BSA_Corrected = (FRLF / 100) * LClr_min / BSA
+
+    console.info "FRLF", FRLF
+    console.info "FRLF BSA Corrected", FRLF_BSA_Corrected
+
+    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, frameStart, frameEnd
+    [liverIntercept, liverSlope] = @fitExponential liverCurve, frameStart, frameEnd
+
+    console.info "Exponential fitting of blood curve", bloodIntercept, bloodSlope
+    console.info "Exponential fitting of liver curve", liverIntercept, liverSlope
+
+  fitExponential: (curve, start, end) ->
+    # Only get part between begin and end
+    slice = _.slice curve, (start - 1), (end - 1)
+    # Create index array
+    index = _.range slice.length
+    # Convert to regression API format
+    data = _.zip index, slice
+    # Perform fit
+    fit = regression 'exponential', data
+    # Only return [intercept, slope]
+    fit.equation
+
+  csum: (curve, start, end) ->
+    # Only get part between begin and end
+    slice = _.slice curve, (start - 1), (end - 1)
+    # Sum all values
+    _.sum slice
 
   validate: (file) =>
     test = (file, tag, compare) =>
@@ -97,6 +129,34 @@ class Hida extends EventBus
     test file, 'x00181242', (value) -> false # TODO
     test file, 'x00540100', (value) -> _.isEqual value, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
                                                          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
+
+  curve: (roi) =>
+    viewer = @bridge.viewerDir.viewer
+    raster = viewer.raster
+    frames = viewer.reader.frames
+
+    frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
+    frame_sums    = frame_pixels.map -> 0
+
+    # Determine scaling
+    offset = raster.getBounds()
+    scaling = raster.getScaling().x
+
+    for x in [0 ... raster.width] by 1
+      x_scale = x * scaling + offset.x
+      for y in [0 ... raster.height] by 1
+        # Calculate relative point
+        point = new paper.Point x_scale, y * scaling + offset.y
+        if roi.contains point
+          i = y * raster.width + x
+          for pixels, frame in frame_pixels
+            frame_sums[frame] += pixels[i]
+
+    frame_sums
+
+  totalCurve: =>
+    _.map @bridge.viewerDir.viewer.reader.frames, (frame) =>
+      _.sum frame.image.getPixelData()
 
   updateRoi: (roi, raster, frames) =>
     frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
