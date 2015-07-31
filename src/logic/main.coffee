@@ -2,21 +2,18 @@
 # General init
 ########################################
 
-window.nw = false
+if global?.require?
+  global.nw = global.require 'nw.gui'
 
-if window.require?
-  gui = require "nw.gui"
-
-  window.nw = gui?
-
-  win = gui.Window.get()
-  menu = new gui.Menu type: "menubar"
+  menu = new global.nw.Menu type: "menubar"
   menu.createMacBuiltin "Hida"
-  win.menu = menu
+  global.nw.Window.get().menu = menu
 
 ########################################
 # Angular
 ########################################
+
+require '../style/main.scss'
 
 require 'angular'
 
@@ -30,6 +27,7 @@ require('./filters')(module)
 require('../parts/directives/dicom_controls')(module)
 require('../parts/directives/dicom_graph')(module)
 require('../parts/directives/dicom_hida_controls')(module)
+require('../parts/directives/dicom_hida_analysis')(module)
 require('../parts/directives/dicom_viewer')(module)
 
 require('../parts/export')(module)
@@ -39,6 +37,13 @@ require('../parts/login')(module)
 require('../parts/main')(module)
 require('../parts/nav')(module)
 
+main_sub_views = 
+  nav:
+    controller: 'NavController'
+    template: require '../parts/nav.jade'
+  top:
+    template: require '../parts/top.jade'
+
 module.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
   .state 'main',
@@ -47,16 +52,22 @@ module.config ($stateProvider, $urlRouterProvider) ->
     controller: 'MainController'
   .state 'main.home',
     url: '/home'
-    template: require '../parts/home.jade'
-    controller: 'HomeController'
+    views: _.extend main_sub_views,
+      main:
+        template: require '../parts/home.jade'
+        controller: 'HomeController'
   .state 'main.hida',
     url: '/hida'
-    template: require '../parts/hida.jade'
-    controller: 'HidaController'
+    views: _.extend main_sub_views,
+      main:
+        template: require '../parts/hida.jade'
+        controller: 'HidaController'
   .state 'main.export',
     url: '/export'
-    template: require '../parts/export.jade'
-    controller: 'ExportController'
+    views: _.extend main_sub_views,
+      main:
+        template: require '../parts/export.jade'
+        controller: 'ExportController'
 
   $urlRouterProvider.otherwise "/home"
 

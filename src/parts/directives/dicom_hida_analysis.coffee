@@ -1,33 +1,35 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomHidaAnalysis', ->
-  restrict: 'E'
-  scope: 
-    bridge: '='
-  templateUrl: "parts/directives/dicom_hida_analysis.html"
-  controller: ($scope, $rootScope) ->
+module.exports = (module) ->
 
-    new class DicomHidaAnalysisController extends DefaultController
+  module.directive 'dicomHidaAnalysis', ->
+    restrict: 'E'
+    scope: 
+      bridge: '='
+    template:  require "./dicom_hida_analysis.jade"
+    controller: ($scope, $rootScope) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class DicomHidaAnalysisController extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        @bridge = @scope.bridge
-        @bridge.analysisDir = @
+        constructor: ->
+          super $scope, $rootScope
 
-        @weigth = ''
-        @length = ''
+          @bridge = @scope.bridge
+          @bridge.analysisDir = @
 
-      isValid: =>
-        length = parseInt @length
-        weigth = parseInt @weigth
+          @weigth = ''
+          @length = ''
 
-        _.isFinite(length) and _.isFinite(weigth)
+        isValid: =>
+          length = parseInt @length
+          weigth = parseInt @weigth
 
-      analyse: =>
-        if @isValid()
-          @bridge.hida.analyse parseInt(@length), parseInt(@weigth)
+          _.isFinite(length) and _.isFinite(weigth)
+
+        analyse: =>
+          if @isValid()
+            @bridge.hida.analyse parseInt(@length), parseInt(@weigth)

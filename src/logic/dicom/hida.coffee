@@ -1,4 +1,6 @@
-EventBus = require '../events'
+EventBus        = require '../events'
+DicomTags       = require './dicom_tags'
+{ DicomReader } = require './dicom_readers'
 
 module.exports = class Hida extends EventBus
 

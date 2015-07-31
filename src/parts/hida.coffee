@@ -1,4 +1,6 @@
 DefaultController = require '../logic/controller'
+{ DicomFSReader } = require '../logic/dicom/dicom_readers'
+Hida              = require '../logic/dicom/hida'
 
 module.exports = (module) ->
   module.controller 'HidaController', ($scope, $rootScope, $timeout, $state) ->
