@@ -7,9 +7,9 @@
     "coffee-script": "^1.9.3",
     "css-loader": "^0.15.6",
     "file-loader": "^0.8.4",
+    "html-loader": "^0.3.0",
     "jade": "^1.11.0",
     "jade-loader": "^0.7.1",
-    "ng-cache-loader": "0.0.9",
     "node-sass": "^3.2.0",
     "nw-builder": "^2.0.2",
     "sass-loader": "^1.0.3",
@@ -22,8 +22,5 @@
     "start": "npm run dev & npm run server",
     "server": "./node_modules/.bin/webpack-dev-server --hot --inline",
     "dev": "./node_modules/.bin/nwbuild -r dev"
-  },
-  "dependencies": {
-    "angular-ui-router.statehelper": "^1.3.1"
   }
 }

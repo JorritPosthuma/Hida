@@ -37,12 +37,9 @@ require('../parts/login')(module)
 require('../parts/main')(module)
 require('../parts/nav')(module)
 
-main_sub_views = 
-  nav:
-    controller: 'NavController'
-    template: require '../parts/nav.jade'
-  top:
-    template: require '../parts/top.jade'
+module.run ($templateCache) ->
+  $templateCache.put 'parts/nav.html', require '../parts/nav.jade'
+  $templateCache.put 'parts/top.html', require '../parts/top.jade'
 
 module.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
@@ -52,22 +49,16 @@ module.config ($stateProvider, $urlRouterProvider) ->
     controller: 'MainController'
   .state 'main.home',
     url: '/home'
-    views: _.extend main_sub_views,
-      main:
-        template: require '../parts/home.jade'
-        controller: 'HomeController'
+    template: require '../parts/home.jade'
+    controller: 'HomeController'
   .state 'main.hida',
     url: '/hida'
-    views: _.extend main_sub_views,
-      main:
-        template: require '../parts/hida.jade'
-        controller: 'HidaController'
+    template: require '../parts/hida.jade'
+    controller: 'HidaController'
   .state 'main.export',
     url: '/export'
-    views: _.extend main_sub_views,
-      main:
-        template: require '../parts/export.jade'
-        controller: 'ExportController'
+    template: require '../parts/export.jade'
+    controller: 'ExportController'
 
   $urlRouterProvider.otherwise "/home"
 
