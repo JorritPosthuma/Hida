@@ -8,6 +8,7 @@
     "css-loader": "^0.15.6",
     "file-loader": "^0.8.4",
     "html-loader": "^0.3.0",
+    "ng-annotate-loader": "0.0.6",
     "node-sass": "^3.2.0",
     "nw-builder": "^2.0.2",
     "sass-loader": "^1.0.3",
@@ -17,8 +18,16 @@
     "webpack-dev-server": "^1.10.1"
   },
   "scripts": {
-    "start": "npm run dev & npm run server",
-    "server": "./node_modules/.bin/webpack-dev-server --hot --inline",
-    "dev": "./node_modules/.bin/nwbuild -r dev"
+    "start":      "npm run nw-dev & npm run wp-server",
+    "app":        "npm run wp-clean && npm run wp-compile && npm run nw-run",
+    "build":      "npm run wp-clean && npm run wp-compile && npm run nw-clean && npm run nw-build && npm run nw-open",
+    "nw-build":   "./node_modules/.bin/nwbuild app",
+    "nw-clean":   "rm -rf build",
+    "nw-dev":     "./node_modules/.bin/nwbuild -r dev",
+    "nw-open":    "open build/Hida",
+    "nw-run":     "./node_modules/.bin/nwbuild -r app",
+    "wp-clean":   "rm -rf app/bundle",
+    "wp-compile": "./node_modules/.bin/webpack -p",
+    "wp-server":  "./node_modules/.bin/webpack-dev-server --hot --inline"
   }
 }

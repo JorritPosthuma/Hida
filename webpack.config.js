@@ -2,10 +2,11 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: ['webpack/hot/dev-server', './src/logic/main'],
+  entry: ['./src/logic/main'],
   output: {
-    path: './app',
-    filename: 'logic/main.js'       
+    path: './app/bundle/assets',
+    filename: '../bundle.js',
+    publicPath: "bundle/assets/"
   },
   module: {
     loaders: [
@@ -14,7 +15,7 @@ module.exports = {
         loader: 'html'
       }, {
         test: /\.coffee$/,
-        loader: 'coffee'
+        loader: 'ng-annotate!coffee'
       }, {
         test: /\.scss$/,
         loader: 'style!css!sass'
