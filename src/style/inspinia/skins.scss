@@ -25,7 +25,7 @@ $skin-1-page-bg: #f4f6fa;
 
 .skin-1 .nav-header {
   background: $skin-1-color;
-  background: url('patterns/header-profile-skin-1.png'); }
+  background: url('~/patterns/header-profile-skin-1.png'); }
 
 .skin-1.mini-navbar .nav-second-level {
   background: $skin-1-nav-bg; }
@@ -127,7 +127,7 @@ body.skin-2 {
 
 .skin-2 .nav-header {
   background: $skin-2-color;
-  background: url('patterns/header-profile-skin-2.png'); }
+  background: url('~/patterns/header-profile-skin-2.png'); }
 
 .skin-2.mini-navbar .nav-second-level {
   background: $skin-2-nav-bg; }
@@ -273,7 +273,7 @@ body.boxed-layout.skin-3 #wrapper {
 
 .skin-3 .nav-header {
   background: $skin-3-color;
-  background: url('patterns/header-profile-skin-3.png'); }
+  background: url('~/patterns/header-profile-skin-3.png'); }
 
 .skin-3.mini-navbar .nav-second-level {
   background: $skin-3-nav-bg; }
