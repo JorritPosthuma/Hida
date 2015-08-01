@@ -17,17 +17,25 @@
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
   },
+  "dependencies": {
+    "c3": "^0.4.10",
+    "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
+    "lodash": "^3.10.0",
+    "moment": "^2.10.6",
+    "q": "^1.4.1"
+  },
   "scripts": {
-    "start":      "npm run nw-dev & npm run wp-server",
-    "app":        "npm run wp-clean && npm run wp-compile && npm run nw-run",
-    "build":      "npm run wp-clean && npm run wp-compile && npm run nw-clean && npm run nw-build && npm run nw-open",
-    "nw-build":   "./node_modules/.bin/nwbuild app",
-    "nw-clean":   "rm -rf build",
-    "nw-dev":     "./node_modules/.bin/nwbuild -r dev",
-    "nw-open":    "open build/Hida",
-    "nw-run":     "./node_modules/.bin/nwbuild -r app",
-    "wp-clean":   "rm -rf app/bundle",
+    "start": "npm run nw-dev & npm run wp-server",
+    "app": "npm run wp-clean && npm run wp-compile && npm run nw-run",
+    "build": "npm run wp-clean && npm run wp-compile && npm run nw-clean && npm run nw-build && npm run nw-open",
+    "nw-build": "./node_modules/.bin/nwbuild app",
+    "nw-clean": "rm -rf build",
+    "nw-dev": "./node_modules/.bin/nwbuild -r dev",
+    "nw-open": "open build/Hida",
+    "nw-run": "./node_modules/.bin/nwbuild -r app",
+    "wp-clean": "rm -rf app/bundle",
     "wp-compile": "./node_modules/.bin/webpack -p",
-    "wp-server":  "./node_modules/.bin/webpack-dev-server --hot --inline"
+    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline"
   }
 }

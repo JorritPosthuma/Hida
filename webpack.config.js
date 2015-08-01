@@ -2,11 +2,11 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: ['./src/logic/main'],
+  entry: ['./src/main'],
   output: {
-    path: './app/bundle/assets',
-    filename: '../bundle.js',
-    publicPath: "bundle/assets/"
+    path: './app',
+    filename: 'bundle.js'
+    // publicPath: "bundle/assets/"
   },
   module: {
     loaders: [

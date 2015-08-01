@@ -1,6 +1,8 @@
 DicomTags = require './dicom_tags'
 DicomFrame = require './dicom_frame'
 
+moment = require 'moment'
+
 COLOR_TYPES = [
   "RGB"
   "PALETTE COLOR" 

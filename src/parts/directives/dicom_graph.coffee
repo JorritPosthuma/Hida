@@ -27,25 +27,26 @@ module.exports = (module) ->
         ###########################
 
         link: (@$element) =>
-          @element = @$element.find('div')[0]
-          @chart = c3.generate
-            bindto: @element
-            data:
-              columns: [ ]
-            size:
-              height: 150
-              width: 590
-            axis:
-              x: show: false
-              y: show: false
-            legend:
-              show: false
-            transition:
-              duration: 0
-            interaction:
-              enabled: false
+          require.ensure [], =>
+            @element = @$element.find('div')[0]
+            @chart = require('c3').generate
+              bindto: @element
+              data:
+                columns: [ ]
+              size:
+                height: 150
+                width: 590
+              axis:
+                x: show: false
+                y: show: false
+              legend:
+                show: false
+              transition:
+                duration: 0
+              interaction:
+                enabled: false
 
-          @bridge.setGraph @
+            @bridge.setGraph @
 
         addRoi: (roi) =>
           roi.data.sums.unshift roi.id
