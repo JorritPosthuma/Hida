@@ -1,0 +1,19 @@
+
+<input id="file" style="display:none;" type="file" multiple=""/>
+<div class="dicom-controls-directive">
+  <div ng-click="ctrl.load()" class="action"><i class="icon fa fa-floppy-o"></i>
+    <div class="text">Load</div>
+  </div>
+  <div ng-click="ctrl.hida()" class="action"><i class="icon fa fa-cogs"></i>
+    <div class="text">HIDA</div>
+  </div>
+  <div ng-click="ctrl.window()" ng-class="{selected: bridge.viewerDir.viewer.state == bridge.viewerDir.viewer.STATE_WINDOW}" class="action"><i class="icon fa fa-picture-o"></i>
+    <div class="text">Window</div>
+  </div>
+  <div ng-click="ctrl.draw()" ng-class="{selected: bridge.viewerDir.viewer.state == bridge.viewerDir.viewer.STATE_DRAW}" class="action"><i class="icon fa fa-pencil-square-o"></i>
+    <div class="text">Draw</div>
+  </div>
+  <div ng-click="ctrl.edit()" ng-class="{selected: bridge.viewerDir.viewer.state == bridge.viewerDir.viewer.STATE_EDIT}" class="action"><i class="icon fa fa-arrows"></i>
+    <div class="text">Edit</div>
+  </div>
+</div>

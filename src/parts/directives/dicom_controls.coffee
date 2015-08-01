@@ -6,7 +6,7 @@ module.exports = (module) ->
     restrict: 'E'
     scope: 
       bridge: '='
-    template: require "./dicom_controls.jade"
+    template: require "./dicom_controls.html"
 
     controller: ($scope, $rootScope, $state) ->
 

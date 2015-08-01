@@ -10,11 +10,11 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.html$/,
+        loader: 'html'
+      }, {
         test: /\.coffee$/,
         loader: 'coffee'
-      }, {
-        test: /\.jade$/,
-        loader: 'jade'
       }, {
         test: /\.scss$/,
         loader: 'style!css!sass'

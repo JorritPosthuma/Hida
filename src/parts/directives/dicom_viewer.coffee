@@ -6,7 +6,7 @@ module.exports = (module) ->
     restrict: 'E'
     scope: 
       bridge: '='
-    template: require "./dicom_viewer.jade"
+    template: require "./dicom_viewer.html"
     link: (scope, element) -> scope.ctrl.link element
     controller: ($scope, $rootScope, $timeout) ->
 

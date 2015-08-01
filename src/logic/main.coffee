@@ -38,26 +38,26 @@ require('../parts/main')(module)
 require('../parts/nav')(module)
 
 module.run ($templateCache) ->
-  $templateCache.put 'parts/nav.html', require '../parts/nav.jade'
-  $templateCache.put 'parts/top.html', require '../parts/top.jade'
+  $templateCache.put 'parts/nav.html', require '../parts/nav.html'
+  $templateCache.put 'parts/top.html', require '../parts/top.html'
 
 module.config ($stateProvider, $urlRouterProvider) ->
   $stateProvider
   .state 'main',
     abstract: true
-    template: require '../parts/main.jade'
+    template: require '../parts/main.html'
     controller: 'MainController'
   .state 'main.home',
     url: '/home'
-    template: require '../parts/home.jade'
+    template: require '../parts/home.html'
     controller: 'HomeController'
   .state 'main.hida',
     url: '/hida'
-    template: require '../parts/hida.jade'
+    template: require '../parts/hida.html'
     controller: 'HidaController'
   .state 'main.export',
     url: '/export'
-    template: require '../parts/export.jade'
+    template: require '../parts/export.html'
     controller: 'ExportController'
 
   $urlRouterProvider.otherwise "/home"

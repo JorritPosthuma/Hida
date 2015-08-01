@@ -8,8 +8,6 @@
     "css-loader": "^0.15.6",
     "file-loader": "^0.8.4",
     "html-loader": "^0.3.0",
-    "jade": "^1.11.0",
-    "jade-loader": "^0.7.1",
     "node-sass": "^3.2.0",
     "nw-builder": "^2.0.2",
     "sass-loader": "^1.0.3",

@@ -6,7 +6,7 @@ module.exports = (module) ->
     restrict: 'E'
     scope: 
       bridge: '='
-    template:  require "./dicom_hida_analysis.jade"
+    template:  require "./dicom_hida_analysis.html"
     controller: ($scope, $rootScope) ->
 
       new class DicomHidaAnalysisController extends DefaultController
