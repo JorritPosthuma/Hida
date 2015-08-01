@@ -5,7 +5,7 @@ require './lib'
 require './nw'
 
 # Create angular module
-module = angular.module "hida", [ 'ui.router', 'ui.bootstrap' ]
+module = angular.module "hida", [ require('angular-ui-router') ]
 
 # Import angular components
 require('./import')(module)
