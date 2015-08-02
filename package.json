@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "bower": "^1.4.1",
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.9.3",
     "css-loader": "^0.15.6",
@@ -41,6 +42,7 @@
     "nw-run": "./node_modules/.bin/nwbuild -r app",
     "wp-clean": "rm -rf app/bundle",
     "wp-compile": "./node_modules/.bin/webpack -p",
-    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline"
+    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline",
+    "postinstall": "./node_modules/.bin/bower install"
   }
 }
