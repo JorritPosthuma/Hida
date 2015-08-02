@@ -196,7 +196,7 @@ module.exports = class Hida extends EventBus
 
       @_reverseMergeFrames left_frame, right_frame
 
-    new DicomReader frames
+    new DicomReader frames, reader.rois
 
   ########################################
   # Private methods
