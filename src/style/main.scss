@@ -1,8 +1,9 @@
 @import "variables";
 @import "flexbox";
 
-@import "../../app/lib/bower/bootstrap-sass-official/assets/stylesheets/_bootstrap";
-@import "../../app/lib/bower/font-awesome/scss/font-awesome";
+@import "~bootstrap-sass-official/assets/stylesheets/_bootstrap";
+@import "~font-awesome/scss/font-awesome";
+@import "~c3/src/scss/main";
 
 @import "inspinia/style";
 

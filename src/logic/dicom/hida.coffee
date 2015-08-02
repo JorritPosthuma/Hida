@@ -1,4 +1,8 @@
-class Hida extends EventBus
+EventBus        = require '../events'
+DicomTags       = require './dicom_tags'
+{ DicomReader } = require './dicom_readers'
+
+module.exports = class Hida extends EventBus
 
   constructor: (@bridge) ->
     super()

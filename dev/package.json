@@ -1,0 +1,14 @@
+{
+  "name": "Hida",
+  "version": "1.0.0",
+  "private": true,
+  "main": "http://localhost:5000/webpack-dev-server/",
+  "node-remote": "http://localhost:5000",
+  "window": {
+    "title": "Hida",
+    "toolbar": true,
+    "frame": true,
+    "width": 1100,
+    "height": 600
+  }
+}

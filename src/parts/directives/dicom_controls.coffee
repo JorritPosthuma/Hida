@@ -1,42 +1,44 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomControls', ->
-  restrict: 'E'
-  scope: 
-    bridge: '='
-  templateUrl: "parts/directives/dicom_controls.html"
+module.exports = (module) ->
 
-  controller: ($scope, $rootScope, $state) ->
+  module.directive 'dicomControls', ->
+    restrict: 'E'
+    scope: 
+      bridge: '='
+    template: require "./dicom_controls.html"
 
-    new class extends DefaultController
+    controller: ($scope, $rootScope, $state) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class DicomControlsController extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        # Make myself known to bridge
-        @bridge = @scope.bridge
-        @bridge.setControls @
-            
-      ###########################
-      # Methods                 #
-      ###########################
+        constructor: ->
+          super $scope, $rootScope
 
-      load: =>
-        file = $('#file')
-        viewer = @bridge.viewerDir.viewer
-        file.change -> viewer.image $(@).val().split ';'
-        file.click()
-        return false
+          # Make myself known to bridge
+          @bridge = @scope.bridge
+          @bridge.setControls @
+              
+        ###########################
+        # Methods                 #
+        ###########################
 
-      hida: =>
-        if @bridge.viewerDir.viewer.reader?
-          @root.temp.hida_reader = @bridge.viewerDir.viewer.reader
-          $state.go 'main.hida'
+        load: =>
+          file = $('#file')
+          viewer = @bridge.viewerDir.viewer
+          file.change -> viewer.image $(@).val().split ';'
+          file.click()
+          return false
 
-      window: => @bridge.viewerDir.viewer.enableWindow()
-      draw:   => @bridge.viewerDir.viewer.enableDraw()
-      edit:   => @bridge.viewerDir.viewer.enableEdit()
+        hida: =>
+          if @bridge.viewerDir.viewer.reader?
+            @root.temp.hida_reader = @bridge.viewerDir.viewer.reader
+            $state.go 'main.hida'
+
+        window: => @bridge.viewerDir.viewer.enableWindow()
+        draw:   => @bridge.viewerDir.viewer.enableDraw()
+        edit:   => @bridge.viewerDir.viewer.enableEdit()

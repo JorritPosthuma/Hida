@@ -1,3 +1,5 @@
+DicomFile = require './dicom_file'
+
 class DicomReader
 
   constructor: (@frames = []) ->
@@ -42,7 +44,7 @@ class DicomFileReader extends DicomReader
 class DicomFSReader extends DicomFileReader
 
   constructor: (paths) ->
-    @fs = require "fs"
+    @fs = global.require 'fs'
     super paths
 
   read: (path) =>
@@ -72,3 +74,8 @@ class DicomHTML5Reader extends DicomFileReader
 
     reader.readAsArrayBuffer path
     deferred.promise
+
+module.exports =
+  DicomReader: DicomReader
+  DicomFSReader: DicomFSReader
+  DicomHTML5Reader: DicomHTML5Reader

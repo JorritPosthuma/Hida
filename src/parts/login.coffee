@@ -2,7 +2,7 @@ DefaultController = require '../logic/controller'
 
 module.exports = (angular) ->
 
-  angular.controller 'MainController', ($scope, $rootScope, $state) ->
+  angular.controller 'LoginController', ($scope, $rootScope) ->
     new class extends DefaultController
 
       ###########################
@@ -15,8 +15,6 @@ module.exports = (angular) ->
 
       constructor: ->
         super $scope, $rootScope
-
-        $scope.$state = $state
 
       ###########################
       # Methods                 #

@@ -1,3 +1,8 @@
+DicomTags = require './dicom_tags'
+DicomFrame = require './dicom_frame'
+
+moment = require 'moment'
+
 COLOR_TYPES = [
   "RGB"
   "PALETTE COLOR" 
@@ -20,7 +25,7 @@ class DicomName
   constructor: (name)  -> @name = dicomParser.parsePN name
   toString:            -> "#{@name.givenName} #{@name.familyName}"
 
-class DicomFile
+module.exports = class DicomFile
 
   constructor: (@buffer, @path) ->
     @frames = []
@@ -114,11 +119,3 @@ class DicomFile
 
   framecount: => parseInt @get 'x00280008'
   colorInt: => @get 'x00280004'
-
-  # actualFrameDuration: => console.info 'actualFrameDuration'; @get 'x00181242'
-  # detectorVector:      => console.info 'detectorVector';      @get 'x00540020'
-  # imageOrientation:    => console.info 'imageOrientation';    @get 'x00200037'
-  # imageType:           => console.info 'imageType';           @get 'x00080008'
-  # modality:            => console.info 'modality';            @get 'x00080060'
-  # patientPosition:     => console.info 'patientPosition';     @get 'x00185100'
-  # timeSliceVector:     => console.info 'timeSliceVector';     @get 'x00540100'

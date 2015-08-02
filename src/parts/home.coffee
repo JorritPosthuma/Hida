@@ -1,24 +1,26 @@
-module = angular.module 'hida'
-module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
+DefaultController = require '../logic/controller'
 
-  new class HomeController extends DefaultController
+module.exports = (module) ->
+  module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
 
-    ###########################
-    # constructor             #
-    ###########################
+    new class HomeController extends DefaultController
 
-    constructor: ->
-      super $scope, $rootScope
+      ###########################
+      # constructor             #
+      ###########################
 
-      @controlsDefer = Q.defer()
-      @viewerDefer = Q.defer()
- 
-      Q.all [@controlsDefer.promise, @viewerDefer.promise]
-      .then @start
-    
-    ###########################
-    # Bridge Methods          #
-    ###########################
+      constructor: ->
+        super $scope, $rootScope
 
-    setControls: (@controlsDir) => @controlsDefer.resolve @controlsDir
-    setViewer:   (@viewerDir)   => @viewerDefer.resolve @viewerDir
+        @controlsDefer = Q.defer()
+        @viewerDefer = Q.defer()
+   
+        Q.all [@controlsDefer.promise, @viewerDefer.promise]
+        .then @start
+      
+      ###########################
+      # Bridge Methods          #
+      ###########################
+
+      setControls: (@controlsDir) => @controlsDefer.resolve @controlsDir
+      setViewer:   (@viewerDir)   => @viewerDefer.resolve @viewerDir

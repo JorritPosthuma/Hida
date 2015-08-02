@@ -1,43 +1,44 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
+DicomViewer = require '../../logic/dicom/viewer'
 
-module.directive 'dicomViewer', ->
-  restrict: 'E'
-  scope: 
-    bridge: '='
-  templateUrl: "parts/directives/dicom_viewer.html"
-  link: (scope, element) -> scope.ctrl.link element
-  controller: ($scope, $rootScope, $timeout) ->
+module.exports = (module) ->
+  module.directive 'dicomViewer', ->
+    restrict: 'E'
+    scope: 
+      bridge: '='
+    template: require "./dicom_viewer.html"
+    link: (scope, element) -> scope.ctrl.link element
+    controller: ($scope, $rootScope, $timeout) ->
 
-    new class extends DefaultController
+      new class DicomViewerDirective extends DefaultController
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-      constructor: ->
-        super $scope, $rootScope
+        constructor: ->
+          super $scope, $rootScope
+          @bridge = @scope.bridge
+          @viewer = new DicomViewer
+          @viewer.on 'update', -> $timeout()
+          @details = false
+          @warnings = []
 
-        @bridge = @scope.bridge
-        @viewer = new DicomViewer
-        @viewer.on 'update', -> $timeout()
-        @details = false
-        @warnings = []
+        ###########################
+        # Linker                  #
+        ###########################
 
-      ###########################
-      # Linker                  #
-      ###########################
+        link: (element) =>
+          @viewer.link element
+          @bridge.setViewer @
 
-      link: (element) =>
-        @viewer.link element
-        @bridge.setViewer @
+        showInfo: =>
+          @details = true
+          @viewer.allowScroll = true
 
-      showInfo: =>
-        @details = true
-        @viewer.allowScroll = true
+        showImage: =>
+          @details = false
+          @viewer.allowScroll = false
 
-      showImage: =>
-        @details = false
-        @viewer.allowScroll = false
-
-      addWarning: (message) =>
-        @warnings.push message
+        addWarning: (message) =>
+          @warnings.push message

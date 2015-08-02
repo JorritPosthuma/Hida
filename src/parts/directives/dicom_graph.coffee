@@ -1,50 +1,53 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomGraph', ->
-  restrict: 'E'
-  scope: 
-    bridge: '='
-  template: '<div></div>'
-  link: (scope, element) -> scope.ctrl.link element
+module.exports = (module) ->
 
-  controller: ($scope, $rootScope) ->
+  module.directive 'dicomGraph', ->
+    restrict: 'E'
+    scope: 
+      bridge: '='
+    template: '<div></div>'
+    link: (scope, element) -> scope.ctrl.link element
 
-    new class extends DefaultController
+    controller: ($scope, $rootScope) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class DicomGraphController extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        @bridge = @scope.bridge
-            
-      ###########################
-      # Methods                 #
-      ###########################
+        constructor: ->
+          super $scope, $rootScope
 
-      link: (@$element) =>
-        @element = @$element.find('div')[0]
-        @chart = c3.generate
-          bindto: @element
-          data:
-            columns: [ ]
-          size:
-            height: 150
-            width: 590
-          axis:
-            x: show: false
-            y: show: false
-          legend:
-            show: false
-          transition:
-            duration: 0
-          interaction:
-            enabled: false
+          @bridge = @scope.bridge
+              
+        ###########################
+        # Methods                 #
+        ###########################
 
-        @bridge.setGraph @
+        link: (@$element) =>
+          require.ensure [], =>
+            @element = @$element.find('div')[0]
+            @chart = require('c3').generate
+              bindto: @element
+              data:
+                columns: [ ]
+              size:
+                height: 150
+                width: 590
+              axis:
+                x: show: false
+                y: show: false
+              legend:
+                show: false
+              transition:
+                duration: 0
+              interaction:
+                enabled: false
 
-      addRoi: (roi) =>
-        roi.data.sums.unshift roi.id
-        @chart.load columns: [ roi.data.sums ]
+            @bridge.setGraph @
+
+        addRoi: (roi) =>
+          roi.data.sums.unshift roi.id
+          @chart.load columns: [ roi.data.sums ]

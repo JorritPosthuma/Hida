@@ -1,47 +1,49 @@
-module = angular.module 'hida'
+DefaultController = require '../../logic/controller'
 
-module.directive 'dicomHidaControls', ->
-  restrict: 'E'
-  scope: 
-    bridge: '='
-  templateUrl: "parts/directives/dicom_hida_controls.html"
+module.exports = (module) ->
 
-  controller: ($scope, $rootScope) ->
+  module.directive 'dicomHidaControls', ->
+    restrict: 'E'
+    scope: 
+      bridge: '='
+    template: require "./dicom_hida_controls.html"
 
-    new class extends DefaultController
+    controller: ($scope, $rootScope) ->
 
-      ###########################
-      # Constructor & init      #
-      ###########################
+      new class extends DefaultController
 
-      constructor: ->
-        super $scope, $rootScope
+        ###########################
+        # Constructor & init      #
+        ###########################
 
-        # Init
-        @merged = false
-        @analysis = false
+        constructor: ->
+          super $scope, $rootScope
 
-        # Make myself known to bridge
-        @bridge = @scope.bridge
-        @bridge.setControls @
+          # Init
+          @merged = false
+          @analysis = false
 
-      ###########################
-      # Methods                 #
-      ###########################
+          # Make myself known to bridge
+          @bridge = @scope.bridge
+          @bridge.setControls @
 
-      merge: =>
-        @merged = true
-        @unmerged_reader = @bridge.viewerDir.viewer.reader
-        reversed = @bridge.hida.reverseMerge @bridge.viewerDir.viewer.reader
-        @bridge.viewerDir.viewer.read reversed
+        ###########################
+        # Methods                 #
+        ###########################
 
-      unmerge: =>
-        @merged = false
-        @bridge.viewerDir.viewer.read @unmerged_reader
+        merge: =>
+          @merged = true
+          @unmerged_reader = @bridge.viewerDir.viewer.reader
+          reversed = @bridge.hida.reverseMerge @bridge.viewerDir.viewer.reader
+          @bridge.viewerDir.viewer.read reversed
 
-      window: => @bridge.viewerDir.viewer.enableWindow()
-      draw:   => @bridge.viewerDir.viewer.enableDraw()
-      edit:   => @bridge.viewerDir.viewer.enableEdit()
+        unmerge: =>
+          @merged = false
+          @bridge.viewerDir.viewer.read @unmerged_reader
 
-      analyse:   => @analysis = true
-      unAnalyse: => @analysis = false
+        window: => @bridge.viewerDir.viewer.enableWindow()
+        draw:   => @bridge.viewerDir.viewer.enableDraw()
+        edit:   => @bridge.viewerDir.viewer.enableEdit()
+
+        analyse:   => @analysis = true
+        unAnalyse: => @analysis = false
