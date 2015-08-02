@@ -1,7 +1,7 @@
 DefaultController = require '../logic/controller'
 
 module.exports = (module) ->
-  module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
+  module.controller 'HomeController', ($scope, $rootScope, $timeout, $q) ->
 
     new class HomeController extends DefaultController
 
@@ -12,10 +12,10 @@ module.exports = (module) ->
       constructor: ->
         super $scope, $rootScope
 
-        @controlsDefer = Q.defer()
-        @viewerDefer = Q.defer()
+        @controlsDefer = $q.defer()
+        @viewerDefer = $q.defer()
    
-        Q.all [@controlsDefer.promise, @viewerDefer.promise]
+        $q.all [@controlsDefer.promise, @viewerDefer.promise]
         .then @start
       
       ###########################

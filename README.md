@@ -17,3 +17,7 @@ By running the complete application in your browser or in a Node-Webkit containe
 To give you an idea about the application, the following shows a multi-file DICOM image with one ROI running in Safari:
 
 ![Hida Screensho](/docs/img/safari.png)
+
+## Backlog
+
+ * Window moving relative to magnitude (e.g. higher number = higher steps)

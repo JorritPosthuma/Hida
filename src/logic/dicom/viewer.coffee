@@ -130,11 +130,13 @@ module.exports = class DicomViewer extends EventBus
   drop: (files) =>
     reader = new DicomHTML5Reader files
     reader.run().then @read
+    .catch (error) => console.info error, error.stack
 
   image: (files) =>
     if files and files.length isnt 0
       reader = new DicomFSReader files
       reader.run().then @read
+      .catch (error) => console.info error, error.stack
 
   # Proxy method that only continues if a image is loaded
   ifLoaded: (fn) =>
@@ -143,13 +145,27 @@ module.exports = class DicomViewer extends EventBus
   # Is an image loaded
   loaded: => @file?
 
-  read: (@reader) =>
-    # Initialize
-    @init()
-    @frames = @reader.getFrameCount()
+  read: (reader) =>
+    # Show images
+    if reader.frames.length > 0
+      @reader = reader
+      # Initialize
+      @init()
+      @frames = reader.getFrameCount()
 
-    # Show
-    @show()
+      # Show
+      @show()
+
+    # ROI's
+    if reader.rois.length > 0
+      _.forEach reader.rois, (roi) =>
+        path = roi.toPath @paper, @raster.bounds
+        if path?
+          path.simplify 15
+          @rois.push path
+          @group.addChild path
+          @emit 'roi_add', path
+      @paper.view.draw()
 
   show: =>
     loaded = @loaded()
@@ -204,6 +220,8 @@ module.exports = class DicomViewer extends EventBus
     @paper.view.draw()
 
     @emit 'update'
+
+    setTimeout @resize, 1000
 
   resize: =>
     if @loaded()

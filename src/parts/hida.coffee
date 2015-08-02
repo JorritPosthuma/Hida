@@ -3,7 +3,7 @@ DefaultController = require '../logic/controller'
 Hida              = require '../logic/dicom/hida'
 
 module.exports = (module) ->
-  module.controller 'HidaController', ($scope, $rootScope, $timeout, $state) ->
+  module.controller 'HidaController', ($scope, $rootScope, $timeout, $state, $q) ->
 
     new class HidaController extends DefaultController
 
@@ -14,11 +14,11 @@ module.exports = (module) ->
       constructor: ->
         super $scope, $rootScope
 
-        @controlsDefer = Q.defer()
-        @graphDefer = Q.defer()
-        @viewerDefer = Q.defer()
+        @controlsDefer = $q.defer()
+        @graphDefer = $q.defer()
+        @viewerDefer = $q.defer()
    
-        Q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
+        $q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
         .then @start
         .catch (e) -> console.error e
       
