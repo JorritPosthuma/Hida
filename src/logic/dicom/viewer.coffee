@@ -161,7 +161,6 @@ module.exports = class DicomViewer extends EventBus
       _.forEach reader.rois, (roi) =>
         path = roi.toPath @paper, @raster.bounds
         if path?
-          path.simplify 15
           @rois.push path
           @group.addChild path
           @emit 'roi_add', path

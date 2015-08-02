@@ -20,7 +20,7 @@ module.exports = (module) ->
    
         $q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
         .then @start
-        .catch (e) -> console.error e
+        .catch (error) => console.info error, error.stack
       
       ###########################
       # Bridge Methods          #

@@ -66,7 +66,7 @@ class HermesRoi
   addRect: (original, x, y, width, height) =>
     @data.push
       x: parseFloat x
-      y: 1 - parseFloat y
+      y: parseFloat y
       width: parseFloat width
       height: parseFloat height
 
@@ -85,6 +85,20 @@ class HermesRoi
         x: bounds.x + bounds.width * point.x
         y: bounds.y + bounds.height * point.y
     roi.closed = true
+    roi.simplify 15
     roi
 
-  toRectPath: (paper) =>
+  toRectPath: (paper, bounds) =>
+    point = @data[0]
+    console.info point, bounds
+    rect = new paper.Rectangle
+      x: bounds.x + bounds.width * point.x
+      y: bounds.y + bounds.height * point.y
+      width: point.width * bounds.width
+      height: point.height * bounds.height
+    console.info rect
+    roi = new paper.Shape.Rectangle rect
+    roi.strokeColor = new paper.Color 1, 0, 0, 0.5 # '#009dec'
+    roi.selectedColor = new paper.Color 1, 0, 0, 1
+    roi.strokeWidth = 4
+    roi
