@@ -1,8 +1,8 @@
 .sass-cache
 
-app/lib/bower
-app/bundle
 node_modules
+bower_components
+app/bundle
 
 build
 cache

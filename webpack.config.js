@@ -43,15 +43,10 @@ module.exports = {
     ]
   },
   resolve: {
-    root: [path.join(__dirname, 'app/lib/bower')],
+    root: [path.join(__dirname, 'bower_components')],
     extensions: ['', '.js', '.json', '.coffee'] 
   },
-  plugins: [
-    new webpack.ResolverPlugin(
-      new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
-    )
-  ],
-  // devtool: 'eval-cheap-module-source-map',
+  // devtool: 'eval-cheap-module-source-map', // Disabled because nw.js dev tools can't handle the large sourcemaps
   devServer: {
     contentBase: './app',
     port: 5000
