@@ -1,7 +1,7 @@
 DefaultController = require '../logic/controller'
 
 module.exports = (module) ->
-  module.controller 'HomeController', ($scope, $rootScope, $timeout, $q) ->
+  module.controller 'HomeController', ($scope, $rootScope, $timeout) ->
 
     new class HomeController extends DefaultController
 
@@ -11,16 +11,10 @@ module.exports = (module) ->
 
       constructor: ->
         super $scope, $rootScope
-
-        @controlsDefer = $q.defer()
-        @viewerDefer = $q.defer()
-   
-        $q.all [@controlsDefer.promise, @viewerDefer.promise]
-        .then @start
       
       ###########################
       # Bridge Methods          #
       ###########################
 
-      setControls: (@controlsDir) => @controlsDefer.resolve @controlsDir
-      setViewer:   (@viewerDir)   => @viewerDefer.resolve @viewerDir
+      setControls: (@controlsDir) => 
+      setViewer:   (@viewerDir)   =>

@@ -52,8 +52,6 @@ class DicomFileReader extends DicomReader
         if file instanceof HermesRoiFile
           Array.prototype.push.apply @rois, file.rois
       @
-    .catch (error) =>
-      console.info error, error.stack
 
 class DicomFSReader extends DicomFileReader
 

@@ -3,7 +3,7 @@ DefaultController = require '../logic/controller'
 Hida              = require '../logic/dicom/hida'
 
 module.exports = (module) ->
-  module.controller 'HidaController', ($scope, $rootScope, $timeout, $state, $q) ->
+  module.controller 'HidaController', ($scope, $rootScope, $timeout, $state) ->
 
     new class HidaController extends DefaultController
 
@@ -14,13 +14,13 @@ module.exports = (module) ->
       constructor: ->
         super $scope, $rootScope
 
-        @controlsDefer = $q.defer()
-        @graphDefer = $q.defer()
-        @viewerDefer = $q.defer()
+        @controlsDefer = Q.defer()
+        @graphDefer = Q.defer()
+        @viewerDefer = Q.defer()
    
-        $q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
+        Q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
         .then @start
-        .catch (error) => console.info error, error.stack
+        .done()
       
       ###########################
       # Bridge Methods          #
@@ -67,7 +67,7 @@ module.exports = (module) ->
 
         reader.run().then =>
           @show reader
-          @controlsDir.merge()
+          # @controlsDir.merge()
           @viewerDir.viewer.frame = 28
           @viewerDir.viewer.show()
 
@@ -103,3 +103,4 @@ module.exports = (module) ->
           # @viewerDir.viewer.paper.view.draw()
 
           @hida.analyse 180, 80
+        .done()

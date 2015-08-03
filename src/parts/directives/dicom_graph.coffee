@@ -46,7 +46,7 @@ module.exports = (module) ->
               interaction:
                 enabled: false
 
-            @bridge.setGraph @
+            @bridge.setGraph? @
 
         addRoi: (roi) =>
           roi.data.sums.unshift roi.id

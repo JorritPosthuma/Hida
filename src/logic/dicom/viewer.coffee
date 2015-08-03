@@ -130,13 +130,13 @@ module.exports = class DicomViewer extends EventBus
   drop: (files) =>
     reader = new DicomHTML5Reader files
     reader.run().then @read
-    .catch (error) => console.info error, error.stack
+    .done()
 
   image: (files) =>
     if files and files.length isnt 0
       reader = new DicomFSReader files
       reader.run().then @read
-      .catch (error) => console.info error, error.stack
+      .done()
 
   # Proxy method that only continues if a image is loaded
   ifLoaded: (fn) =>
@@ -200,7 +200,7 @@ module.exports = class DicomViewer extends EventBus
 
     i = 0
     for pixel in @file.image.getPixelData()
-      pixel = @file.image.lut[pixel]
+      pixel = @file.image.lut[Math.round pixel]
       image_data.data[i]    = pixel
       image_data.data[i+1]  = pixel
       image_data.data[i+2]  = pixel

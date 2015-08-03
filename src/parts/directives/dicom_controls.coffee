@@ -21,7 +21,7 @@ module.exports = (module) ->
 
           # Make myself known to bridge
           @bridge = @scope.bridge
-          @bridge.setControls @
+          @bridge.setControls? @
               
         ###########################
         # Methods                 #

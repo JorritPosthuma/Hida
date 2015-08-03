@@ -37,7 +37,7 @@
     <table>
       <tr ng-repeat="(tag, element) in ctrl.viewer.file.file.data.elements">
         <td class="tag">{{element.display}}</td>
-        <td class="name">{{element.info.name}}</td>
+        <td class="name">{{element.name}}</td>
         <td ng-switch="element.type" class="value"><span ng-switch-when="unsupported" class="unsupported">Unsupported tag of {{element.length}} bytes</span><span ng-switch-when="sequence" class="unsupported">Unsupported sequence of {{element.length}} bytes</span><span ng-switch-default="ng-switch-default">{{element.value.toString()}}</span></td>
       </tr>
     </table>

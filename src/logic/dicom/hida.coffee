@@ -122,6 +122,7 @@ module.exports = class Hida extends EventBus
     data = _.zip index, slice
     # Perform fit
     fit = regression 'exponential', data
+    console.info fit
     # Only return [intercept, slope]
     fit.equation
 
@@ -147,7 +148,7 @@ module.exports = class Hida extends EventBus
 
       # Test value
       if not compare element.value
-        @emit 'warning', 'The value of DICOM tag '#{element.info.name}' #{element.info.tag} is incorrect'
+        @emit 'warning', "The value of DICOM tag '#{element.name}' #{element.tag} is incorrect"
 
     test file, 'x00080008', (value) -> _.contains value, 'DYNAMIC'
     test file, 'x00080060', (value) -> value is 'NM'
@@ -228,7 +229,7 @@ module.exports = class Hida extends EventBus
   # Private methods
   ########################################
 
-  # sqrt ( l^2 + r^2 )
+  # sqrt ( l * r )
   _reverseMergeFrames: (left, right) =>
     width = left.image.height
     height = left.image.width
@@ -252,10 +253,7 @@ module.exports = class Hida extends EventBus
         right_i = y * width + (width - (x + 1))
 
         # Calculate new value
-        value = Math.round Math.sqrt( Math.pow(left_data[i], 2) + Math.pow(right_data[right_i], 2) )
-        
-        # if value > 100
-        #   console.info left_data[i], right_data[right_i], value
+        value = Math.sqrt( left_data[i] * right_data[right_i] )
 
         target_data[i] = value
         max = Math.max max, value

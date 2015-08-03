@@ -30,7 +30,7 @@ module.exports = (module) ->
 
         link: (element) =>
           @viewer.link element
-          @bridge.setViewer @
+          @bridge.setViewer? @
 
         showInfo: =>
           @details = true
