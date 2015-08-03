@@ -14,9 +14,9 @@ The requirements were as follows:
 
 By running the complete application in your browser or in a Node-Webkit container, there is no nead to upload files in any sort of way. This means that all code is executed only on your computer, and privacy issues are not an issue!
 
-To give you an idea about the application, the following shows a multi-file DICOM image with one ROI running in Safari:
+To give you an idea about the application, the following shows a multi-frame DICOM image with three ROI's:
 
-![Hida Screensho](/docs/img/safari.png)
+![Hida Screensho](/docs/img/screen.png)
 
 ## TODO
 
