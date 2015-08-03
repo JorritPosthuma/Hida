@@ -49,9 +49,11 @@ module.exports = (module) ->
         @hida.on 'warning', @viewerDir.addWarning
         @hida.validate @viewerDir.viewer.reader.frames[0].file
 
-        @viewerDir.viewer.on 'roi_add',      (roi) => @updateRoi roi
-        @viewerDir.viewer.on 'roi_sub_edit', (roi) => @updateRoi roi
-        @viewerDir.viewer.on 'roi_edit',     (roi) => @updateRoi roi
+        @viewerDir.viewer.on 'roi_add',      (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_sub_edit', (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_edit',     (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_clear',            => @graphDir.create()
+        @viewerDir.viewer.on 'resize',       (width) => @graphDir.resize width
 
       updateRoi: (roi) =>
         @hida.updateRoi roi, @viewerDir.viewer.raster, @viewerDir.viewer.reader.frames
@@ -69,5 +71,5 @@ module.exports = (module) ->
           @viewerDir.viewer.frame = 28
           @viewerDir.viewer.show()
 
-          @hida.analyse 180, 80
+          # @hida.analyse 180, 80
         .done()

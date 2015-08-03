@@ -18,6 +18,13 @@ To give you an idea about the application, the following shows a multi-file DICO
 
 ![Hida Screensho](/docs/img/safari.png)
 
+## TODO
+
+ * Hida algoritme afmaken
+ * C15 toevoegen
+ * DICOM sub tags uitlezen (voor actual frame duration)
+
 ## Backlog
 
  * Window moving relative to magnitude (e.g. higher number = higher steps)
+ * Export

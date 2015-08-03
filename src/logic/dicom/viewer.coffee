@@ -148,6 +148,7 @@ module.exports = class DicomViewer extends EventBus
   read: (reader) =>
     # Show images
     if reader.frames.length > 0
+      @emit 'roi_clear'
       @reader = reader
       # Initialize
       @init()
@@ -220,9 +221,11 @@ module.exports = class DicomViewer extends EventBus
 
     @emit 'update'
 
-    setTimeout @resize, 1000
+    setTimeout @resize, 100
 
   resize: =>
     if @loaded()
       @group.fitBounds @paper.view.bounds
       @scaling.current = @raster.scaling.x
+      @paper.view.draw()
+      @emit 'resize', @$canvas.width()

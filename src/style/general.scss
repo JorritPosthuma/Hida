@@ -8,6 +8,41 @@ input {
   cursor: default;
 }
 
+.c3-tooltip-container {
+  display: none !important;
+}
+
+.dicom-graph-dir {
+  @include flexbox();
+  height: 150px;
+
+  .lines {
+    height: 100%;
+  }
+
+  .info {
+    @include flex-shrink(0);
+    @include flexbox();
+    @include justify-content(center);
+
+    height: 100%;
+    width: 150px;
+    color: white;
+    padding: 10px 0;
+
+    table {
+      height: 100%;
+
+      .color {
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
 .drag {
   -webkit-user-select: none;
   -webkit-app-region: drag;

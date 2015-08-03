@@ -148,7 +148,7 @@ module.exports = class Hida extends EventBus
 
       # Test value
       if not compare element.value
-        @emit 'warning', "The value of DICOM tag '#{element.name}' #{element.tag} is incorrect"
+        @emit 'warning', "The value of DICOM tag '#{element.name}' #{element.display} is incorrect"
 
     test file, 'x00080008', (value) -> _.contains value, 'DYNAMIC'
     test file, 'x00080060', (value) -> value is 'NM'

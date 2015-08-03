@@ -6,7 +6,21 @@ module.exports = (module) ->
     restrict: 'E'
     scope: 
       bridge: '='
-    template: '<div></div>'
+    template: """
+      <div class="dicom-graph-dir">
+        <div class="lines"></div>
+        <div class="info">
+          <table>
+            <tr ng-repeat="item in ctrl.hovered">
+              <td>
+                <div ng-style="{'background': item.color}" class="color"></div>
+              </td>
+              <td>{{item.value}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    """
     link: (scope, element) -> scope.ctrl.link element
 
     controller: ($scope, $rootScope) ->
@@ -19,6 +33,7 @@ module.exports = (module) ->
 
         constructor: ->
           super $scope, $rootScope
+          @hovered = []
 
           @bridge = @scope.bridge
               
@@ -26,16 +41,22 @@ module.exports = (module) ->
         # Methods                 #
         ###########################
 
-        link: (@$element) =>
+        link: (@$directive_element) => @create()
+
+        create: =>
           require.ensure [], =>
-            @element = @$element.find('div')[0]
+            @$graph_element = @$directive_element.find('.lines')
+            @graph_element = @$graph_element[0]
+
+            @chart?.destroy()
             @chart = require('c3').generate
-              bindto: @element
+              bindto: @graph_element
               data:
                 columns: [ ]
+                onmouseover: @onMouseOverData
               size:
                 height: 150
-                width: 590
+                width: @$graph_element.width()
               axis:
                 x: show: false
                 y: show: false
@@ -44,10 +65,28 @@ module.exports = (module) ->
               transition:
                 duration: 0
               interaction:
-                enabled: false
+                enabled: true
 
             @bridge.setGraph? @
 
+        onMouseOverData: (item) =>
+          colors = @chart.data.colors()
+          @hovered = _.map @chart.data(), (curve) ->
+            color: colors[curve.id]
+            value: _.round curve.values[item.index].value, 2
+          @hovered = _.sortByOrder @hovered, 'value', 'desc'
+          @scope.$apply()
+
+        resize: (width) =>
+          if width >= 200
+            @chart?.resize
+              height: 150
+              width: width - 150
+
         addRoi: (roi) =>
           roi.data.sums.unshift roi.id
-          @chart.load columns: [ roi.data.sums ]
+          @chart?.load columns: [ roi.data.sums ]
+
+          colors = @chart.data.colors()
+          roi.strokeColor = colors[roi.id]
+          # @roi.selectedColor = new @paper.Color 1, 0, 0, 1
