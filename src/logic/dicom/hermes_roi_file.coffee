@@ -73,7 +73,7 @@ class HermesRoi
   toPath: (paper, bounds) =>
     switch @info['roi type']
       when 1, 2 then @toPointPath paper, bounds
-      when 3    then @toRectPath paper, bounds
+      # when 3    then @toRectPath paper, bounds
       
   toPointPath: (paper, bounds) =>
     roi = new paper.Path()
