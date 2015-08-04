@@ -1,7 +1,20 @@
 {
   "name": "Hida",
   "version": "1.0.0",
-  "private": true,
+  "author": {
+    "name": "Jorrit Posthuma",
+    "email": "j.s.posthuma@amc.uva.nl"
+  },
+  "description": "CoffeeScript implementation (both web and NW.js) of a DICOM viewer and the HIDA algorithm.",
+  "dependencies": {
+    "angular": "^1.4.3",
+    "angular-ui-router": "^0.2.15",
+    "c3": "^0.4.10",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.0",
+    "moment": "^2.10.6",
+    "q": "^1.4.1"
+  },
   "devDependencies": {
     "bower": "^1.4.1",
     "coffee-loader": "^0.7.2",
@@ -22,19 +35,12 @@
     "webpack": "^1.10.5",
     "webpack-dev-server": "^1.10.1"
   },
-  "dependencies": {
-    "angular": "^1.4.3",
-    "angular-ui-router": "^0.2.15",
-    "c3": "^0.4.10",
-    "jquery": "^2.1.4",
-    "lodash": "^3.10.0",
-    "moment": "^2.10.6",
-    "q": "^1.4.1"
-  },
+  "private": true,
   "scripts": {
     "start": "npm run nw-dev & npm run wp-server",
     "app": "npm run wp-clean && npm run wp-compile && npm run nw-run",
     "build": "npm run wp-clean && npm run wp-compile && npm run nw-clean && npm run nw-build && npm run nw-open",
+    "postinstall": "./node_modules/.bin/bower install",
     "nw-build": "./node_modules/.bin/nwbuild app",
     "nw-clean": "rm -rf build",
     "nw-dev": "./node_modules/.bin/nwbuild -r dev",
@@ -42,7 +48,6 @@
     "nw-run": "./node_modules/.bin/nwbuild -r app",
     "wp-clean": "rm -rf app/bundle",
     "wp-compile": "./node_modules/.bin/webpack -p",
-    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline",
-    "postinstall": "./node_modules/.bin/bower install"
+    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline"
   }
 }

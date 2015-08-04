@@ -20,9 +20,7 @@ To give you an idea about the application, the following shows a multi-frame DIC
 
 ## TODO
 
- * Hida algoritme afmaken
- * C15 toevoegen
- * DICOM sub tags uitlezen (voor actual frame duration)
+ * Resultaten view maken
 
 ## Backlog
 

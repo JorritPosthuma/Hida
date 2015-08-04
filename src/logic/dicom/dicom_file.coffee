@@ -34,6 +34,7 @@ module.exports = class DicomFile
     @getInfo()
     @getValues()
     @getCustomValues()
+    @flattenInfoTree()
 
   #######################################
   # Public
@@ -68,11 +69,20 @@ module.exports = class DicomFile
   # Private
   #######################################
 
+  _walkDataset: (fn, dict) =>
+    walk = (dataset, _dict, level) => _.each dataset, (element, tag) =>
+      __dict = fn element, tag, _dict, level
+
+      if element.items?
+        _.each element.items, (item, key) =>
+          walk item.dataSet.elements, __dict?[key], level + 1
+    walk @data.elements, dict, 0
+
   getData: =>
     @data = dicomParser.parseDicom new Uint8Array @buffer
 
   getInfo: =>
-    _.each @data.elements, (element, tag) =>
+    @_walkDataset (element, tag) =>
       # Create display tag
       one = tag.substring 1, 5
       two = tag.substring 5, 9
@@ -86,27 +96,28 @@ module.exports = class DicomFile
         element.vr = 'unsupported'
 
   getValues: =>
-    values = dicomParser.explicitDataSetToJS @data
-
-    _.each @data.elements, (element, tag) =>
+    @_walkDataset (element, tag, values, level) =>
+      element.level = level
       if _.has values, tag
-        element.value = values[tag]
+        value = values[tag]
+        if _.isArray value then return value
+        else element.value = value
+      return
+    , dicomParser.explicitDataSetToJS @data
 
+  getCustomValues: =>
+    @_walkDataset (element, tag) =>
+      # Start of with normal type
+      element.type = 'normal'
+
+      # Transform existing values
+      if element.vr?
         switch element.vr
           when 'PN' then @_singleOrMultple element, (v) -> new DicomName v
           when 'DA' then @_singleOrMultple element, (v) -> new DicomDate v
           when 'TM' then @_singleOrMultple element, (v) -> new DicomTime v
 
-  getCustomValues: =>
-    _.each @data.elements, (element, tag) =>
-      # Start of with normal type
-      element.type = 'normal'
-
-      # We don't support sequences (yet)
-      if element.vr is 'SQ'
-        element.type = 'sequence'
-
-      # Do some custom mapping
+      # Do some additional VR mapping
       if element.vm? and not element.value?
         if element.vm is '1'
           switch element.vr
@@ -121,6 +132,23 @@ module.exports = class DicomFile
           element.type = 'unsupported'
       else
         element.type = 'unsupported'
+
+      # Add sequenct functions
+      if element.vr is 'SQ'
+        element.type = 'sequence'
+        element.find = (tag) ->
+          result = undefined
+          _.find element.items, (item) ->
+            _.find item.dataSet.elements, (element, key) ->
+              if tag is key
+                result = element
+                return true
+              return false
+          result
+
+  flattenInfoTree: =>
+    @elementList = []
+    @_walkDataset (element) => @elementList.push element
 
   _readMultipleUShort: (element) =>  [0 ... (element.length / 2)].map (i) => @data.uint16 element.tag, i
   _readMultipleSShort: (element) =>  [0 ... (element.length / 2)].map (i) => @data.int16  element.tag, i

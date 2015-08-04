@@ -15,14 +15,16 @@ module.exports = class Hida extends EventBus
     # Basic access variables
     viewer = @bridge.viewerDir.viewer
 
-    length = 183
-    weigth = 71
-
     console.info 'Patient length', length
     console.info 'Patient weigth', weigth
 
     # Constants
-    averageFrameDuration = 10002 / 1000 # In seconds!
+    # Phase Information Sequence
+    pisq = viewer.reader.frames[0].file.getElement 'x00540032'
+    # Actual frame duration
+    averageFrameDuration = parseInt pisq.find('x00181242')?.value
+    averageFrameDuration = 10000 unless _.isFinite averageFrameDuration
+    averageFrameDuration = averageFrameDuration / 1000
 
     console.info 'Frame duration (seconds)', averageFrameDuration
 
@@ -41,10 +43,10 @@ module.exports = class Hida extends EventBus
     remnantLiverCurve = order[1].curve # Get middle
     totalCurve = @totalCurve()
 
-    # liverCurve = [1984, 2854, 4238, 5417, 6151, 6836, 7455, 8126, 8713, 9066, 9803, 10199, 10627, 11089, 11410, 11985, 12368, 12912, 13259, 13547, 13812, 14243, 14497, 15073, 15146, 15633, 15737, 16206, 16345, 16676, 16758, 16983, 17415, 17501, 17655, 17907]
-    # bloodCurve = [3133, 1970, 1134, 968.4, 959.2, 959.1, 902.6, 907.2, 797.4, 764.2, 743.7, 741.5, 716.2, 689.5, 652.6, 625.3, 582.9, 620, 583, 578.9, 566.6, 513.5, 531.2, 518.2, 495.8, 471.7, 441.2, 449.8, 434.8, 414.9, 394.1, 430.9, 377.2, 367.2, 388.2, 360.5]
-    # remnantLiverCurve = order[1].curve # Get middle
-    # totalCurve = [22952, 24264, 23409, 22914, 22814, 22629, 22926, 23316, 23432, 23557, 23919, 24203, 24279, 24793, 24934, 25374, 25739, 26258, 26228, 26601, 26605, 26920, 27113, 27590, 27536, 28094, 28198, 28573, 28464, 28754, 28829, 29127, 29314, 29383, 29529, 29692]
+    # liverCurve = [3561, 9777, 13578, 15991, 17960, 20063, 22054, 23855, 25117, 26343, 27753, 28881, 29998, 30717, 31885, 32732, 33691, 34454, 34778, 35826, 36778, 37238, 37816, 38298, 38876, 39394, 39845, 40399, 40458, 40974, 41699, 41545, 40975, 42019, 42780, 42650]
+    # bloodCurve = [4045, 3435, 1935, 1945, 1819, 1716, 1628, 1428, 1416, 1349, 1286, 1192, 1050, 1054, 942.8, 988.4, 938.0, 942.9, 849.3, 847.9, 764.1, 799.3, 759.7, 709.4, 722.8, 648.6, 623.3, 633.1, 598.3, 605.7, 568.1, 591.0, 500.9, 544.8, 489.6, 526.4]
+    # totalCurve = [45182, 46890, 42684, 42989, 43381, 44385, 44790, 45214, 45591, 45997, 46697, 47057, 47362, 47546, 47712, 48542, 48990, 49409, 49220, 49657, 50453, 50640, 50798, 51098, 51440, 51460, 51685, 52101, 51836, 52058, 52798, 52582, 53296, 52964, 53261, 52899]
+    # remnantLiverCurve = [2237, 5081, 6557, 7278, 8170, 9051, 9641, 10412, 10838, 11395, 11856, 12137, 12516, 12638, 12978, 13607, 13695, 14223, 14094, 14297, 15051, 15277, 15394, 15654, 15725, 16012, 16067, 16291, 16350, 16422, 16917, 16694, 16296, 16813, 17285, 17521]
 
     console.info 'Total curve | F', totalCurve
     console.info 'Blood curve | C', bloodCurve
@@ -58,9 +60,6 @@ module.exports = class Hida extends EventBus
 
     frameStart = Math.round(150 / averageFrameDuration)
     frameEnd   = Math.round(350 / averageFrameDuration)
-
-    # frameStart = 16
-    # frameEnd = 36
 
     console.info 'Frame start', frameStart
     console.info 'Frame end', frameEnd
@@ -84,10 +83,12 @@ module.exports = class Hida extends EventBus
     At1  = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
     LClr = (liverSumEnd - liverSumStart) / (At1 * @csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
     LClr_min = 100 * LClr * 60 / averageFrameDuration
+    LClr_BSA = LClr_min / BSA
 
     console.info 'A(t1)', At1
     console.info 'LClr [/frame]', LClr
     console.info 'LClr [%/min]', LClr_min
+    console.info 'LClr [BSA Corrected]', LClr_BSA
 
     totalLiverCounts   = @csum(liverCurve, frameStart, frameEnd)
     remnantLiverCounts = @csum(remnantLiverCurve, frameStart, frameEnd)
@@ -101,8 +102,8 @@ module.exports = class Hida extends EventBus
     console.info 'FRLF', FRLF
     console.info 'FRLF BSA Corrected', FRLF_BSA_Corrected
 
-    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, frameStart, frameEnd
-    [liverIntercept, liverSlope] = @fitExponential liverCurve, frameStart, frameEnd
+    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, (frameStart), (frameEnd)
+    [liverIntercept, liverSlope] = @fitExponential liverCurve, (frameStart), (frameEnd)
 
     console.info 'Exponential fitting of blood curve', bloodIntercept, bloodSlope
     console.info 'Exponential fitting of liver curve', liverIntercept, liverSlope
@@ -113,22 +114,31 @@ module.exports = class Hida extends EventBus
     console.info '-BClr', BClr
     console.info 'LClr', LClr
 
+    Cfit_0 = averageFrameDuration * bloodIntercept
+    Cfit_15 = averageFrameDuration * bloodIntercept * Math.exp(bloodSlope * 15 * 60)
+
+    console.info 'Cfit(t=0min)', Cfit_0
+    console.info 'Cfit(t=15min)', Cfit_15
+
+    HIDAc15 = 100 - (100 * Cfit_15 / Cfit_0)
+
+    console.info 'HIDA c15', HIDAc15
+
   fitExponential: (curve, start, end) ->
     # Only get part between begin and end
-    slice = _.slice curve, (start - 1), (end - 1)
+    slice = _.slice curve, (start + 1), end
+    slice = _.map slice, (value) -> value / 10
     # Create index array
     index = _.range slice.length
-    # Convert to regression API format
-    data = _.zip index, slice
+    index = _.map index, (value) -> (value + start) * 10
     # Perform fit
-    fit = regression 'exponential', data
-    console.info fit
+    fit = regression 'exponential', _.zip index, slice
     # Only return [intercept, slope]
     fit.equation
 
   csum: (curve, start, end) ->
     # Only get part between begin and end
-    slice = _.slice curve, (start - 1), (end - 1)
+    slice = _.slice curve, start, end
     # Sum all values
     _.sum slice
 
@@ -147,19 +157,25 @@ module.exports = class Hida extends EventBus
         return
 
       # Test value
-      if not compare element.value
+      if not compare element
         @emit 'warning', "The value of DICOM tag '#{element.name}' #{element.display} is incorrect"
 
-    test file, 'x00080008', (value) -> _.contains value, 'DYNAMIC'
-    test file, 'x00080060', (value) -> value is 'NM'
-    test file, 'x00540020', (value) -> _.isEqual value, [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-                                                         2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
-    test file, 'x00185100', (value) -> value is 'FFS'
-    test file, 'x00280008', (value) -> value is '72'
-    test file, 'x00200037', (value) -> false # TODO
-    test file, 'x00181242', (value) -> false # TODO
-    test file, 'x00540100', (value) -> _.isEqual value, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
-                                                         1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
+    test file, 'x00080008', (element) -> _.contains element.value, 'DYNAMIC'
+    test file, 'x00080060', (element) -> element.value is 'NM'
+    test file, 'x00540020', (element) -> _.isEqual element.value, [
+      1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+      2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+    ]
+    test file, 'x00185100', (element) -> element.value is 'FFS'
+    test file, 'x00280008', (element) -> element.value is '72'
+    # test file, 'x00200037', (element) -> true # TODO
+    test file, 'x00540032', (element) -> 
+      afd = parseInt element.find('x00181242')?.value
+      return _.isFinite afd
+    test file, 'x00540100', (element) -> _.isEqual element.value, [
+      1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
+      1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36
+    ]
 
   curve: (roi) =>
     viewer = @bridge.viewerDir.viewer

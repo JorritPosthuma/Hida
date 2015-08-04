@@ -228,6 +228,15 @@ input {
       font-family: "Lucida Console", Monaco, monospace;
     }
 
+    .level {
+      div {
+        width: 10px;
+        i {
+          margin-right: 2px;
+        }
+      }
+    }
+
     .name {
       font-weight: bold;
     }
@@ -238,7 +247,7 @@ input {
     }
 
     td {
-      padding: 2px 5px;
+      padding: 2px 7px;
     }
   }
 }

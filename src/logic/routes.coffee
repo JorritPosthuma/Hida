@@ -23,3 +23,4 @@ module.exports = (module) ->
 
   module.run ($rootScope) ->
     $rootScope.temp = {}
+    $rootScope._ = _

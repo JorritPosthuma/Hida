@@ -165,6 +165,7 @@ module.exports = class DicomViewer extends EventBus
           @rois.push path
           @group.addChild path
           @emit 'roi_add', path
+          @roiToMask path
       @paper.view.draw()
 
   show: =>
@@ -229,3 +230,26 @@ module.exports = class DicomViewer extends EventBus
       @scaling.current = @raster.scaling.x
       @paper.view.draw()
       @emit 'resize', @$canvas.width()
+
+  roiToMask: (path) =>
+    # # Determine scaling
+    # offset = @raster.getBounds()
+    # scaling = @raster.getScaling().x
+
+    # image_data = @raster.createImageData new @paper.Size @file.image.width, @file.image.height
+
+    # for x in [0 ... @raster.width] by 1
+    #   x_scale = x * scaling + offset.x
+    #   for y in [0 ... @raster.height] by 1
+    #     # Calculate relative point
+    #     point = new paper.Point x_scale, y * scaling + offset.y
+    #     if path.contains point
+    #       i = (y * @raster.width + x) * 4
+    #       image_data.data[i]    = 255
+    #       image_data.data[i+1]  = 255
+    #       image_data.data[i+2]  = 255
+    #       image_data.data[i+3]  = 255
+    
+    # @raster.setImageData image_data, new @paper.Point 0, 0
+
+    # @paper.view.draw()

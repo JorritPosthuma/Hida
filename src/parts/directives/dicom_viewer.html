@@ -29,16 +29,32 @@
       </tr>
     </table>
     <div class="warnings">
-      <div ng-repeat="warning in ctrl.warnings" class="warning"><span class="head"><i class="fa fa-exclamation-triangle"></i>&nbsp;Warning: </span><span class="message">{{warning}}</span></div>
+      <div ng-repeat="warning in ctrl.warnings" class="warning">
+        <span class="head"><i class="fa fa-exclamation-triangle"></i>&nbsp;Warning: </span>
+        <span class="message">{{warning}}</span>
+        </div>
     </div>
   </div>
   <div ng-if="ctrl.viewer.loaded() &amp;&amp; ctrl.details" class="info">
     <h2>DICOM Image information</h2><i ng-click="ctrl.showImage()" class="infoToggle fa fa-picture-o"></i>
     <table>
-      <tr ng-repeat="(tag, element) in ctrl.viewer.file.file.data.elements">
+      <tr ng-repeat="element in ctrl.viewer.file.file.elementList">
+        <td class="level">
+          <div>
+            <i class="fa fa-ellipsis-v" ng-repeat="i in $root._.times(element.level)"></i>
+          </div>
+        </td>
         <td class="tag">{{element.display}}</td>
         <td class="name">{{element.name}}</td>
-        <td ng-switch="element.type" class="value"><span ng-switch-when="unsupported" class="unsupported">Unsupported tag of {{element.length}} bytes</span><span ng-switch-when="sequence" class="unsupported">Unsupported sequence of {{element.length}} bytes</span><span ng-switch-default="ng-switch-default">{{element.value.toString()}}</span></td>
+        <td ng-switch="element.type" class="value">
+          <span ng-switch-when="unsupported" class="unsupported">
+            Unsupported {{element.vr}} tag of {{element.length}} bytes
+          </span>
+          <span ng-switch-when="sequence" class="unsupported">
+            Sequence shown below
+          </span>
+          <span ng-switch-default="ng-switch-default">{{element.value.toString()}}</span>
+        </td>
       </tr>
     </table>
   </div>
