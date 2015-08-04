@@ -10,7 +10,8 @@ module.exports = (module) ->
       <div class="dicom-graph-dir">
         <div class="lines"></div>
         <div class="info">
-          <table>
+          <span ng-if="ctrl.hovered.length == 0">Move mouse over data to see the values</span>
+          <table ng-if="ctrl.hovered.length > 0">
             <tr ng-repeat="item in ctrl.hovered">
               <td>
                 <div ng-style="{'background': item.color}" class="color"></div>

@@ -1,0 +1,99 @@
+.dicom-viewer-directive {
+  background: black;
+  width: 100%;
+  height: 100%;
+
+  .placeholder, .image, .info, canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .placeholder {
+    @include flexbox();
+    @include justify-content(center);
+    @include align-items(center);
+    @include flex-direction(column);
+
+    h1 {
+      color: white;
+    }
+  }
+
+  table {
+    color: white;
+
+    .name {
+      font-weight: bold;
+    }
+
+    td {
+      padding: 2px 7px;
+    }
+  }
+
+  i.infoToggle {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+
+    font-size: 15px;
+    color: #009dec;
+  }
+
+  .image table {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .warnings {
+    color: white;
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+
+    .head {
+      color: red;
+      font-weight: bold;
+    }
+  }
+
+  .info {
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .dataset {
+      width: 100%;
+      table-layout: fixed;
+
+      .level {
+        width: 15px;
+        div { width: 15px; }
+        i { margin-right: 2px; }
+      }
+
+      .tag {
+        font-size: 9px;
+        width: 70px;
+        color: #AAA;
+        font-family: "Lucida Console", Monaco, monospace;
+      }
+
+      .name {
+        width: 150px;
+      }
+
+      .value {
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+
+        .unsupported {
+          font-size: 9px;
+          color: #AAA;
+        }
+      }
+    }
+  }
+}

@@ -20,9 +20,9 @@ module.exports = class Hida extends EventBus
 
     # Constants
     # Phase Information Sequence
-    pisq = viewer.reader.frames[0].file.getElement 'x00540032'
+    phaseInformation = viewer.reader.frames[0].file.getElement 'x00540032'
     # Actual frame duration
-    averageFrameDuration = parseInt pisq.find('x00181242')?.value
+    averageFrameDuration = parseInt phaseInformation.find('x00181242')?.value
     averageFrameDuration = 10000 unless _.isFinite averageFrameDuration
     averageFrameDuration = averageFrameDuration / 1000
 
@@ -102,8 +102,8 @@ module.exports = class Hida extends EventBus
     console.info 'FRLF', FRLF
     console.info 'FRLF BSA Corrected', FRLF_BSA_Corrected
 
-    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, (frameStart), (frameEnd)
-    [liverIntercept, liverSlope] = @fitExponential liverCurve, (frameStart), (frameEnd)
+    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, frameStart, frameEnd, averageFrameDuration
+    [liverIntercept, liverSlope] = @fitExponential liverCurve, frameStart, frameEnd, averageFrameDuration
 
     console.info 'Exponential fitting of blood curve', bloodIntercept, bloodSlope
     console.info 'Exponential fitting of liver curve', liverIntercept, liverSlope
@@ -114,7 +114,7 @@ module.exports = class Hida extends EventBus
     console.info '-BClr', BClr
     console.info 'LClr', LClr
 
-    Cfit_0 = averageFrameDuration * bloodIntercept
+    Cfit_0  = averageFrameDuration * bloodIntercept
     Cfit_15 = averageFrameDuration * bloodIntercept * Math.exp(bloodSlope * 15 * 60)
 
     console.info 'Cfit(t=0min)', Cfit_0
@@ -124,23 +124,21 @@ module.exports = class Hida extends EventBus
 
     console.info 'HIDA c15', HIDAc15
 
-  fitExponential: (curve, start, end) ->
-    # Only get part between begin and end
-    slice = _.slice curve, (start + 1), end
-    slice = _.map slice, (value) -> value / 10
-    # Create index array
-    index = _.range slice.length
-    index = _.map index, (value) -> (value + start) * 10
-    # Perform fit
-    fit = regression 'exponential', _.zip index, slice
+  fitExponential: (curve, start, end, averageFrameDuration) ->
+    # Set time steps
+    index  = _.map curve, (value, index) -> index * averageFrameDuration
+    # Convert to /sec
+    values = _.map curve, (value, index) -> value / averageFrameDuration
+    # Create API format
+    total = _.zip index, values
+    # Perform fit (with slice of total)
+    fit = regression 'exponential', _.slice total, start, end
     # Only return [intercept, slope]
     fit.equation
 
   csum: (curve, start, end) ->
-    # Only get part between begin and end
-    slice = _.slice curve, start, end
-    # Sum all values
-    _.sum slice
+    # Sum all values between begin and end
+    _.sum _.slice curve, start, end
 
   validate: (file) =>
     test = (file, tag, compare) =>

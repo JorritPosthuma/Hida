@@ -35,6 +35,14 @@ module.exports = (module) ->
       ###########################
 
       start: =>
+        @hida = new Hida @
+
+        @viewerDir.viewer.on 'roi_add',      (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_sub_edit', (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_edit',     (roi)   => @updateRoi roi
+        @viewerDir.viewer.on 'roi_clear',            => @graphDir.create()
+        @viewerDir.viewer.on 'resize',       (width) => @graphDir.resize width
+
         if @root.temp.hida_reader?
           reader = @root.temp.hida_reader
           delete @root.temp.hida_reader
@@ -44,34 +52,27 @@ module.exports = (module) ->
           else $state.go 'main.home'
 
       show: (reader) =>
-        @viewerDir.viewer.read reader
-        @hida = new Hida @
+        @viewerDir.viewer.read reader        
         @hida.on 'warning', @viewerDir.addWarning
         @hida.validate @viewerDir.viewer.reader.frames[0].file
-
-        @viewerDir.viewer.on 'roi_add',      (roi)   => @updateRoi roi
-        @viewerDir.viewer.on 'roi_sub_edit', (roi)   => @updateRoi roi
-        @viewerDir.viewer.on 'roi_edit',     (roi)   => @updateRoi roi
-        @viewerDir.viewer.on 'roi_clear',            => @graphDir.create()
-        @viewerDir.viewer.on 'resize',       (width) => @graphDir.resize width
 
       updateRoi: (roi) =>
         @hida.updateRoi roi, @viewerDir.viewer.raster, @viewerDir.viewer.reader.frames
         @graphDir.addRoi roi
 
       debug: =>
-        reader = new DicomFSReader [
-          "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905"
-          # "/Users/Jorrit/Development/Hida Private/Data/dcm150406921.0000.dcm"
-          # "/Users/Jorrit/Development/Hida Private/Data/dcm153821220.0000.dcm"
-          "/Users/Jorrit/Development/Hida Private/Data/testfile1.hroi"
-        ]
+        # reader = new DicomFSReader [
+        #   # "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905"
+        #   "/Users/Jorrit/Development/Hida Private/Data/dcm150406921.0000.dcm"
+        #   # "/Users/Jorrit/Development/Hida Private/Data/dcm153821220.0000.dcm"
+        #   "/Users/Jorrit/Development/Hida Private/Data/testfile1.hroi"
+        # ]
 
-        reader.run().then =>
-          @show reader
-          @controlsDir.merge()
-          @viewerDir.viewer.frame = 28
-          @viewerDir.viewer.show()
+        # reader.run().then =>
+        #   @show reader
+        #   # @controlsDir.merge()
+        #   @viewerDir.viewer.frame = 28
+        #   @viewerDir.viewer.show()
 
-          @hida.analyse 183, 71
-        .done()
+        #   @hida.analyse 183, 71
+        # .done()

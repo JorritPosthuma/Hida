@@ -1,0 +1,40 @@
+.dicom-graph-dir {
+  @include flexbox();
+  height: 150px;
+
+  .c3-tooltip-container {
+    display: none !important;
+  }
+
+  .lines {
+    height: 100%;
+  }
+
+  .info {
+    @include flex-shrink(0);
+    @include flexbox();
+    @include justify-content(center);
+    @include align-items(center);
+
+    height: 100%;
+    width: 150px;
+    color: white;
+    padding: 10px 0;
+
+    span {
+      margin: 25px;
+      text-align: center;
+    }
+
+    table {
+      height: 100%;
+
+      .color {
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+        margin-right: 20px;
+      }
+    }
+  }
+}

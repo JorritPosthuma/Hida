@@ -8,3 +8,6 @@
 @import "inspinia/style";
 
 @import "general";
+@import "../parts/directives/dicom_graph";
+@import "../parts/directives/dicom_viewer";
+@import "../parts/directives/dicom_controls";

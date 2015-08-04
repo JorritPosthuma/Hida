@@ -37,7 +37,7 @@
   </div>
   <div ng-if="ctrl.viewer.loaded() &amp;&amp; ctrl.details" class="info">
     <h2>DICOM Image information</h2><i ng-click="ctrl.showImage()" class="infoToggle fa fa-picture-o"></i>
-    <table>
+    <table class="dataset">
       <tr ng-repeat="element in ctrl.viewer.file.file.elementList">
         <td class="level">
           <div>
