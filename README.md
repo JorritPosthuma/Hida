@@ -16,7 +16,7 @@ By running the complete application in your browser or in a Node-Webkit containe
 
 To give you an idea about the application, the following shows a multi-frame DICOM image with three ROI's:
 
-![Hida Screensho](/docs/img/screen.png)
+![Hida Screenshot](/docs/img/screen.png)
 
 ## TODO
 

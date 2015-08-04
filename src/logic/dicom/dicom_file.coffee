@@ -118,7 +118,7 @@ module.exports = class DicomFile
           when 'TM' then @_singleOrMultple element, (v) -> new DicomTime v
 
       # Do some additional VR mapping
-      if element.vm? and not element.value?
+      if element.vm? and element.value?.dataOffset?
         if element.vm is '1'
           switch element.vr
             when 'IS' then element.value = @data.string element.tag, 0
