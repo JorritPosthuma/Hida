@@ -81,11 +81,11 @@ class HermesRoi
     roi.selectedColor = new paper.Color 1, 0, 0, 1
     roi.strokeWidth = 4
     _.forEach @data, (point) ->
-      roi.add 
+      roi.add
         x: bounds.x + bounds.width * point.x
         y: bounds.y + bounds.height * point.y
     roi.closed = true    
-    roi.simplify 10
+    # roi.simplify 10
     roi
 
   toRectPath: (paper, bounds) =>
