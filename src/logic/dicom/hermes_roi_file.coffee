@@ -84,8 +84,8 @@ class HermesRoi
       roi.add 
         x: bounds.x + bounds.width * point.x
         y: bounds.y + bounds.height * point.y
-    roi.closed = true
-    # roi.simplify 15
+    roi.closed = true    
+    roi.simplify 10
     roi
 
   toRectPath: (paper, bounds) =>

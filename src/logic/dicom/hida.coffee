@@ -43,10 +43,10 @@ module.exports = class Hida extends EventBus
     remnantLiverCurve = order[1].curve # Get middle
     totalCurve = @totalCurve()
 
-    # liverCurve = [3561, 9777, 13578, 15991, 17960, 20063, 22054, 23855, 25117, 26343, 27753, 28881, 29998, 30717, 31885, 32732, 33691, 34454, 34778, 35826, 36778, 37238, 37816, 38298, 38876, 39394, 39845, 40399, 40458, 40974, 41699, 41545, 40975, 42019, 42780, 42650]
-    # bloodCurve = [4045, 3435, 1935, 1945, 1819, 1716, 1628, 1428, 1416, 1349, 1286, 1192, 1050, 1054, 942.8, 988.4, 938.0, 942.9, 849.3, 847.9, 764.1, 799.3, 759.7, 709.4, 722.8, 648.6, 623.3, 633.1, 598.3, 605.7, 568.1, 591.0, 500.9, 544.8, 489.6, 526.4]
-    # totalCurve = [45182, 46890, 42684, 42989, 43381, 44385, 44790, 45214, 45591, 45997, 46697, 47057, 47362, 47546, 47712, 48542, 48990, 49409, 49220, 49657, 50453, 50640, 50798, 51098, 51440, 51460, 51685, 52101, 51836, 52058, 52798, 52582, 53296, 52964, 53261, 52899]
-    # remnantLiverCurve = [2237, 5081, 6557, 7278, 8170, 9051, 9641, 10412, 10838, 11395, 11856, 12137, 12516, 12638, 12978, 13607, 13695, 14223, 14094, 14297, 15051, 15277, 15394, 15654, 15725, 16012, 16067, 16291, 16350, 16422, 16917, 16694, 16296, 16813, 17285, 17521]
+    liverCurve = [2525, 7948, 11164, 13286, 15029, 16757, 18234, 19629, 20845, 21884, 23170, 24149, 25065, 25695, 26586, 27177, 28054, 28383, 29057, 29504, 30432, 30872, 31573, 31779, 32180, 32909, 32918, 33443, 33747, 33879, 34614, 34673, 33756, 34687, 35326, 35561]
+    bloodCurve = [3176, 2928, 1588, 1574, 1497, 1411, 1274, 1178, 1115, 1079, 1029, 946.7, 875.7, 837.2, 750.6, 777.4, 720.4, 733.3, 652.9, 633.6, 601.9, 620.4, 610.4, 532.2, 544.7, 491.8, 487.1, 481.2, 467.5, 452.6, 432.9, 415.4, 378.9, 402.0, 362.1, 394.5]
+    totalCurve = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
+    remnantLiverCurve = [1551, 4026, 5007, 5574, 6187, 6835, 7168, 7687, 8058, 8387, 8710, 8999, 9341, 9307, 9459, 9885, 10020, 10221, 10283, 10318, 10847, 10960, 11128, 11204, 11349, 11535, 11425, 11669, 11773, 11794, 12091, 12026, 11566, 12008, 12311, 12618]
 
     console.info 'Total curve | F', totalCurve
     console.info 'Blood curve | C', bloodCurve
@@ -133,12 +133,15 @@ module.exports = class Hida extends EventBus
     total = _.zip index, values
     # Perform fit (with slice of total)
     fit = regression 'exponential', _.slice total, start, end
+    # fit = regression 'exponential', _.slice total, (start + 1), end
     # Only return [intercept, slope]
     fit.equation
 
   csum: (curve, start, end) ->
+    slice = _.slice curve, (start - 1), (end - 1)
+    # console.info "CSUM", slice
     # Sum all values between begin and end
-    _.sum _.slice curve, start, end
+    _.sum slice
 
   validate: (file) =>
     test = (file, tag, compare) =>
@@ -174,6 +177,91 @@ module.exports = class Hida extends EventBus
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36
     ]
+
+  # curve: (roi) =>
+  #   viewer = @bridge.viewerDir.viewer
+  #   raster = viewer.raster
+  #   frames = viewer.reader.frames
+
+  #   frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
+  #   frame_sums    = frame_pixels.map -> 0
+  #   frame_raster  = []
+
+  #   # Determine scaling
+  #   offset = raster.getBounds()
+  #   scaling = raster.getScaling().x
+
+  #   clone = roi.clone true
+  #   clone.strokeWidth = 0
+  #   clone.fillColor = 'white'
+  #   ras = clone.rasterize raster.resolution
+
+  #   # # console.info "RASTER size", raster.size, raster.resolution
+  #   # # console.info "RAS size", ras.size, ras.resolution
+  #   # raster_bounds = raster.getBounds()
+  #   # console.info "Raster Bounds", raster.getBounds().x, raster.getBounds().y
+  #   # clone_bounds  = clone.getBounds()
+  #   # console.info "Clone Bounds", clone.getBounds().x, clone.getBounds().y
+
+  #   # bounds = 
+  #   #   x: clone_bounds.x - raster_bounds.x
+  #   #   y: clone_bounds.y - raster_bounds.y
+
+  #   # console.info "Diff Bounds", bounds.x, bounds.y
+
+  #   # # console.info clone.position
+  #   # clone.position.x = clone.position.x - bounds.x
+  #   # clone.position.y = clone.position.y - bounds.y
+
+  #   # clone_bounds  = clone.getBounds()
+  #   # console.info "Clone Bounds", clone.getBounds().x, clone.getBounds().y
+  #   # # console.info clone.position
+
+  #   # bounds = 
+  #   #   x: clone_bounds.x - raster_bounds.x
+  #   #   y: clone_bounds.y - raster_bounds.y
+
+  #   # scale = 
+  #   #   x: bounds.x / scaling
+  #   #   y: bounds.y / scaling
+  #   # ras = clone.rasterize raster.resolution
+
+  #   # console.info bounds, scale
+
+  #   console.info ras
+
+  #   for x in [0 ... ras.width] by 1
+  #     row = ''
+  #     for y in [0 ... ras.height] by 1
+  #       value = ras.getPixel x, y
+  #       # console.info value.brightness, value.lightness
+  #       if value.lightness >= 0.5
+  #         row += 'X'
+  #       else 
+  #         row += ' '
+  #     frame_raster.push row  
+
+  #   # for y in [0 ... raster.height] by 1
+  #   #   y_scale = y * scaling + offset.y
+  #   #   row = ''
+  #   #   for x in [0 ... raster.width] by 1
+  #   #     x_scale = x * scaling + offset.x
+  #   #     # Calculate relative point
+  #   #     value = ras.getPixel x_scale, y_scale
+  #   #     # console.info value.brightness, value.lightness
+  #   #     # if 
+  #   #     #   row += 'X'
+  #   #     #   for pixels, frame in frame_pixels
+  #   #     #     i = y * raster.width + x
+  #   #     #     frame_sums[frame] += pixels[i]
+  #   #     # else
+  #   #     #   row += ' '
+  #   #   frame_raster.push row
+
+  #   @bridge.viewerDir.viewer.paper.view.draw()
+  #   console.info frame_raster.join '\n'
+
+  #   frame_sums
 
   curve: (roi) =>
     viewer = @bridge.viewerDir.viewer
