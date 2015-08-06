@@ -43,20 +43,27 @@ module.exports = class Hida extends EventBus
     remnantLiverCurve = order[1].curve # Get middle
     totalCurve = @totalCurve()
 
-    # liverCurve = [2524.801, 7947.875, 11163.790, 13285.790, 15029.410, 16757.100, 18234.020, 19628.740, 20844.971, 21883.680, 23169.990, 24149.430, 25065.160, 25695.090, 26585.740, 27177.199, 28054.320, 28382.730, 29056.619, 29504.211, 30431.580, 30872.270, 31572.590, 31778.770, 32180.279, 32908.609, 32918.262, 33443.199, 33746.660, 33878.738, 34614.359, 34672.539, 33755.781, 34686.711, 35326.102, 35560.699]
-    # bloodCurve = [3175.711, 2928.363, 1587.531, 1573.703, 1496.867, 1410.809, 1274.242, 1177.949, 1114.902, 1078.672, 1028.633, 946.703, 875.652, 837.152, 750.551, 777.359, 720.441, 733.266, 652.867, 633.586, 601.934, 620.383, 610.426, 532.191, 544.727, 491.773, 487.133, 481.207, 467.543, 452.645, 432.949, 415.391, 378.871, 401.988, 362.148, 394.484]
-    # remnantLiverCurve = [1550.918, 4026.141, 5007.223, 5574.375, 6187.160, 6835.012, 7168.316, 7686.793, 8057.621, 8387.348, 8709.527, 8998.598, 9341.266, 9307.000, 9459.492, 9884.879, 10020.120, 10220.680, 10282.660, 10318.460, 10846.860, 10960.270, 11128.220, 11204.320, 11349.370, 11535.150, 11424.960, 11668.600, 11773.120, 11793.590, 12090.760, 12026.290, 11566.420, 12008.120, 12310.510, 12618.470]
-    # totalCurve = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
+    # liverCurve2 = [2524.801, 7947.875, 11163.790, 13285.790, 15029.410, 16757.100, 18234.020, 19628.740, 20844.971, 21883.680, 23169.990, 24149.430, 25065.160, 25695.090, 26585.740, 27177.199, 28054.320, 28382.730, 29056.619, 29504.211, 30431.580, 30872.270, 31572.590, 31778.770, 32180.279, 32908.609, 32918.262, 33443.199, 33746.660, 33878.738, 34614.359, 34672.539, 33755.781, 34686.711, 35326.102, 35560.699]
+    # bloodCurve2 = [3175.711, 2928.363, 1587.531, 1573.703, 1496.867, 1410.809, 1274.242, 1177.949, 1114.902, 1078.672, 1028.633, 946.703, 875.652, 837.152, 750.551, 777.359, 720.441, 733.266, 652.867, 633.586, 601.934, 620.383, 610.426, 532.191, 544.727, 491.773, 487.133, 481.207, 467.543, 452.645, 432.949, 415.391, 378.871, 401.988, 362.148, 394.484]
+    # remnantLiverCurve2 = [1550.918, 4026.141, 5007.223, 5574.375, 6187.160, 6835.012, 7168.316, 7686.793, 8057.621, 8387.348, 8709.527, 8998.598, 9341.266, 9307.000, 9459.492, 9884.879, 10020.120, 10220.680, 10282.660, 10318.460, 10846.860, 10960.270, 11128.220, 11204.320, 11349.370, 11535.150, 11424.960, 11668.600, 11773.120, 11793.590, 12090.760, 12026.290, 11566.420, 12008.120, 12310.510, 12618.470]
+    # totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
 
-    # liverCurve = [2525, 7948, 11164, 13286, 15029, 16757, 18234, 19629, 20845, 21884, 23170, 24149, 25065, 25695, 26586, 27177, 28054, 28383, 29057, 29504, 30432, 30872, 31573, 31779, 32180, 32909, 32918, 33443, 33747, 33879, 34614, 34673, 33756, 34687, 35326, 35561]
-    # bloodCurve = [3176, 2928, 1588, 1574, 1497, 1411, 1274, 1178, 1115, 1079, 1029, 946.7, 875.7, 837.2, 750.6, 777.4, 720.4, 733.3, 652.9, 633.6, 601.9, 620.4, 610.4, 532.2, 544.7, 491.8, 487.1, 481.2, 467.5, 452.6, 432.9, 415.4, 378.9, 402.0, 362.1, 394.5]
-    # totalCurve = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
-    # remnantLiverCurve = [1551, 4026, 5007, 5574, 6187, 6835, 7168, 7687, 8058, 8387, 8710, 8999, 9341, 9307, 9459, 9885, 10020, 10221, 10283, 10318, 10847, 10960, 11128, 11204, 11349, 11535, 11425, 11669, 11773, 11794, 12091, 12026, 11566, 12008, 12311, 12618]
+    liverCurve2 = [2525, 7948, 11164, 13286, 15029, 16757, 18234, 19629, 20845, 21884, 23170, 24149, 25065, 25695, 26586, 27177, 28054, 28383, 29057, 29504, 30432, 30872, 31573, 31779, 32180, 32909, 32918, 33443, 33747, 33879, 34614, 34673, 33756, 34687, 35326, 35561]
+    bloodCurve2 = [3176, 2928, 1588, 1574, 1497, 1411, 1274, 1178, 1115, 1079, 1029, 946.7, 875.7, 837.2, 750.6, 777.4, 720.4, 733.3, 652.9, 633.6, 601.9, 620.4, 610.4, 532.2, 544.7, 491.8, 487.1, 481.2, 467.5, 452.6, 432.9, 415.4, 378.9, 402.0, 362.1, 394.5]
+    totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
+    remnantLiverCurve2 = [1551, 4026, 5007, 5574, 6187, 6835, 7168, 7687, 8058, 8387, 8710, 8999, 9341, 9307, 9459, 9885, 10020, 10221, 10283, 10318, 10847, 10960, 11128, 11204, 11349, 11535, 11425, 11669, 11773, 11794, 12091, 12026, 11566, 12008, 12311, 12618]
 
-    console.info 'Total curve | F', totalCurve
-    console.info 'Blood curve | C', bloodCurve
-    console.info 'Liver curve | L', liverCurve
-    console.info 'Future remnant liver curve', remnantLiverCurve
+    console.info 'Total curve | F', _.map totalCurve, (value, index) -> Math.round value - totalCurve2[index]
+    console.info 'Blood curve | C', _.map bloodCurve, (value, index) -> Math.round value - bloodCurve2[index]
+    console.info 'Liver curve | L', _.map liverCurve, (value, index) -> Math.round value - liverCurve2[index]
+    console.info 'Future remnant liver curve', _.map remnantLiverCurve, (value, index) -> Math.round value - remnantLiverCurve2[index]
+
+    return
+
+    # console.info 'Total curve | F', totalCurve
+    # console.info 'Blood curve | C', bloodCurve
+    # console.info 'Liver curve | L', liverCurve
+    # console.info 'Future remnant liver curve', remnantLiverCurve
 
     # Start
     BSA = Math.sqrt(length * weigth / 3600)
@@ -181,48 +188,76 @@ module.exports = class Hida extends EventBus
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36
     ]
+
+  curvePixel: (roi) =>
+    viewer = @bridge.viewerDir.viewer
+    raster = viewer.raster
+
+    target = new paper.Raster
+    target.setSize 512, 512
+
+    _.map roi.data, (point) ->
+      target.setPixel (point.x * 512), (point.y * 512), 'white'
+
+    bounds = viewer.group.bounds
+    target.fitBounds bounds
     
   curve: (roi) =>
+    @curvePixel roi if roi.type is 1
+    # return @curve2 roi if roi.type is 2
+
+    # Get necessary info
     viewer = @bridge.viewerDir.viewer
-    # paper = viewer.paper
     raster = viewer.raster
     frames = viewer.reader.frames
 
+    # Get pixel data, and create sum maps
     frame_pixels  = frames.map (frame) -> frame.image.getPixelData()
     frame_sums    = frame_pixels.map -> 0
 
-    bounds = viewer.group.bounds
-
+    # Create temporary group
+    # This will be the size of the image, and have
+    # the ROI placed on top. After this, it will be
+    # rasterized so we get a mask to overlay on the 
+    # frame data
     group = new paper.Group
 
+    # Just a empty raster with the size of the image
     target = new paper.Raster
     target.setSize raster.size
     group.addChild target
 
-    before = group.bounds.width
+    # Scale to "scale" of the ROI
+    bounds = viewer.group.bounds
     group.fitBounds bounds
-    after = group.bounds.width
-    scale = before / after
+    # Remember actual scaling
+    scale = raster.size.width / group.bounds.width
 
+    # Copy ROI to temporary group
     clone = roi.clone false
     clone.strokeWidth = 0
     clone.fillColor = 'white'
     group.addChild clone
 
+    # Scale back to original size
     group.scale scale
 
+    # Turn into mask at default DIPI
     mask = group.rasterize 72
 
+    # Remove all elements from view (before they are drawn)
     mask.remove()
     group.remove()
 
-    for x in [0 ... mask.width] by 1
-      for y in [0 ... mask.height]
+    # Sum frames based on mask
+    for x in [0 ... raster.size.width]
+      for y in [0 ... raster.size.width]
         pixel = mask.getPixel x, y # TODO, make faster!!!
         i = y * mask.width + x
         for pixels, frame in frame_pixels
           frame_sums[frame] += pixels[i] * pixel.alpha
 
+    # Return
     frame_sums    
 
   curve2: (roi) =>

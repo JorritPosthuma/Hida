@@ -71,9 +71,14 @@ class HermesRoi
       height: parseFloat height
 
   toPath: (paper, bounds) =>
-    switch @info['roi type']
+    type = @info['roi type']
+    roi = switch type
       when 1, 2 then @toPointPath paper, bounds
       # when 3    then @toRectPath paper, bounds
+    if roi?
+      roi.data = @data
+      roi.type = type
+      roi
       
   toPointPath: (paper, bounds) =>
     roi = new paper.Path()
@@ -82,8 +87,8 @@ class HermesRoi
     roi.strokeWidth = 4
     _.forEach @data, (point) ->
       roi.add
-        x: bounds.x + bounds.width * point.x
-        y: bounds.y + bounds.height * point.y
+        x: bounds.x + bounds.width * (point.x)
+        y: bounds.y + bounds.height * (point.y)
     roi.closed = true    
     # roi.simplify 10
     roi
