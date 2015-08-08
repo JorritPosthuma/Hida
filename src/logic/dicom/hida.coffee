@@ -1,7 +1,9 @@
 pip = require 'robust-point-in-polygon'
+Q = require 'q'
 
 EventBus        = require '../events'
 DicomTags       = require './dicom_tags'
+ROI             = require './roi'
 { DicomReader } = require './dicom_readers'
 
 module.exports = class Hida extends EventBus
@@ -17,34 +19,6 @@ module.exports = class Hida extends EventBus
     # Basic access variables
     viewer = @bridge.viewerDir.viewer
 
-
-    worker = new Worker 'bundle/roi_worker.bundle.js'
-    worker.onmessage = (e) ->
-      console.info "HIER", e
-    worker.postMessage 'HOI hoi'
-
-    # Worker = require 'worker!coffee!./roi'
-    # worker = new Worker
-    # worker.onmessage = (event) => console.info event
-    # worker.postMessage "b"
-    # p = new Parallel('forwards')
-
-    # p.spawn (data) ->
-    #   data = data.reverse();
-
-    #   console.log data
-
-    #   data;
-    # .then (data) ->
-    #   console.log data
-
-    # bloodCurve = @curve viewer.rois[1]
-    # bloodCurve2 = [3175.711, 2928.363, 1587.531, 1573.703, 1496.867, 1410.809, 1274.242, 1177.949, 1114.902, 1078.672, 1028.633, 946.703, 875.652, 837.152, 750.551, 777.359, 720.441, 733.266, 652.867, 633.586, 601.934, 620.383, 610.426, 532.191, 544.727, 491.773, 487.133, 481.207, 467.543, 452.645, 432.949, 415.391, 378.871, 401.988, 362.148, 394.484]
-    
-    # console.info 'Blood curve | C', _.map bloodCurve, (value, index) -> Math.round value - bloodCurve2[index]
-    
-    return
-
     console.info 'Patient length', length
     console.info 'Patient weigth', weigth
 
@@ -58,111 +32,122 @@ module.exports = class Hida extends EventBus
 
     console.info 'Frame duration (seconds)', averageFrameDuration
 
-    # Curves
-    order = _.map viewer.rois, (roi, index) =>
-      curve = @curve roi
+    frames = viewer.reader.frames
+    pixels = frames.map (frame) -> frame.image.getPixelData()
 
-      curve: curve
-      last: _.last curve
-      index: index
+    start = performance.now()
 
-    order = _.sortBy order, 'last'
+    curves = _.map viewer.rois, (roi) =>
+      ROI.curve pixels, roi.original.data
 
-    liverCurve = order[2].curve        # Get highest
-    bloodCurve = order[0].curve        # Get lowest
-    remnantLiverCurve = order[1].curve # Get middle
-    totalCurve = @totalCurve()
+    Q.all curves
+    .then (curves) =>
+      end = performance.now()
 
-    # liverCurve2 = [2524.801, 7947.875, 11163.790, 13285.790, 15029.410, 16757.100, 18234.020, 19628.740, 20844.971, 21883.680, 23169.990, 24149.430, 25065.160, 25695.090, 26585.740, 27177.199, 28054.320, 28382.730, 29056.619, 29504.211, 30431.580, 30872.270, 31572.590, 31778.770, 32180.279, 32908.609, 32918.262, 33443.199, 33746.660, 33878.738, 34614.359, 34672.539, 33755.781, 34686.711, 35326.102, 35560.699]
-    # bloodCurve2 = [3175.711, 2928.363, 1587.531, 1573.703, 1496.867, 1410.809, 1274.242, 1177.949, 1114.902, 1078.672, 1028.633, 946.703, 875.652, 837.152, 750.551, 777.359, 720.441, 733.266, 652.867, 633.586, 601.934, 620.383, 610.426, 532.191, 544.727, 491.773, 487.133, 481.207, 467.543, 452.645, 432.949, 415.391, 378.871, 401.988, 362.148, 394.484]
-    # remnantLiverCurve2 = [1550.918, 4026.141, 5007.223, 5574.375, 6187.160, 6835.012, 7168.316, 7686.793, 8057.621, 8387.348, 8709.527, 8998.598, 9341.266, 9307.000, 9459.492, 9884.879, 10020.120, 10220.680, 10282.660, 10318.460, 10846.860, 10960.270, 11128.220, 11204.320, 11349.370, 11535.150, 11424.960, 11668.600, 11773.120, 11793.590, 12090.760, 12026.290, 11566.420, 12008.120, 12310.510, 12618.470]
-    # totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
+      console.info "Calculations took #{end - start} milliseconds" 
 
-    # liverCurve2 = [2525, 7948, 11164, 13286, 15029, 16757, 18234, 19629, 20845, 21884, 23170, 24149, 25065, 25695, 26586, 27177, 28054, 28383, 29057, 29504, 30432, 30872, 31573, 31779, 32180, 32909, 32918, 33443, 33747, 33879, 34614, 34673, 33756, 34687, 35326, 35561]
-    # bloodCurve2 = [3176, 2928, 1588, 1574, 1497, 1411, 1274, 1178, 1115, 1079, 1029, 946.7, 875.7, 837.2, 750.6, 777.4, 720.4, 733.3, 652.9, 633.6, 601.9, 620.4, 610.4, 532.2, 544.7, 491.8, 487.1, 481.2, 467.5, 452.6, 432.9, 415.4, 378.9, 402.0, 362.1, 394.5]
-    # totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
-    # remnantLiverCurve2 = [1551, 4026, 5007, 5574, 6187, 6835, 7168, 7687, 8058, 8387, 8710, 8999, 9341, 9307, 9459, 9885, 10020, 10221, 10283, 10318, 10847, 10960, 11128, 11204, 11349, 11535, 11425, 11669, 11773, 11794, 12091, 12026, 11566, 12008, 12311, 12618]
+      order = _.map curves, (curve, index) =>
+        curve: curve
+        last: _.last curve
+        index: index
 
-    # console.info 'Total curve | F', _.map totalCurve, (value, index) -> Math.round value - totalCurve2[index]
-    # console.info 'Blood curve | C', _.map bloodCurve, (value, index) -> Math.round value - bloodCurve2[index]
-    # console.info 'Liver curve | L', _.map liverCurve, (value, index) -> Math.round value - liverCurve2[index]
-    # console.info 'Future remnant liver curve', _.map remnantLiverCurve, (value, index) -> Math.round value - remnantLiverCurve2[index]
+      order = _.sortBy order, 'last'
 
-    # # console.info 'Total curve | F', totalCurve
-    # # console.info 'Blood curve | C', bloodCurve
-    # # console.info 'Liver curve | L', liverCurve
-    # # console.info 'Future remnant liver curve', remnantLiverCurve
+      liverCurve = order[2].curve        # Get highest
+      bloodCurve = order[0].curve        # Get lowest
+      remnantLiverCurve = order[1].curve # Get middle
+      totalCurve = @totalCurve()
 
-    # Start
-    BSA = Math.sqrt(length * weigth / 3600)
+      # liverCurve2 = [2524.801, 7947.875, 11163.790, 13285.790, 15029.410, 16757.100, 18234.020, 19628.740, 20844.971, 21883.680, 23169.990, 24149.430, 25065.160, 25695.090, 26585.740, 27177.199, 28054.320, 28382.730, 29056.619, 29504.211, 30431.580, 30872.270, 31572.590, 31778.770, 32180.279, 32908.609, 32918.262, 33443.199, 33746.660, 33878.738, 34614.359, 34672.539, 33755.781, 34686.711, 35326.102, 35560.699]
+      # bloodCurve2 = [3175.711, 2928.363, 1587.531, 1573.703, 1496.867, 1410.809, 1274.242, 1177.949, 1114.902, 1078.672, 1028.633, 946.703, 875.652, 837.152, 750.551, 777.359, 720.441, 733.266, 652.867, 633.586, 601.934, 620.383, 610.426, 532.191, 544.727, 491.773, 487.133, 481.207, 467.543, 452.645, 432.949, 415.391, 378.871, 401.988, 362.148, 394.484]
+      # remnantLiverCurve2 = [1550.918, 4026.141, 5007.223, 5574.375, 6187.160, 6835.012, 7168.316, 7686.793, 8057.621, 8387.348, 8709.527, 8998.598, 9341.266, 9307.000, 9459.492, 9884.879, 10020.120, 10220.680, 10282.660, 10318.460, 10846.860, 10960.270, 11128.220, 11204.320, 11349.370, 11535.150, 11424.960, 11668.600, 11773.120, 11793.590, 12090.760, 12026.290, 11566.420, 12008.120, 12310.510, 12618.470]
+      # totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
 
-    console.info 'BSA', BSA
+      # liverCurve2 = [2525, 7948, 11164, 13286, 15029, 16757, 18234, 19629, 20845, 21884, 23170, 24149, 25065, 25695, 26586, 27177, 28054, 28383, 29057, 29504, 30432, 30872, 31573, 31779, 32180, 32909, 32918, 33443, 33747, 33879, 34614, 34673, 33756, 34687, 35326, 35561]
+      # bloodCurve2 = [3176, 2928, 1588, 1574, 1497, 1411, 1274, 1178, 1115, 1079, 1029, 946.7, 875.7, 837.2, 750.6, 777.4, 720.4, 733.3, 652.9, 633.6, 601.9, 620.4, 610.4, 532.2, 544.7, 491.8, 487.1, 481.2, 467.5, 452.6, 432.9, 415.4, 378.9, 402.0, 362.1, 394.5]
+      # totalCurve2 = [32707, 37368, 33645, 33918, 34388, 34914, 35212, 35379, 35938, 36151, 36882, 37242, 37534, 37568, 37727, 38280, 38801, 38766, 39022, 38872, 39712, 40017, 40412, 40403, 40551, 40895, 40829, 41085, 41212, 41148, 41822, 41648, 41469, 41638, 42040, 42142]
+      # remnantLiverCurve2 = [1551, 4026, 5007, 5574, 6187, 6835, 7168, 7687, 8058, 8387, 8710, 8999, 9341, 9307, 9459, 9885, 10020, 10221, 10283, 10318, 10847, 10960, 11128, 11204, 11349, 11535, 11425, 11669, 11773, 11794, 12091, 12026, 11566, 12008, 12311, 12618]
 
-    frameStart = Math.round(150 / averageFrameDuration)
-    frameEnd   = Math.round(350 / averageFrameDuration)
+      # console.info 'Total curve | F', _.map totalCurve, (value, index) -> Math.round value - totalCurve2[index]
+      # console.info 'Blood curve | C', _.map bloodCurve, (value, index) -> Math.round value - bloodCurve2[index]
+      # console.info 'Liver curve | L', _.map liverCurve, (value, index) -> Math.round value - liverCurve2[index]
+      # console.info 'Future remnant liver curve', _.map remnantLiverCurve, (value, index) -> Math.round value - remnantLiverCurve2[index]
 
-    console.info 'Frame start', frameStart
-    console.info 'Frame end', frameEnd
+      # # console.info 'Total curve | F', totalCurve
+      # # console.info 'Blood curve | C', bloodCurve
+      # # console.info 'Liver curve | L', liverCurve
+      # # console.info 'Future remnant liver curve', remnantLiverCurve
 
-    bloodSumStart = @csum(bloodCurve, frameStart - 1, frameStart + 1) / 2
-    liverSumStart = @csum(liverCurve, frameStart - 1, frameStart + 1) / 2
-    liverSumEnd   = @csum(liverCurve, frameEnd   - 1, frameEnd   + 1) / 2
-    totalSumStart = @csum(totalCurve, frameStart - 1, frameStart + 1) / 2
-    totalSumEnd   = @csum(totalCurve, frameEnd   - 1, frameEnd   + 1) / 2
+      # Start
+      BSA = Math.sqrt(length * weigth / 3600)
 
-    console.info 'Blood Sum (150 sec) | C(t1)', bloodSumStart
-    console.info 'Liver Sum (150 sec) | L(t1)', liverSumStart
-    console.info 'Liver Sum (350 sec) | L(t2)', liverSumEnd
-    console.info 'Total Sum (150 sec) | F(t1)', totalSumStart
-    console.info 'Total Sum (350 sec) | F(t2)', totalSumEnd
-    
-    bloodSumEndNorm = @csum(bloodCurve, frameEnd - 1, frameEnd + 1) / (2 * bloodSumStart)
+      console.info 'BSA', BSA
 
-    console.info 'Blood Sum (350 sec) normalized | Cnorm(t2)', bloodSumEndNorm
+      frameStart = Math.round(150 / averageFrameDuration)
+      frameEnd   = Math.round(350 / averageFrameDuration)
 
-    At1  = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
-    LClr = (liverSumEnd - liverSumStart) / (At1 * @csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
-    LClr_min = 100 * LClr * 60 / averageFrameDuration
-    LClr_BSA = LClr_min / BSA
+      console.info 'Frame start', frameStart
+      console.info 'Frame end', frameEnd
 
-    console.info 'A(t1)', At1
-    console.info 'LClr [/frame]', LClr
-    console.info 'LClr [%/min]', LClr_min
-    console.info 'LClr [BSA Corrected]', LClr_BSA
+      bloodSumStart = @csum(bloodCurve, frameStart - 1, frameStart + 1) / 2
+      liverSumStart = @csum(liverCurve, frameStart - 1, frameStart + 1) / 2
+      liverSumEnd   = @csum(liverCurve, frameEnd   - 1, frameEnd   + 1) / 2
+      totalSumStart = @csum(totalCurve, frameStart - 1, frameStart + 1) / 2
+      totalSumEnd   = @csum(totalCurve, frameEnd   - 1, frameEnd   + 1) / 2
 
-    totalLiverCounts   = @csum(liverCurve, frameStart, frameEnd)
-    remnantLiverCounts = @csum(remnantLiverCurve, frameStart, frameEnd)
+      console.info 'Blood Sum (150 sec) | C(t1)', bloodSumStart
+      console.info 'Liver Sum (150 sec) | L(t1)', liverSumStart
+      console.info 'Liver Sum (350 sec) | L(t2)', liverSumEnd
+      console.info 'Total Sum (150 sec) | F(t1)', totalSumStart
+      console.info 'Total Sum (350 sec) | F(t2)', totalSumEnd
+      
+      bloodSumEndNorm = @csum(bloodCurve, frameEnd - 1, frameEnd + 1) / (2 * bloodSumStart)
 
-    console.info 'Total liver counts', totalLiverCounts
-    console.info 'Remnant liver counts', remnantLiverCounts
-    
-    FRLF = 100 * remnantLiverCounts / totalLiverCounts
-    FRLF_BSA_Corrected = (FRLF / 100) * LClr_min / BSA
+      console.info 'Blood Sum (350 sec) normalized | Cnorm(t2)', bloodSumEndNorm
 
-    console.info 'FRLF', FRLF
-    console.info 'FRLF BSA Corrected', FRLF_BSA_Corrected
+      At1  = (totalSumEnd - liverSumStart - (totalSumStart - liverSumStart) * bloodSumEndNorm) / (1 - bloodSumEndNorm) 
+      LClr = (liverSumEnd - liverSumStart) / (At1 * @csum(bloodCurve, frameStart, frameEnd) / bloodSumStart) 
+      LClr_min = 100 * LClr * 60 / averageFrameDuration
+      LClr_BSA = LClr_min / BSA
 
-    [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, frameStart, frameEnd, averageFrameDuration
-    [liverIntercept, liverSlope] = @fitExponential liverCurve, frameStart, frameEnd, averageFrameDuration
+      console.info 'A(t1)', At1
+      console.info 'LClr [/frame]', LClr
+      console.info 'LClr [%/min]', LClr_min
+      console.info 'LClr [BSA Corrected]', LClr_BSA
 
-    console.info 'Exponential fitting of blood curve', bloodIntercept, bloodSlope
-    console.info 'Exponential fitting of liver curve', liverIntercept, liverSlope
+      totalLiverCounts   = @csum(liverCurve, frameStart, frameEnd)
+      remnantLiverCounts = @csum(remnantLiverCurve, frameStart, frameEnd)
 
-    BClr = - bloodSlope * 60 * 100
-    LClr = liverSlope * 60 * 100
+      console.info 'Total liver counts', totalLiverCounts
+      console.info 'Remnant liver counts', remnantLiverCounts
+      
+      FRLF = 100 * remnantLiverCounts / totalLiverCounts
+      FRLF_BSA_Corrected = (FRLF / 100) * LClr_min / BSA
 
-    console.info '-BClr', BClr
-    console.info 'LClr', LClr
+      console.info 'FRLF', FRLF
+      console.info 'FRLF BSA Corrected', FRLF_BSA_Corrected
 
-    Cfit_0  = averageFrameDuration * bloodIntercept
-    Cfit_15 = averageFrameDuration * bloodIntercept * Math.exp(bloodSlope * 15 * 60)
+      [bloodIntercept, bloodSlope] = @fitExponential bloodCurve, frameStart, frameEnd, averageFrameDuration
+      [liverIntercept, liverSlope] = @fitExponential liverCurve, frameStart, frameEnd, averageFrameDuration
 
-    console.info 'Cfit(t=0min)', Cfit_0
-    console.info 'Cfit(t=15min)', Cfit_15
+      console.info 'Exponential fitting of blood curve', bloodIntercept, bloodSlope
+      console.info 'Exponential fitting of liver curve', liverIntercept, liverSlope
 
-    HIDAc15 = 100 - (100 * Cfit_15 / Cfit_0)
+      BClr = - bloodSlope * 60 * 100
+      LClr = liverSlope * 60 * 100
 
-    console.info 'HIDA c15', HIDAc15
+      console.info '-BClr', BClr
+      console.info 'LClr', LClr
+
+      Cfit_0  = averageFrameDuration * bloodIntercept
+      Cfit_15 = averageFrameDuration * bloodIntercept * Math.exp(bloodSlope * 15 * 60)
+
+      console.info 'Cfit(t=0min)', Cfit_0
+      console.info 'Cfit(t=15min)', Cfit_15
+
+      HIDAc15 = 100 - (100 * Cfit_15 / Cfit_0)
+
+      console.info 'HIDA c15', HIDAc15
 
   fitExponential: (curve, start, end, averageFrameDuration) ->
     # Set time steps
@@ -217,45 +202,6 @@ module.exports = class Hida extends EventBus
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36
     ]
     
-  curve: (roi) =>
-    frames = @bridge.viewerDir.viewer.reader.frames
-    pixels = frames.map (frame) -> frame.image.getPixelData()
-    sums   = pixels.map -> 0
-
-    resolution = 512
-    size = 128
-
-    # Calculate image scaling
-    scale = resolution / size
-    scaleq = scale * scale
-
-    # Convert to PIP format
-    data = _.map roi.original.data, (point) -> [point.x * resolution, point.y * resolution]
-
-    # Loop through size of image
-    for yi in [0 ... size]
-      for xi in [0 ... size]
-        mask = 0
-        # Loop through resolution
-        for yr in [0 ... scale]
-          for xr in [0 ... scale]
-            # Calculate relative point
-            y = (yi * scale) + yr
-            x = (xi * scale) + xr
-            contains = pip data, [x, y]
-
-            # < 0 only inside
-            # <= 0 inside and border
-            mask += 1 if contains <= 0
-
-        # If there are any (sub) pixels that are part of the ROI
-        if mask isnt 0
-          index = yi * size + xi
-          for frame, frame_id in pixels
-            sums[frame_id] += frame[index] * mask / scaleq
-
-    return sums
-
   totalCurve: =>
     _.map @bridge.viewerDir.viewer.reader.frames, (frame) =>
       _.sum frame.image.getPixelData()
