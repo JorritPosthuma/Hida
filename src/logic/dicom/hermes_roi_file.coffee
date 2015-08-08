@@ -76,8 +76,9 @@ class HermesRoi
       when 1, 2 then @toPointPath paper, bounds
       # when 3    then @toRectPath paper, bounds
     if roi?
-      roi.data = @data
-      roi.type = type
+      roi.original = 
+        data: @data
+        type: type
       roi
       
   toPointPath: (paper, bounds) =>

@@ -13,7 +13,8 @@
     "jquery": "^2.1.4",
     "lodash": "^3.10.0",
     "moment": "^2.10.6",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "robust-point-in-polygon": "^1.0.3"
   },
   "devDependencies": {
     "bower": "^1.4.1",
@@ -48,6 +49,6 @@
     "nw-run": "./node_modules/.bin/nwbuild -r app",
     "wp-clean": "rm -rf app/bundle",
     "wp-compile": "./node_modules/.bin/webpack -p",
-    "wp-server": "./node_modules/.bin/webpack-dev-server --hot --inline"
+    "wp-server": "./node_modules/.bin/webpack-dev-server --hot"
   }
 }

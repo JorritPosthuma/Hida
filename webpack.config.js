@@ -3,7 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    main: './src/main'
+    main: ['webpack/hot/dev-server', './src/main'],
+    roi_worker: './src/logic/dicom/roi'
   },
   output: {
     path: './app',
