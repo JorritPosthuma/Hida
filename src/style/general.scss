@@ -31,15 +31,8 @@ input {
   bottom: 0;
 }
 
-@media (max-width: 767px) {
-  .layout-nav                   { left: -220px; }
-  .layout-top, .layout-content  { left: 0;      }
-}
-
-@media (min-width: 768px) {
-  .layout-nav                   { left: 0px;    }
-  .layout-top, .layout-content  { left: 220px;  }
-}
+.layout-nav                   { left: 0px;    }
+.layout-top, .layout-content  { left: 220px;  }
 
 .main-home, .main-hida {
   .controls {

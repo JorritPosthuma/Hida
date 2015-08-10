@@ -10,9 +10,8 @@ module.exports = (module) ->
   require('./parts/export')(module)
   require('./parts/hida')(module)
   require('./parts/home')(module)
-  require('./parts/login')(module)
   require('./parts/main')(module)
-  require('./parts/nav')(module)
+
 
   module.run ($templateCache) ->
     $templateCache.put 'parts/nav.html', require './parts/nav.html'

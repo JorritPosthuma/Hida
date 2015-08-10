@@ -12,7 +12,7 @@ class WorkerWrapper
         .then (result) -> global.postMessage result
 
   wrap: (method) =>
-    if not worker
+    if Worker? and not worker
       @instance[method] = (args...) =>
         deferred = Q.defer()
         worker = new Worker @file

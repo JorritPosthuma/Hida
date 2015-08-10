@@ -55,7 +55,11 @@ module.exports = class DicomViewer extends EventBus
     @enableScroll()
     @enableWindow()
 
-    $(window).resize _.debounce @resize, 500
+    # Debounce original resize
+    resize = @paper.view._windowEvents.resize
+    @paper.view._windowEvents.resize = _.debounce resize, 100
+
+    @paper.view.onResize = @resize
 
   ###########################
   # External methods        #
