@@ -75,11 +75,9 @@ class HermesRoi
     roi = switch type
       when 1, 2 then @toPointPath paper, bounds
       # when 3    then @toRectPath paper, bounds
-    if roi?
-      roi.original = 
-        data: @data
-        type: type
-      roi
+
+    roi?.original = @data
+    roi
       
   toPointPath: (paper, bounds) =>
     roi = new paper.Path()
@@ -91,18 +89,15 @@ class HermesRoi
         x: bounds.x + bounds.width * (point.x)
         y: bounds.y + bounds.height * (point.y)
     roi.closed = true    
-    # roi.simplify 10
     roi
 
   toRectPath: (paper, bounds) =>
     point = @data[0]
-    console.info point, bounds
     rect = new paper.Rectangle
       x: bounds.x + bounds.width * point.x
       y: bounds.y + bounds.height * point.y
       width: point.width * bounds.width
       height: point.height * bounds.height
-    console.info rect
     roi = new paper.Shape.Rectangle rect
     roi.strokeColor = new paper.Color 1, 0, 0, 0.5 # '#009dec'
     roi.selectedColor = new paper.Color 1, 0, 0, 1

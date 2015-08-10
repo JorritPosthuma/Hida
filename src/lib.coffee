@@ -10,6 +10,7 @@ require 'script!regression-js/build/regression.min.js'
 
 # Q
 window.Q = require 'q'
+window.Q.longStackSupport = true
 
 # Lodash
 window._ = require 'lodash'

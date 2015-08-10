@@ -33,3 +33,5 @@ module.exports = (module) ->
         analyse: =>
           if @isValid()
             @bridge.hida.analyse parseInt(@length), parseInt(@weigth)
+            .then (result) ->
+              console.info result

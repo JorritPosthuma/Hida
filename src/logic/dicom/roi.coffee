@@ -2,15 +2,17 @@ pip = require 'robust-point-in-polygon'
 Q = require 'q'
 _ = require 'lodash'
 
-Worker = require '../worker'
-
 class ROI
 
-  curve: (pixels, roi) ->
+  curve: (pixels, roi, resolution) ->
+    @curveFromSimplePolygon pixels, roi.original, resolution
+
+  curveFromSimplePolygon: (pixels, roi, resolution = 1) ->
     sums = pixels.map -> 0
 
-    resolution = 512
-    size = 128
+    # Calculate size of original image
+    size = Math.floor Math.sqrt pixels[0].length
+    resolution = size * resolution
 
     # Calculate image scaling
     scale = resolution / size
@@ -45,7 +47,8 @@ class ROI
 
 instance = new ROI
 
+Worker = require '../worker'
 worker = new Worker instance, 'bundle/roi.bundle.js'
-worker.wrap 'curve'
+worker.wrap 'curveFromSimplePolygon'
 
 module.exports = instance

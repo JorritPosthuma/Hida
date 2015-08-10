@@ -84,9 +84,9 @@ module.exports = (module) ->
               height: 150
               width: width - 150
 
-        addRoi: (roi) =>
-          roi.data.sums.unshift roi.id
-          @chart?.load columns: [ roi.data.sums ]
+        addRoi: (roi, sums) =>
+          sums.unshift roi.id
+          @chart?.load columns: [ sums ]
 
           colors = @chart.data.colors()
           roi.strokeColor = colors[roi.id]
