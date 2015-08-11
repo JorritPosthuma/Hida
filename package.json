@@ -48,7 +48,7 @@
     "nw-open":     "open build/Hida",
     "nw-run":      "./node_modules/.bin/nwbuild -r app",
     "wp-clean":    "rm -rf app/bundle",
-    "wp-compile":  "NODE_ENV=PROD ./node_modules/.bin/webpack -p",
-    "wp-server":   "NODE_ENV=DEV  ./node_modules/.bin/webpack-dev-server --hot"
+    "wp-compile":  "./node_modules/.bin/webpack -p",
+    "wp-server":   "./node_modules/.bin/webpack-dev-server --hot"
   }
 }

@@ -1,10 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
+var _ = require('lodash');
 
-env = 'DEV' // Default
-if (process.env.NODE_ENV) {
-  env = process.env.NODE_ENV 
-}
+var dev = _.contains(process.argv, '--hot');
 
 /**************************************
  * Main config
@@ -62,7 +60,7 @@ config = {
  * DEV additions
  **************************************/
 
-if (env == 'DEV') {
+if (dev) {
   // config.devtool = 'eval-cheap-module-source-map';
   config.devServer = {
     contentBase: './app',
