@@ -26,3 +26,15 @@ To give you an idea about the application, the following shows a multi-frame DIC
 
  * Window moving relative to magnitude (e.g. higher number = higher steps)
  * Export
+
+## Installation
+
+### Windows
+
+ * Git (https://git-scm.com, choose option to make available on prompt)
+ * NodeJS (https://nodejs.org, with NPM)
+ * All dependencies of Node-Gyp (https://github.com/TooTallNate/node-gyp)
+
+### OS X
+
+ We assume homebrew is installed (http://brew.sh).
