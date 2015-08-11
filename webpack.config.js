@@ -1,9 +1,18 @@
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports = {
+env = 'DEV' // Default
+if (process.env.NODE_ENV) {
+  env = process.env.NODE_ENV 
+}
+
+/**************************************
+ * Main config
+ **************************************/
+
+config = {
   entry: {
-    main: ['webpack/hot/dev-server', './src/main'],
+    main: ['./src/main'],
     roi: ['./src/logic/dicom/roi']
   },
   output: {
@@ -46,10 +55,24 @@ module.exports = {
   resolve: {
     root: [path.join(__dirname, 'bower_components')],
     extensions: ['', '.js', '.json', '.coffee'] 
-  },
-  // devtool: 'eval-cheap-module-source-map', // Disabled because nw.js dev tools can't handle the large sourcemaps
-  devServer: {
-    contentBase: './app',
-    port: 5000
   }
 };
+
+/**************************************
+ * DEV additions
+ **************************************/
+
+if (env == 'DEV') {
+  // config.devtool = 'eval-cheap-module-source-map';
+  config.devServer = {
+    contentBase: './app',
+    port: 5000
+  };
+  config.entry.main.unshift('webpack/hot/dev-server');
+}
+
+/**************************************
+ * Export
+ **************************************/
+
+module.exports = config
