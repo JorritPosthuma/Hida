@@ -32,14 +32,26 @@ module.exports = (module) ->
         ###########################
 
         merge: =>
+          # Set state to true
           @merged = true
-          @unmerged_reader = @bridge.viewerDir.viewer.reader
-          reversed = @bridge.hida.reverseMerge @bridge.viewerDir.viewer.reader
-          @bridge.viewerDir.viewer.read reversed
+          # Get viewer
+          viewer = @bridge.viewerDir.viewer
+          # Store original frames
+          @unmerged_frames = viewer.reader.frames
+          # Set new frames
+          viewer.reader.frames = @bridge.hida.reverseMerge @unmerged_frames
+          # Show view
+          viewer.reread()
 
         unmerge: =>
+          # Set state to false
           @merged = false
-          @bridge.viewerDir.viewer.read @unmerged_reader
+          # Get viewer
+          viewer = @bridge.viewerDir.viewer
+          # Restore frames
+          viewer.reader.frames = @unmerged_frames
+          # Show view
+          viewer.reread()
 
         window: => @bridge.viewerDir.viewer.enableWindow()
         draw:   => @bridge.viewerDir.viewer.enableDraw()

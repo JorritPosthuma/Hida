@@ -7,7 +7,7 @@ module.exports = (module) ->
     scope: 
       bridge: '='
     template:  require "./dicom_hida_analysis.html"
-    controller: ($scope, $rootScope) ->
+    controller: ($scope, $rootScope, $timeout) ->
 
       new class DicomHidaAnalysisController extends DefaultController
 
@@ -21,6 +21,7 @@ module.exports = (module) ->
           @bridge = @scope.bridge
           @bridge.analysisDir = @
 
+          @loading = false
           @weigth = ''
           @length = ''
 
@@ -31,7 +32,12 @@ module.exports = (module) ->
           _.isFinite(length) and _.isFinite(weigth)
 
         analyse: =>
-          if @isValid()
-            @bridge.hida.analyse parseInt(@length), parseInt(@weigth)
-            .then (result) ->
-              console.info result
+          if not @loading and @isValid()
+            @loading = true
+
+            $timeout =>
+              @bridge.hida.analyse parseInt(@length), parseInt(@weigth)
+              .then =>
+                @bridge.controlsDir.unAnalyse()
+                @loading = false
+                $timeout()

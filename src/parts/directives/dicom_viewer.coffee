@@ -19,7 +19,13 @@ module.exports = (module) ->
         constructor: ->
           super $scope, $rootScope
           @bridge = @scope.bridge
-          @viewer = new DicomViewer
+
+          if @root.viewer?
+            @viewer = @root.viewer
+          else 
+            @viewer = new DicomViewer
+            @root.viewer = @viewer
+
           @viewer.on 'update', -> $timeout()
           @details = false
           @warnings = []

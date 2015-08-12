@@ -44,18 +44,10 @@ module.exports = (module) ->
         @viewerDir.viewer.on 'roi_clear',            => @graphDir.create()
         @viewerDir.viewer.on 'resize',       (width) => @graphDir.resize width
 
-        if @root.temp.hida_reader?
-          reader = @root.temp.hida_reader
-          delete @root.temp.hida_reader
-          @show reader
-        else
-          if window.nw? then @debug()
-          else $state.go 'main.home'
-
-      show: (reader) =>
-        @viewerDir.viewer.read reader        
+      show: (viewer) =>
+        @viewerDir.viewer.migrate viewer
         @hida.on 'warning', @viewerDir.addWarning
-        @hida.validate @viewerDir.viewer.reader.frames[0].file
+        @hida.validate @viewerDir.viewer.viewer.frames[0].file
 
       updateRoi: (roi) =>
         frames = @viewerDir.viewer.reader.frames
@@ -63,6 +55,7 @@ module.exports = (module) ->
 
         ROI.curve pixels, roi
         .then (sums) => @graphDir.addRoi roi, sums
+        .done()
 
       debug: =>
         reader = new DicomFSReader [
@@ -79,8 +72,6 @@ module.exports = (module) ->
             @viewerDir.viewer.frame = 28
             @viewerDir.viewer.show()
 
-            @hida.analyse 183, 71
-            .then (result) ->
-              console.info result
+            # @hida.analyse 183, 71
           , 1000
         .done()

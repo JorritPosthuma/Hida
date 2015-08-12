@@ -36,7 +36,7 @@ module.exports = (module) ->
 
         hida: =>
           if @bridge.viewerDir.viewer.reader?
-            @root.temp.hida_reader = @bridge.viewerDir.viewer.reader
+            @root.temp.viewer = @bridge.viewerDir.viewer
             $state.go 'main.hida'
 
         window: => @bridge.viewerDir.viewer.enableWindow()

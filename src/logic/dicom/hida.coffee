@@ -15,14 +15,14 @@ module.exports = class Hida extends EventBus
   # Public methods
   ########################################
 
-  analyse: (length, weigth) =>
+  analyse: (length, weight) =>
     # Basic access variables
     viewer = @bridge.viewerDir.viewer
 
     # Store all results
     r = 
       length: length
-      weigth: weigth
+      weight: weight
 
     # Constants
     # Phase Information Sequence
@@ -57,7 +57,7 @@ module.exports = class Hida extends EventBus
       r.totalCurve = @totalCurve()
 
       # Start
-      r.BSA = Math.sqrt r.length * r.weigth / 3600
+      r.BSA = Math.sqrt r.length * r.weight / 3600
 
       r.frameStart = Math.round 150 / r.averageFrameDuration
       r.frameEnd   = Math.round 350 / r.averageFrameDuration
@@ -91,6 +91,11 @@ module.exports = class Hida extends EventBus
       r.Cfit_15 = r.averageFrameDuration * r.bloodIntercept * Math.exp(r.bloodSlope * 15 * 60)
 
       r.HIDAc15 = 100 - (100 * r.Cfit_15 / r.Cfit_0)
+
+      # Also store as internal result
+      @result = r
+
+      console.info @result
 
       return r
 
@@ -140,8 +145,7 @@ module.exports = class Hida extends EventBus
     test file, 'x00280008', (element) -> element.value is '72'
     # test file, 'x00200037', (element) -> true # TODO
     test file, 'x00540032', (element) -> 
-      afd = parseInt element.find('x00181242')?.value
-      return _.isFinite afd
+      _.isFinite parseInt element.find('x00181242')?.value
     test file, 'x00540100', (element) -> _.isEqual element.value, [
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,
       1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36
@@ -151,21 +155,21 @@ module.exports = class Hida extends EventBus
     _.map @bridge.viewerDir.viewer.reader.frames, (frame) =>
       _.sum frame.image.getPixelData()
 
-  reverseMerge: (reader) =>
-    frame_count = reader.getFrameCount()
+  reverseMerge: (frames) =>
+    frame_count = frames.length
     frame_count_result = Math.floor frame_count / 2
 
     console.assert frame_count % 2 is 0, 'Even frame count'
 
-    frames = for left in [1 .. frame_count_result] by 1
+    frames = for left in [0 ... frame_count_result] by 1
       right = (left + frame_count_result)
 
-      left_frame  = reader.getFrame left
-      right_frame = reader.getFrame right
+      left_frame  = frames[left]
+      right_frame = frames[right]
 
       @_reverseMergeFrames left_frame, right_frame
 
-    new DicomReader frames, reader.rois
+    frames
 
   ########################################
   # Private methods

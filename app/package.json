@@ -7,9 +7,9 @@
     "title": "Hida",
     "toolbar": false,
     "frame": true,
-    "width": 970,
-    "height": 700,
+    "width": 890,
+    "height": 580,
     "min_width": 800,
-    "min_height": 460
+    "min_height": 580
   }
 }

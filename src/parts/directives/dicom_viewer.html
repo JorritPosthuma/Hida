@@ -2,14 +2,22 @@
 <div class="dicom-viewer-directive">
   <div ng-if="!ctrl.viewer.loaded()" class="placeholder">
     <h1>No DICOM image loaded!</h1>
-    <h2>You can use drag & drop to load files</h2>
+    <h2>You can use drag &amp; drop to load files</h2>
   </div>
   <div ng-show="ctrl.viewer.loaded() &amp;&amp; !ctrl.details" class="image">
     <canvas resize="true"></canvas><i ng-click="ctrl.showInfo()" class="infoToggle fa fa-info-circle"></i>
-    <table>
+    <table class="patient_info">
       <tr>
         <td class="name">Patient ID:</td>
         <td>{{ctrl.viewer.file.file.get('x00100020').toString()}}</td>
+      </tr>
+      <tr ng-if="ctrl.bridge.hida.result">
+        <td class="name">Patient Weight</td>
+        <td>{{ctrl.bridge.hida.result.weight}}</td>
+      </tr>
+      <tr ng-if="ctrl.bridge.hida.result">
+        <td class="name">Patient Length</td>
+        <td>{{ctrl.bridge.hida.result.length}}</td>
       </tr>
       <tr>
         <td class="name">DOB:</td>
@@ -33,6 +41,35 @@
         <span class="head"><i class="fa fa-exclamation-triangle"></i>&nbsp;Warning: </span>
         <span class="message">{{warning}}</span>
         </div>
+    </div>
+    <div class="hida_result" ng-if="ctrl.bridge.hida.result">
+      <table>
+        <tr>
+          <td class="name">Liver Uptake</td>
+          <td class="value">{{$root._.round(ctrl.bridge.hida.result.LClr_min, 3)}}</td>
+          <td class="units">% / min</td>
+        </tr>
+        <tr>
+          <td class="name">Liver Uptake</td>
+          <td class="value">{{$root._.round(ctrl.bridge.hida.result.LClr_BSA, 3)}}</td>
+          <td class="units">% / min / m<sup>2</sup></td>
+        </tr>
+        <tr>
+          <td class="name">HIDA-C15</td>
+          <td class="value">{{$root._.round(ctrl.bridge.hida.result.HIDAc15, 3)}}</td>
+          <td class="units">%</td>
+        </tr>
+        <tr>
+          <td class="name">FRLU</td>
+          <td class="value">{{$root._.round(ctrl.bridge.hida.result.FRLF, 3)}}</td>
+          <td class="units">% of total Liver Uptake</td>
+        </tr>
+        <tr>
+          <td class="name">FRLV</td>
+          <td class="value">{{$root._.round(ctrl.bridge.hida.result.FRLF_BSA_Corrected, 3)}}</td>
+          <td class="units">% / min / m<sup>2</sup></td>
+        </tr>
+      </table>
     </div>
   </div>
   <div ng-if="ctrl.viewer.loaded() &amp;&amp; ctrl.details" class="info">

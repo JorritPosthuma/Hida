@@ -10,8 +10,7 @@ module.exports = (module) ->
       <div class="dicom-graph-dir">
         <div class="lines"></div>
         <div class="info">
-          <span ng-if="ctrl.hovered.length == 0">Move mouse over data to see the values</span>
-          <table ng-if="ctrl.hovered.length > 0">
+          <table>
             <tr ng-repeat="item in ctrl.hovered">
               <td>
                 <div ng-style="{'background': item.color}" class="color"></div>
@@ -67,15 +66,28 @@ module.exports = (module) ->
                 duration: 0
               interaction:
                 enabled: true
+              onmouseout: @update
 
             @bridge.setGraph? @
 
         onMouseOverData: (item) =>
-          colors = @chart.data.colors()
-          @hovered = _.map @chart.data(), (curve) ->
-            color: colors[curve.id]
-            value: _.round curve.values[item.index].value, 2
-          @hovered = _.sortByOrder @hovered, 'value', 'desc'
+          @update item.index
+
+        update: (index) =>
+          # Get chart data
+          data = @chart.data() 
+          # Only calculate if there is data
+          if data.length is 0
+            @hovered = []
+          else
+            index = data[0].values.length - 1 if not index?
+
+            colors = @chart.data.colors()
+            @hovered = _.map data, (curve) ->
+              color: colors[curve.id]
+              value: _.round curve.values[index]?.value, 2
+            @hovered = _.sortByOrder @hovered, 'value', 'desc'
+          # Let angular know
           @scope.$apply()
 
         resize: (width) =>
@@ -87,7 +99,9 @@ module.exports = (module) ->
         addRoi: (roi, sums) =>
           sums.unshift roi.id
           @chart?.load columns: [ sums ]
+          @update()
 
+          # Set colors to reflect ROI
           colors = @chart.data.colors()
           roi.strokeColor = colors[roi.id]
-          # @roi.selectedColor = new @paper.Color 1, 0, 0, 1
+          paper.view.draw()

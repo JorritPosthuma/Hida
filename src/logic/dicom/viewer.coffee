@@ -38,7 +38,16 @@ module.exports = class DicomViewer extends EventBus
   # Linker                  #
   ###########################
 
-  link: (@$element) =>
+  link: ($element) =>
+    if @$canvas?
+      @linkExisting $element
+    else
+      @linkNew $element
+
+    @enableDrop()
+    @enableScroll()
+
+  linkNew: (@$element) =>
     @$canvas = @$element.find 'canvas'
 
     @element = @$element[0]
@@ -51,8 +60,6 @@ module.exports = class DicomViewer extends EventBus
     @draw_tool    = new DicomViewerDrawTool @
     @edit_tool    = new DicomViewerEditTool @
 
-    @enableDrop()
-    @enableScroll()
     @enableWindow()
 
     # Debounce original resize
@@ -60,6 +67,12 @@ module.exports = class DicomViewer extends EventBus
     @paper.view._windowEvents.resize = _.debounce resize, 100
 
     @paper.view.onResize = @resize
+
+  linkExisting: ($element) =>
+    $canvas = $element.find 'canvas'
+    $canvas.replaceWith @$canvas
+    @$element = $element
+    @resize()
 
   ###########################
   # External methods        #
@@ -151,17 +164,28 @@ module.exports = class DicomViewer extends EventBus
   loaded: => @file?
 
   read: (reader) =>
+    @readFrames reader
+    @readRois reader
+
+  reread: =>
+    @frames = @reader.getFrameCount()
+    @frame = 1 if @frame > @frames
+    @show()
+
+    _.forEach @rois, (roi) =>
+      @emit 'roi_add', roi
+
+  readFrames: (reader) =>
     # Show images
-    if reader.frames.length > 0
+    if reader.getFrameCount() > 0
       @emit 'roi_clear'
       @reader = reader
       # Initialize
       @init()
       @frames = reader.getFrameCount()
-
-      # Show
       @show()
 
+  readRois: (reader) =>
     # ROI's
     if reader.rois.length > 0
       _.forEach reader.rois, (roi) =>

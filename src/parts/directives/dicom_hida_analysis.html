@@ -2,4 +2,4 @@
 <h1>Starting HIDA analysis</h1>
 <h2>First, we need more information about the patient:</h2><span>
   <input ng-model="ctrl.weigth" placeholder="Please fill in the weigth..."/><span class="postfix">kg</span></span><span>
-  <input ng-model="ctrl.length" placeholder="And the length..."/><span class="postfix">cm</span></span><i ng-click="ctrl.analyse()" ng-class="{valid: ctrl.isValid()}" class="submit fa fa-connectdevelop"></i>
+  <input ng-model="ctrl.length" placeholder="And the length..."/><span class="postfix">cm</span></span><i ng-click="ctrl.analyse()" ng-class="{valid: ctrl.isValid(), 'fa-spin': ctrl.loading}" class="submit fa fa-connectdevelop"></i>

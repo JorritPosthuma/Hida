@@ -40,7 +40,7 @@
     color: #009dec;
   }
 
-  .image table {
+  .patient_info {
     position: absolute;
     top: 30px;
     left: 30px;
@@ -48,12 +48,19 @@
     cursor: default;
   }
 
-  .warnings {
+  .warnings, .hida_result {
     color: white;
     position: absolute;
     left: 30px;
     bottom: 30px;
+  }
 
+  .hida_result {
+    .value { text-align: right; }
+    .units { color: #999;}
+  }
+
+  .warnings {
     .head {
       color: red;
       font-weight: bold;

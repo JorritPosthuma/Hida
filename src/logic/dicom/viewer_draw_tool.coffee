@@ -35,8 +35,6 @@ module.exports = class DicomViewerDrawTool extends DicomViewerTool
     @viewer.emit 'roi_add', @roi
 
   addPoint: (e) =>
-    # # First add point
-    # @roi.add e.point
     # Get size of raster
     width = @viewer.raster.size.width
     # And half
