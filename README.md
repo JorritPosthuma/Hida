@@ -18,6 +18,8 @@ To give you an idea about the application, the following shows a multi-frame DIC
 
 ![Hida Screenshot](/docs/img/screen.png)
 
+![Hida Screencapture](/docs/img/capture.gif)
+
 ## TODO
 
  * Resultaten view maken
