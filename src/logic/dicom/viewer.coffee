@@ -72,6 +72,7 @@ module.exports = class DicomViewer extends EventBus
     $canvas = $element.find 'canvas'
     $canvas.replaceWith @$canvas
     @$element = $element
+    @element = @$element[0]
     @resize()
 
   ###########################
@@ -168,12 +169,13 @@ module.exports = class DicomViewer extends EventBus
     @readRois reader
 
   reread: =>
-    @frames = @reader.getFrameCount()
-    @frame = 1 if @frame > @frames
-    @show()
+    if @loaded()
+      @frames = @reader.getFrameCount()
+      @frame = 1 if @frame > @frames
+      @show()
 
-    _.forEach @rois, (roi) =>
-      @emit 'roi_add', roi
+      _.forEach @rois, (roi) =>
+        @emit 'roi_add', roi
 
   readFrames: (reader) =>
     # Show images
@@ -184,6 +186,7 @@ module.exports = class DicomViewer extends EventBus
       @init()
       @frames = reader.getFrameCount()
       @show()
+      @emit 'file_load'
 
   readRois: (reader) =>
     # ROI's

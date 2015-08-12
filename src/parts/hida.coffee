@@ -43,10 +43,15 @@ module.exports = (module) ->
         @viewerDir.viewer.on 'roi_edit',     (roi)   => @updateRoi roi
         @viewerDir.viewer.on 'roi_clear',            => @graphDir.create()
         @viewerDir.viewer.on 'resize',       (width) => @graphDir.resize width
+        @viewerDir.viewer.on 'file_load',               @validate
 
-      show: (viewer) =>
-        @viewerDir.viewer.migrate viewer
         @hida.on 'warning', @viewerDir.addWarning
+
+        if @viewerDir.viewer.loaded()
+          @viewerDir.viewer.reread()
+          @validate()
+
+      validate: =>
         @hida.validate @viewerDir.viewer.viewer.frames[0].file
 
       updateRoi: (roi) =>
