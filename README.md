@@ -45,6 +45,8 @@ By running the complete application in your browser or in a Node-Webkit containe
   * Python 2.7
   * Visual Studio
 
+You might want to use https://chocolatey.org/
+
 ### OS X
 
 We assume homebrew is installed (http://brew.sh).
