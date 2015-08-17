@@ -39,7 +39,7 @@ module.exports = class HermesRoiFile
       match = line.match type_rect
       if match?
         return roi.addRect match...
-      
+
       # Else, clean roi
       roi = new HermesRoi
 
@@ -74,11 +74,11 @@ class HermesRoi
     type = @info['roi type']
     roi = switch type
       when 1, 2 then @toPointPath paper, bounds
-      # when 3    then @toRectPath paper, bounds
+      # when 3    then @toRectPath paper, bounds  # Uncomment to enable square format ROI's
 
     roi?.original = @data
     roi
-      
+
   toPointPath: (paper, bounds) =>
     roi = new paper.Path()
     roi.strokeColor = new paper.Color 1, 0, 0, 0.5 # '#009dec'
@@ -88,7 +88,7 @@ class HermesRoi
       roi.add
         x: bounds.x + bounds.width * (point.x)
         y: bounds.y + bounds.height * (point.y)
-    roi.closed = true    
+    roi.closed = true
     roi
 
   toRectPath: (paper, bounds) =>

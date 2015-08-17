@@ -1,3 +1,5 @@
+// File to describe (most) dicom tags for name and implicid reading purposes
+
 module.exports = {
   'x00000000': { tag: '(0000,0000)', vr: 'UL',       vm: '1',    name: 'Command Group Length' },
   'x00000001': { tag: '(0000,0001)', vr: 'UL',       vm: '1',    name: 'Command Length To End' },

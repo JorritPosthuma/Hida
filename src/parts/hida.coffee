@@ -18,11 +18,11 @@ module.exports = (module) ->
         @controlsDefer = Q.defer()
         @graphDefer = Q.defer()
         @viewerDefer = Q.defer()
-   
+
         Q.all [@controlsDefer.promise, @graphDefer.promise, @viewerDefer.promise]
         .then @start
         .done()
-      
+
       ###########################
       # Bridge Methods          #
       ###########################
@@ -60,23 +60,4 @@ module.exports = (module) ->
 
         ROI.curve pixels, roi
         .then (sums) => @graphDir.addRoi roi, sums
-        .done()
-
-      debug: =>
-        reader = new DicomFSReader [
-          "/Users/Jorrit/Development/Hida Private/Data/ANONHBSAMCHERMES1/HIDADYNFASE1/1.2.752.37.1.1.3407820023.6.166606920130905"
-          # "/Users/Jorrit/Development/Hida Private/Data/dcm150406921.0000.dcm"
-          # "/Users/Jorrit/Development/Hida Private/Data/dcm153821220.0000.dcm"
-          "/Users/Jorrit/Development/Hida Private/Data/testfile1.hroi"
-        ]
-
-        reader.run().then =>
-          @show reader
-          $timeout =>
-            @controlsDir.merge()
-            @viewerDir.viewer.frame = 28
-            @viewerDir.viewer.show()
-
-            # @hida.analyse 183, 71
-          , 1000
         .done()

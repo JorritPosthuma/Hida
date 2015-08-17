@@ -7,7 +7,6 @@ module.exports = (module) ->
   require('./parts/directives/dicom_hida_analysis')(module)
   require('./parts/directives/dicom_viewer')(module)
 
-  require('./parts/export')(module)
   require('./parts/hida')(module)
   require('./parts/home')(module)
   require('./parts/main')(module)

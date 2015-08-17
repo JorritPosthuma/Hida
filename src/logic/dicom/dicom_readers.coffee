@@ -1,6 +1,8 @@
 DicomFile = require './dicom_file'
 HermesRoiFile = require './hermes_roi_file'
 
+# These are the interfaces for reading files (both in the browser and NW)
+
 class DicomReader
 
   constructor: (@frames = [], @rois = []) ->
@@ -16,8 +18,6 @@ class DicomFileReader extends DicomReader
   constructor: (@paths) ->
     super()
     @files = []
-
-  # abstract read(path)
 
   run: =>
     # For all paths
@@ -74,7 +74,7 @@ class DicomHTML5Reader extends DicomFileReader
 
   pathToId: (path) => path.name
 
-  readBuffer: (path) => 
+  readBuffer: (path) =>
     deferred = Q.defer()
     reader = new FileReader()
 
@@ -86,7 +86,7 @@ class DicomHTML5Reader extends DicomFileReader
     reader.readAsArrayBuffer path
     deferred.promise
 
-  readString: (path) => 
+  readString: (path) =>
     deferred = Q.defer()
     reader = new FileReader()
 

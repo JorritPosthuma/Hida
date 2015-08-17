@@ -14,13 +14,10 @@ module.exports = (module) ->
       url: '/hida'
       template: require '../parts/hida.html'
       controller: 'HidaController'
-    # .state 'main.export',
-    #   url: '/export'
-    #   template: require '../parts/export.html'
-    #   controller: 'ExportController'
 
     $urlRouterProvider.otherwise "/home"
 
   module.run ($rootScope) ->
     $rootScope.temp = {}
     $rootScope._ = _
+    $rootScope.nw = global.nw?

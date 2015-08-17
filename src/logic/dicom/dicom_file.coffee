@@ -3,6 +3,7 @@ DicomFrame = require './dicom_frame'
 
 moment = require 'moment'
 
+# Used for detecting if an image is a color of grayscale version
 COLOR_TYPES = [
   "RGB"
   "PALETTE COLOR" 
@@ -13,27 +14,36 @@ COLOR_TYPES = [
   "YBR_RCT"
 ]
 
+# Helper class to format date tag
 class DicomDate
   constructor: (@dateString) -> @date = moment @dateString, 'YYYYMMDD'
   toString:                  -> @date.format 'LL'
 
+# Helper class to format time tag
 class DicomTime
   constructor: (@timeString) -> @time = moment @timeString, 'HHmmss.SSSS'
   toString:                  -> @time.format 'HH:mm.ss SSSS'
 
+# Helper class to format name tag
 class DicomName
   constructor: (name)  -> @name = dicomParser.parsePN name
   toString:            -> "#{@name.givenName} #{@name.familyName}"
 
+# Main class
 module.exports = class DicomFile
 
   constructor: (@buffer, @path) ->
     @frames = []
     
+    # First get tag data (raw ID + data-offset)
     @getData()
+    # Match tags to info (especially for implicit tags)
     @getInfo()
+    # Get actual values
     @getValues()
+    # Do additional value parsing
     @getCustomValues()
+    # Flatten tree for UI
     @flattenInfoTree()
 
   #######################################
@@ -41,13 +51,14 @@ module.exports = class DicomFile
   #######################################
 
   isColor: => COLOR_TYPES.indexOf(@colorInt()) isnt -1
+  colorInt:   => @get 'x00280004'
 
   getElement: (tag) => @data.elements[tag]
   get:        (tag) => @data.elements[tag]?.value
 
   framecount: => parseInt @get 'x00280008'
-  colorInt: => @get 'x00280004'
 
+  # Start parsing DICOM file
   parse: =>
     method = if @isColor()
     then cornerstoneWADOImageLoader.makeColorImage

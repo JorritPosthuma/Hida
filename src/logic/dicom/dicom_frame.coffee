@@ -2,6 +2,7 @@ module.exports = class DicomFrame
 
   constructor: (@file, @id, @frame_nr, @image) ->
 
+  # Method used to create new images based on this image (e.g. with merging multiple frames)
   derive: (data, max) ->
     new DicomFrame @file, @id, @frame_nr,
       imageId:            @image.imageId
