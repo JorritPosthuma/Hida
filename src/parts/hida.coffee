@@ -52,7 +52,7 @@ module.exports = (module) ->
           @validate()
 
       validate: =>
-        @hida.validate @viewerDir.viewer.viewer.frames[0].file
+        @hida.validate @viewerDir.viewer.reader.frames[0].file
 
       updateRoi: (roi) =>
         frames = @viewerDir.viewer.reader.frames
